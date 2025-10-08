@@ -1,0 +1,43 @@
+{
+  "generator-jhipster": {
+    "applicationType": "gateway",
+    "authenticationType": "oauth2",
+    "baseName": "gatewayService",
+    "buildTool": "maven",
+    "cacheProvider": null,
+    "clientFramework": "angular",
+    "clientTestFrameworks": [],
+    "clientTheme": "none",
+    "creationTimestamp": 1759890581328,
+    "databaseType": "sql",
+    "devDatabaseType": "h2Disk",
+    "devServerPort": 4200,
+    "enableHibernateCache": null,
+    "enableSwaggerCodegen": false,
+    "enableTranslation": true,
+    "entities": [],
+    "feignClient": null,
+    "jhipsterVersion": "8.7.3",
+    "languages": ["fr", "en"],
+    "messageBroker": "kafka",
+    "microfrontend": true,
+    "microfrontends": [
+      {
+        "baseName": "nextstepsenegal"
+      }
+    ],
+    "nativeLanguage": "fr",
+    "packageName": "com.nextstepsenegal.app",
+    "prodDatabaseType": "mysql",
+    "reactive": true,
+    "searchEngine": "elasticsearch",
+    "serverPort": 8080,
+    "serverSideOptions": ["searchEngine:elasticsearch", "messageBroker:kafka"],
+    "serviceDiscoveryType": "eureka",
+    "skipUserManagement": true,
+    "syncUserWithIdp": true,
+    "testFrameworks": [],
+    "websocket": false,
+    "withAdminUi": true
+  }
+}

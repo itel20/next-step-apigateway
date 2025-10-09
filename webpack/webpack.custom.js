@@ -26,10 +26,6 @@ module.exports = async (config, options, targetOptions) => {
         configType: 'flat',
         extensions: ['ts', 'js', 'html'],
       }),
-      new WebpackNotifierPlugin({
-        title: 'Gateway Service',
-        contentImage: path.join(__dirname, 'logo-jhipster.png'),
-      }),
     );
   }
 

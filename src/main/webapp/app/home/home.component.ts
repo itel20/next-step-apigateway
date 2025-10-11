@@ -6,6 +6,7 @@ import SharedModule from 'app/shared/shared.module';
 import { LoginService } from 'app/login/login.service';
 import { AccountService } from 'app/core/auth/account.service';
 import { Account } from 'app/core/auth/account.model';
+import { faLaptopCode, faPencilAlt, faTasks } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   standalone: true,
@@ -21,9 +22,9 @@ export default class HomeComponent implements OnInit {
   searchQuery = '';
 
   jobs = [
-    { id: 1, title: 'Développeur Web', description: 'Angular / Spring Boot' },
-    { id: 2, title: 'Designer UX/UI', description: 'Figma / Adobe XD' },
-    { id: 3, title: 'Chef de projet', description: 'Méthodologie Agile / Scrum' },
+    { id: 1, title: 'Développeur Web', description: 'Angular / Spring Boot', icon: faLaptopCode },
+    { id: 2, title: 'Designer UX/UI', description: 'Figma / Adobe XD', icon: faPencilAlt },
+    { id: 3, title: 'Chef de projet', description: 'Méthodologie Agile / Scrum', icon: faTasks },
   ];
 
   private readonly accountService = inject(AccountService);

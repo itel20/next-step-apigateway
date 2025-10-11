@@ -1,27 +1,66 @@
-/* ==========================================================================
-Main page styles
-========================================================================== */
-/* Décaler le contenu sous la navbar fixe */
+/* ========================================================================
+   Global Layout
+========================================================================= */
 :host {
   display: block;
-  padding-top: 350px; /* ajuste selon la hauteur réelle */
+  padding-top: 350px;
 }
 
-/* Layout */
 .homepage {
   max-width: 100%;
   margin: 0 auto;
   padding: 50px;
-  color: #072;
+  color: #1d4830; // Texte sombre lisible
   font-family: 'Helvetica Neue', Arial, sans-serif;
+  background: #f4fff5; // Fond général doux
 }
 
-/* Search bar (under navbar) */
+/* Widget flottant chatbot */
+.chatbot-widget {
+  position: fixed;
+  top: 80px; /* ↓ Descendu */
+  right: 20px; /* léger recul */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  z-index: 9999;
+}
+
+.chatbot-message {
+  background-color: #f4c01e;
+  color: white;
+  font-weight: 600;
+  font-size: 14px; /* taille réduite */
+  padding: 10px 18px; /* réduit */
+  border-radius: 40px;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.chatbot-icon {
+  width: 60px; /* réduit */
+  height: 60px; /* réduit */
+  border-radius: 50%;
+  background: white;
+  border: 2px solid #f4c01e; /* bord un peu plus fin */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 26px; /* icône réduite */
+  color: #15803d;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* ========================================================================
+   Barre de recherche
+========================================================================= */
 .search-bar {
   display: flex;
   justify-content: center;
   gap: 8px;
-  margin-top: 8px; /* leave space under fixed navbar */
+  margin-top: 8px;
   margin-bottom: 18px;
 
   input {
@@ -29,130 +68,151 @@ Main page styles
     max-width: 80%;
     padding: 10px 14px;
     border-radius: 20px;
-    border: 2px solid #f4c01e; /* gold border */
+    border: 2px solid #f4c01e;
     box-shadow: none;
+    background: #ffffff;
+    color: #1d4830;
   }
 
   .btn-search {
-    border: none;
-    background: #ffffff;
     border: 2px solid #f4c01e;
+    background: #ffffff;
     border-radius: 20px;
     padding: 8px 12px;
     cursor: pointer;
+    display: flex;
+    align-items: center;
   }
 }
 
-/* Hero */
+/* ========================================================================
+   Section Hero
+========================================================================= */
 .hero {
-  background: #f2fbf3;
-  border-radius: 8px;
-  padding: 18px;
+  background: #ebfaf0; // Vert clair similaire à ta capture
+  border-radius: 10px;
+  padding: 22px;
   text-align: center;
-  margin-bottom: 18px;
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
+  margin-bottom: 22px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.07);
 
   h2 {
-    color: #15803d;
-    margin: 6px 0 8px;
+    color: #f4c01e;
+    margin: 10px 0;
+    font-size: 26px;
+    font-weight: 700;
   }
 
   .lead {
-    color: #243;
-    margin-bottom: 14px;
+    color: #335555;
+    margin-bottom: 18px;
+    font-size: 16px;
   }
 
   .hero-actions {
     display: flex;
     justify-content: center;
-    gap: 12px;
+    gap: 14px;
     flex-wrap: wrap;
 
     .action {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 10px 18px;
-      border-radius: 12px;
+      padding: 12px 22px;
+      border-radius: 14px;
       border: 2px solid #f4c01e;
       background: #fff;
       color: #15803d;
       font-weight: 700;
       cursor: pointer;
+      font-size: 15px;
     }
 
     .primary {
-      background: linear-gradient(90deg, #eaf9ea, #d4f1d8);
+      background: #d6f5d9;
       border-color: #15803d;
     }
   }
 }
 
-/* Info row */
+/* ========================================================================
+   Cartes d'info (Test orientation + Parcours)
+========================================================================= */
 .info-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 18px;
-  margin-bottom: 18px;
+  gap: 20px;
+  margin-bottom: 22px;
 
   .card {
-    background: #fff;
-    border-radius: 8px;
-    padding: 16px;
-    border: 1px solid #e6f0e8;
-    min-height: 160px;
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 18px;
+    border: 1px solid #e5f0e8;
+    min-height: 170px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 
     h4 {
       color: #15803d;
       display: flex;
       gap: 8px;
       align-items: center;
+      font-size: 18px;
+      font-weight: 700;
     }
 
     .muted {
-      color: #567;
-      font-size: 13px;
+      color: #667;
+      font-size: 14px;
+      margin-top: 4px;
     }
+
     .link-btn {
-      margin-top: 10px;
+      margin-top: 12px;
       background: transparent;
       border: none;
       color: #15803d;
       font-weight: 700;
       cursor: pointer;
+      font-size: 14px;
     }
   }
 
   .parcours-graph {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-    padding-top: 8px;
+    gap: 10px;
+    padding-top: 12px;
 
     .node {
-      background: #dff5df;
+      background: #e3f7e5;
       border: 1px solid #15803d;
-      color: #075;
-      padding: 8px 12px;
+      color: #066b3a;
+      padding: 8px 14px;
       border-radius: 20px;
       font-weight: 700;
-      font-size: 13px;
+      font-size: 14px;
     }
   }
 }
 
-/* Jobs list */
+/* ========================================================================
+   Section métiers
+========================================================================= */
 .jobs-section {
-  margin-bottom: 30px;
+  margin-bottom: 40px;
 
   h3 {
     color: #15803d;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
+    font-size: 22px;
+    font-weight: 700;
   }
 
   .job-cards {
     display: grid;
-    gap: 10px;
+    gap: 12px;
   }
 
   .job-card {
@@ -160,20 +220,20 @@ Main page styles
     align-items: center;
     justify-content: space-between;
     border: 2px solid #e3efe4;
-    background: #fff;
-    padding: 12px 16px;
-    border-radius: 8px;
+    background: #ffffff;
+    padding: 14px 18px;
+    border-radius: 10px;
     box-shadow: 0 0 0 4px rgba(245, 251, 246, 0.6);
   }
 
   .job-left {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
 
     .job-icon {
-      width: 44px;
-      height: 44px;
+      width: 50px;
+      height: 50px;
       border-radius: 8px;
       display: flex;
       align-items: center;
@@ -181,14 +241,16 @@ Main page styles
       background: #eaf9ea;
       border: 1px solid #15803d;
       color: #15803d;
-      font-size: 20px;
+      font-size: 22px;
     }
 
     .job-title {
       font-weight: 700;
+      font-size: 16px;
     }
+
     .job-sub {
-      color: #567;
+      color: #667;
       font-size: 13px;
     }
   }
@@ -196,33 +258,62 @@ Main page styles
   .job-right {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
 
     .job-duration {
       color: #f4c01e;
       font-weight: 800;
+      font-size: 15px;
     }
+
     .details {
       border: none;
       background: transparent;
       color: #15803d;
       font-weight: 700;
       cursor: pointer;
+      font-size: 14px;
     }
   }
 }
 
-/* Responsive */
+/* ========================================================================
+   Responsive
+========================================================================= */
 @media (max-width: 900px) {
   .info-row {
     grid-template-columns: 1fr;
   }
+
   .search-bar input {
     width: 100%;
     max-width: 100%;
   }
+
   .hero .hero-actions {
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
+  }
+  .floating-chat {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    z-index: 9999;
+  }
+
+  /* Bulle jaune avec texte */
+  .chat-text {
+    background: #f4c01e;
+    color: white;
+    font-weight: 700;
+    font-size: 16px;
+    padding: 12px 28px;
+    border-radius: 40px;
+    text-align: center;
+    white-space: nowrap;
   }
 }

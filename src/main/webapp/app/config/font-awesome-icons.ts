@@ -41,6 +41,9 @@ import {
   faBookOpen,
   faVial,
   faGraduationCap,
+  faRobot,
+  faLaptopCode,
+
   // jhipster-needle-add-icon-import
 } from '@fortawesome/free-solid-svg-icons';
 
@@ -87,5 +90,7 @@ export const fontAwesomeIcons = [
   faBookOpen,
   faVial,
   faGraduationCap,
+  faRobot,
+  faLaptopCode,
   // jhipster-needle-add-icon-import
 ];

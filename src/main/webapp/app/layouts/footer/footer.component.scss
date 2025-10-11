@@ -1,0 +1,74 @@
+.custom-footer {
+  background: #ffffff;
+  padding: 40px 80px;
+  border-top: 1px solid #ddd;
+  color: #000;
+  font-family: Arial, sans-serif;
+}
+
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.footer-section {
+  width: 30%;
+  min-width: 250px;
+}
+
+.footer-section h3 {
+  color: #15803d; /* vert */
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 15px;
+  position: relative;
+}
+
+.footer-section h3::after {
+  content: '';
+  display: block;
+  width: 50px;
+  height: 3px;
+  background: #f4c01e; /* jaune */
+  margin-top: 3px;
+}
+
+.footer-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-list li {
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer-list.links li {
+  cursor: pointer;
+}
+
+.footer-list.links li:hover {
+  color: #15803d;
+  text-decoration: underline;
+}
+
+/* Icônes réseaux sociaux */
+.social-icons {
+  display: flex;
+  gap: 12px;
+}
+
+.social-icons fa-icon {
+  font-size: 20px;
+  cursor: pointer;
+  color: #15803d;
+}
+
+.social-icons fa-icon:hover {
+  transform: scale(1.1);
+}

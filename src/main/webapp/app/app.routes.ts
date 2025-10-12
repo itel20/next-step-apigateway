@@ -5,12 +5,17 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access.service'
 import { errorRoute } from './layouts/error/error.route';
 
 import { loadEntityRoutes } from './core/microfrontend';
+import ChatbotPageComponent from './chatbot-page/chatbot-page.component';
 
 const routes: Routes = [
   {
     path: '',
     loadComponent: () => import('./home/home.component'),
     title: 'home.title',
+  },
+  {
+    path: 'chatbot',
+    component: ChatbotPageComponent,
   },
   {
     path: '',

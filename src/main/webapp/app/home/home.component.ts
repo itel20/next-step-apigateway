@@ -1,6 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import SharedModule from 'app/shared/shared.module';
 import { LoginService } from 'app/login/login.service';
@@ -16,9 +17,8 @@ import { faLaptopCode, faPencilAlt, faTasks } from '@fortawesome/free-solid-svg-
   imports: [SharedModule, RouterModule, FormsModule],
 })
 export default class HomeComponent implements OnInit {
+  // ✅ Les propriétés avant le constructor
   account = signal<Account | null>(null);
-
-  // ✅ Pas besoin de ": string"
   searchQuery = '';
 
   jobs = [
@@ -30,6 +30,8 @@ export default class HomeComponent implements OnInit {
   private readonly accountService = inject(AccountService);
   private readonly loginService = inject(LoginService);
 
+  constructor(private router: Router) {}
+
   ngOnInit(): void {
     this.accountService.identity().subscribe(account => this.account.set(account));
   }
@@ -38,25 +40,28 @@ export default class HomeComponent implements OnInit {
     this.loginService.login();
   }
 
-  // ✅ Suppression des console.log
+  goToChatbotPage(): void {
+    this.router.navigate(['/chatbot']);
+  }
+
   onSearch(): void {
-    // TODO: implémenter la recherche
+    // TODO: implémentation future
   }
 
   startOrientation(): void {
-    // TODO: implémenter l’orientation
+    // TODO: implémentation future
   }
 
   doTest(): void {
-    // TODO: implémenter le test
+    // TODO: implémentation future
   }
 
   discover(): void {
-    // TODO: implémenter la découverte
+    // TODO: implémentation future
   }
 
   viewDetails(job: any): void {
-    // TODO: afficher les détails du job
+    // TODO: implémentation future
   }
 
   filteredJobs(): any[] {

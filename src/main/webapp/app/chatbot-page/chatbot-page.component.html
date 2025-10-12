@@ -2,8 +2,7 @@
   <div class="chat-window">
     <!-- Logo centré -->
     <div class="chat-logo">
-      <img src="content/images/image%2010.png" alt="Next Step Sénégal" />
-      <p>Next Step Senegal</p>
+      <img src="content/images/image%2011.png" alt="Next Step Sénégal" />
     </div>
 
     <!-- Zone de chat vide pour l’instant -->
@@ -15,17 +14,17 @@
     <div class="menu-wrapper">
       <!-- Bouton principal -->
       <button class="menu-toggle" (click)="toggleMenu()">
-        <fa-icon [icon]="isMenuOpen ? 'times' : 'plus'"></fa-icon>
+        <fa-icon [icon]="isMenuOpen ? faTimes : faPlus"></fa-icon>
       </button>
 
       <!-- Sous-menus -->
       <div class="submenu" [class.open]="isMenuOpen">
         <button class="submenu-item" (click)="addPhoto()">
-          <fa-icon icon="camera"></fa-icon>
+          <fa-icon [icon]="faCamera"></fa-icon>
           <span>Photo</span>
         </button>
         <button class="submenu-item" (click)="addDocument()">
-          <fa-icon icon="file"></fa-icon>
+          <fa-icon [icon]="faFile"></fa-icon>
           <span>Document</span>
         </button>
       </div>
@@ -36,7 +35,7 @@
 
     <!-- Bouton envoyer -->
     <button class="send-btn">
-      <fa-icon icon="paper-plane"></fa-icon>
+      <fa-icon [icon]="faPaperPlane"></fa-icon>
     </button>
   </div>
 </div>

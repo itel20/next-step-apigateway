@@ -1,32 +1,33 @@
 import { Component } from '@angular/core';
-import { FaIconComponent } from '@fortawesome/angular-fontawesome';
-import { faPlus, faTimes, faImage, faFileAlt } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faPlus, faTimes, faCamera, faFile, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'jhi-chatbot-page',
   standalone: true,
-  imports: [FaIconComponent], // ✅ Nécessaire pour utiliser <fa-icon>
+  imports: [FontAwesomeModule], // ✅ Nécessaire pour <fa-icon>
   templateUrl: './chatbot-page.component.html',
   styleUrl: './chatbot-page.component.scss',
 })
-export class ChatbotPageComponent {
+export default class ChatbotPageComponent {
   isMenuOpen = false;
 
-  // ✅ Icônes utilisées dans le HTML
+  // ✅ Icônes accessibles dans le template
   faPlus = faPlus;
   faTimes = faTimes;
-  faImage = faImage;
-  faFileAlt = faFileAlt;
+  faCamera = faCamera;
+  faFile = faFile;
+  faPaperPlane = faPaperPlane;
 
-  toggleMenu() {
+  toggleMenu(): void {
     this.isMenuOpen = !this.isMenuOpen;
   }
 
-  addPhoto() {
-    console.log('Ajouter une photo');
+  addPhoto(): void {
+    // Action à implémenter plus tard
   }
 
-  addDocument() {
-    console.log('Ajouter un document');
+  addDocument(): void {
+    // Action à implémenter plus tard
   }
 }

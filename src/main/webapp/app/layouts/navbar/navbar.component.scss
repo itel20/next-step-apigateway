@@ -21,11 +21,8 @@ Navbar (FIXE)
 }
 
 /* Pour que le contenu ne passe PAS sous la navbar */
-body,
-main,
-.app-container,
-router-outlet {
-  padding-top: 100px; /* ✅ Ajuste selon la hauteur du logo */
+#app-view-container {
+  padding-top: 100px !important; /* correspond à la navbar height */
 }
 
 /* Logo */

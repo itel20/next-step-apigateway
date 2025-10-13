@@ -6,6 +6,7 @@ import { errorRoute } from './layouts/error/error.route';
 
 import { loadEntityRoutes } from './core/microfrontend';
 import ChatbotPageComponent from './chatbot-page/chatbot-page.component';
+import { TestOrientationComponent } from './test-orientation/test-orientation.component';
 
 const routes: Routes = [
   {
@@ -13,6 +14,11 @@ const routes: Routes = [
     loadComponent: () => import('./home/home.component'),
     title: 'home.title',
   },
+  {
+    path: 'test-orientation',
+    loadComponent: () => import('./test-orientation/test-orientation.component').then(m => m.TestOrientationComponent),
+  },
+
   {
     path: 'chatbot',
     component: ChatbotPageComponent,

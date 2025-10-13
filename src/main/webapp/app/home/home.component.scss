@@ -16,41 +16,53 @@
 }
 
 /* Widget flottant chatbot */
+/* Taille initiale du widget */
 .chatbot-widget {
   position: fixed;
-  top: 80px; /* ↓ Descendu */
-  right: 20px; /* léger recul */
+  bottom: 30px;
+  right: 30px;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 6px;
-  z-index: 9999;
+  gap: 10px;
+  transition: all 0.4s ease;
 }
 
 .chatbot-message {
-  background-color: #f4c01e;
-  color: white;
-  font-weight: 600;
-  font-size: 14px; /* taille réduite */
-  padding: 10px 18px; /* réduit */
-  border-radius: 40px;
-  text-align: center;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background: white;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 14px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
+/* Icône initiale */
 .chatbot-icon {
-  width: 60px; /* réduit */
-  height: 60px; /* réduit */
+  width: 55px;
+  height: 55px;
   border-radius: 50%;
-  background: white;
-  border: 2px solid #f4c01e; /* bord un peu plus fin */
+  border: none;
+  background: linear-gradient(90deg, #1e7d32, #c9a800);
+  font-size: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-size: 26px; /* icône réduite */
-  color: #15803d;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  transition: all 0.4s ease;
+}
+
+/* ✅ Après 5 minutes → bouton réduit */
+.chatbot-widget.shrink .chatbot-icon {
+  width: 40px;
+  height: 40px;
+  font-size: 18px;
+}
+
+/* ✅ Le message disparaît après rétrécissement */
+.chatbot-widget.shrink .chatbot-message {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.9);
 }
 
 /* ========================================================================

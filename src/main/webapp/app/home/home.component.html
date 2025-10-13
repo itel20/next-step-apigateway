@@ -8,7 +8,7 @@
   </div>
 
   <!-- Bouton flottant chatbot -->
-  <div class="chatbot-widget">
+  <div class="chatbot-widget" [class.shrink]="isShrunk">
     <div class="chatbot-message">Prêt à découvrir ton avenir ?</div>
     <button class="chatbot-icon" (click)="goToChatbotPage()">
       <fa-icon [icon]="'robot'"></fa-icon>

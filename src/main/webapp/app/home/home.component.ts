@@ -27,6 +27,8 @@ export default class HomeComponent implements OnInit {
     { id: 3, title: 'Chef de projet', description: 'Méthodologie Agile / Scrum', icon: faTasks },
   ];
 
+  isShrunk = false;
+
   private readonly accountService = inject(AccountService);
   private readonly loginService = inject(LoginService);
 
@@ -34,6 +36,9 @@ export default class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.accountService.identity().subscribe(account => this.account.set(account));
+    setTimeout(() => {
+      this.isShrunk = true;
+    }, 5 * 1000);
   }
 
   login(): void {

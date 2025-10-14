@@ -1,0 +1,25 @@
+<div class="login-container">
+  <img src="assets/images/logo-nextstep.png" alt="Next Step Logo" class="logo" />
+
+  <h2>Bienvenue sur Next step</h2>
+  <p>Connecte-toi pour découvrir ton avenir !</p>
+
+  <form (ngSubmit)="onSubmit()" [formGroup]="loginForm">
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" formControlName="email" placeholder="Email" />
+    </div>
+
+    <div class="form-group">
+      <label>Mot de passe</label>
+      <input type="password" formControlName="password" placeholder="Mot de passe" />
+      <small class="forgot-password">Mot de passe oublié ?</small>
+    </div>
+
+    <button type="submit" [disabled]="loginForm.invalid" class="login-btn">Se connecter</button>
+  </form>
+
+  <p class="signup-text">
+    Pas encore de compte ? <a routerLink="/register"><strong>S’inscrire</strong></a>
+  </p>
+</div>

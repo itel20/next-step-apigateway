@@ -233,4 +233,26 @@ angular-cli removes postcss-rtl processed inline css, processed rules must be ad
     }
   }
 }
+
+/*
+.main-content{
+  min-height: 30vw;
+}
+*/
+.container-fluid {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+}
+/* Décalage global du contenu sous la navbar fixe */
+.app-content {
+  padding-top: 90px; /* même hauteur que la navbar */
+}
+
+/* Option mobile si la navbar devient plus haute */
+@media (max-width: 768px) {
+  .app-content {
+    padding-top: 120px;
+  }
+}
+
 /* jhipster-needle-scss-add-main JHipster will add new css style */

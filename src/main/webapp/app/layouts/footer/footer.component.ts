@@ -9,4 +9,6 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
   styleUrls: ['./footer.component.scss'],
   imports: [TranslateDirective, FaIconComponent],
 })
-export default class FooterComponent {}
+export default class FooterComponent {
+  currentYear: number = new Date().getFullYear();
+}

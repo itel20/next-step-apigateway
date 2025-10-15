@@ -1,9 +1,17 @@
 <jhi-page-ribbon></jhi-page-ribbon>
 
-<jhi-navbar></jhi-navbar>
+<!-- ✅ Navbar FIXE placée hors du flux -->
+<router-outlet name="navbar"></router-outlet>
 
-<div id="app-view-container">
-  <router-outlet></router-outlet>
+<!-- ✅ Conteneur principal décalé sous la navbar -->
+<div class="app-content">
+  <router-outlet name="breadCrumb"></router-outlet>
+
+  <div class="container-fluid">
+    <div class="card jh-card">
+      <router-outlet></router-outlet>
+    </div>
+
+    <jhi-footer *ngIf="!isChatbotPage"></jhi-footer>
+  </div>
 </div>
-
-<jhi-footer></jhi-footer>

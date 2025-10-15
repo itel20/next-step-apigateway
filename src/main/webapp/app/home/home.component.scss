@@ -3,16 +3,16 @@
 ========================================================================= */
 :host {
   display: block;
-  margin-top: 90px; /* ou 100px selon la hauteur de ton navbar */
+  margin-top: 0 !important;
 }
 
 .homepage {
   max-width: 100%;
   margin: 0 auto;
-  padding: 50px;
-  color: #1d4830; // Texte sombre lisible
+  padding: 0 90px 40px 90px; // haut = 0, côtés = 90px, bas = 40px
+  color: #1d4830;
   font-family: 'Helvetica Neue', Arial, sans-serif;
-  background: #f4fff5; // Fond général doux
+  background: #f4fff5;
 }
 
 /* Widget flottant chatbot */
@@ -214,6 +214,10 @@
 ========================================================================= */
 .jobs-section {
   margin-bottom: 40px;
+  min-height: 400px; /* ✅ garde la section stable même si vide */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 
   h3 {
     color: #15803d;
@@ -266,7 +270,13 @@
       font-size: 13px;
     }
   }
-
+  .no-jobs {
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    color: #667;
+    padding: 40px 0;
+  }
   .job-right {
     display: flex;
     align-items: center;

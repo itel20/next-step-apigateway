@@ -1,39 +1,54 @@
+/* ✅ Conteneur principal sans scroll inutile */
 .chatbot-container {
-  position: relative;
-  height: 100vh;
+  position: fixed;
+  min-height: 100vh !important;
   background: #f1fbf4;
   display: flex;
   flex-direction: column;
+  overflow: hidden !important;
 }
 
+/* ✅ Zone de chat sans carte ni bordure */
 .chat-window {
   flex: 1;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
 }
 
+/* ✅ Logo sans cadre, ni fond, ni ombre */
 .chat-logo {
-  text-align: center;
-
-  img {
-    width: 140px;
-    height: auto;
-  }
-
-  p {
-    margin-top: 5px;
-    font-weight: bold;
-    color: #2f4f2f;
-  }
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+.chat-logo img {
+  width: 140px;
+  height: auto;
+  display: block;
+  border: none !important;
+  box-shadow: none !important;
+  background: none !important;
 }
 
+/* ✅ Texte propre */
+p {
+  margin-top: 700px;
+  font-weight: bold;
+  color: #2f4f2f;
+}
+
+/* ✅ Zone des messages */
 .chat-content {
   flex: 1;
   width: 100%;
 }
 
+/* ✅ Footer flottant centré */
 .chat-footer {
   display: flex;
   align-items: center;
@@ -48,6 +63,7 @@
   width: 60%;
 }
 
+/* ✅ Menu flottant */
 .menu-wrapper {
   position: relative;
 }
@@ -102,6 +118,7 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
+/* ✅ Champ de saisie */
 .chat-input {
   flex: 1;
   max-width: 50vw;
@@ -111,6 +128,7 @@
   font-size: 14px;
 }
 
+/* ✅ Bouton envoyer */
 .send-btn {
   width: 45px;
   height: 35px;

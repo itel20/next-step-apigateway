@@ -68,6 +68,10 @@
     <h3>Découvre des métiers</h3>
 
     <div class="job-cards">
+      <!-- ✅ Affichage si aucun résultat -->
+      <div *ngIf="filteredJobs().length === 0" class="no-jobs">Aucun métier disponible pour le moment.</div>
+
+      <!-- ✅ Liste des métiers -->
       <div class="job-card" *ngFor="let job of filteredJobs()">
         <div class="job-left">
           <div class="job-icon">

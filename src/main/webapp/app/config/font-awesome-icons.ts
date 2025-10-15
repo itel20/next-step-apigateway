@@ -1,3 +1,4 @@
+// ✅ 1) Icônes "SOLID"
 import {
   faArrowLeft,
   faAsterisk,
@@ -46,9 +47,11 @@ import {
   faCamera,
   faFileAlt,
   faPaperPlane,
-
   // jhipster-needle-add-icon-import
 } from '@fortawesome/free-solid-svg-icons';
+
+// ✅ 2) Icônes "BRANDS"
+import { faFacebook, faInstagram, faLinkedin, faYoutube, faTwitter } from '@fortawesome/free-brands-svg-icons';
 
 export const fontAwesomeIcons = [
   faArrowLeft,
@@ -98,5 +101,13 @@ export const fontAwesomeIcons = [
   faCamera,
   faFileAlt,
   faPaperPlane,
+
+  // ✅ Ajout ici
+  faFacebook,
+  faInstagram,
+  faLinkedin,
+  faYoutube,
+  faTwitter,
+
   // jhipster-needle-add-icon-import
 ];

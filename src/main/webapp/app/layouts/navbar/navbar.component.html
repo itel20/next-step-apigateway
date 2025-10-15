@@ -1,7 +1,7 @@
 <nav class="custom-navbar" data-cy="navbar">
   <!-- Logo -->
   <div class="navbar-logo">
-    <img src="content/images/image%2010.png" alt="Logo" />
+    <img src="content/images/image%2011.png" alt="Logo" />
   </div>
 
   <!-- Menu central -->
@@ -13,8 +13,8 @@
     <li><a class="menu-item" routerLink="/actus" routerLinkActive="active" (click)="collapseNavbar()">Actus & Événements</a></li>
   </ul>
 
-  <!-- Icône Compte + Nom utilisateur -->
-  <li
+  <!-- Profil (placé correctement dans un conteneur à part) -->
+  <div
     ngbDropdown
     class="nav-item dropdown pointer navbar-profile"
     display="dynamic"
@@ -27,7 +27,6 @@
     </a>
 
     <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="account-menu">
-      <!-- Utilisateur connecté -->
       <ng-container *ngIf="account() !== null; else notLogged">
         <li>
           <a class="dropdown-item" (click)="logout()" id="logout" data-cy="logout">
@@ -37,7 +36,6 @@
         </li>
       </ng-container>
 
-      <!-- Utilisateur NON connecté -->
       <ng-template #notLogged>
         <li>
           <a class="dropdown-item" (click)="login()" id="login" data-cy="login">
@@ -47,5 +45,5 @@
         </li>
       </ng-template>
     </ul>
-  </li>
+  </div>
 </nav>

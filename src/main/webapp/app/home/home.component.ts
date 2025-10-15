@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, AfterViewInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -13,15 +13,18 @@ import { faLaptopCode, faPencilAlt, faTasks } from '@fortawesome/free-solid-svg-
   standalone: true,
   selector: 'jhi-home',
   templateUrl: './home.component.html',
-  styleUrl: './home.component.scss',
+  styleUrls: ['./home.component.scss'],
+
+  // styleUrl: './home.component.scss',
   imports: [SharedModule, RouterModule, FormsModule],
 })
-export default class HomeComponent implements OnInit {
+export default class HomeComponent implements OnInit, AfterViewInit {
   // ✅ Les propriétés avant le constructor
   account = signal<Account | null>(null);
   searchQuery = '';
 
   jobs = [
+    { id: 1, title: 'Développeur Web', description: 'Angular / Spring Boot', icon: faLaptopCode },
     { id: 1, title: 'Développeur Web', description: 'Angular / Spring Boot', icon: faLaptopCode },
     { id: 2, title: 'Designer UX/UI', description: 'Figma / Adobe XD', icon: faPencilAlt },
     { id: 3, title: 'Chef de projet', description: 'Méthodologie Agile / Scrum', icon: faTasks },
@@ -75,5 +78,14 @@ export default class HomeComponent implements OnInit {
     }
 
     return this.jobs.filter(job => job.title.toLowerCase().includes(this.searchQuery.toLowerCase()));
+  }
+  ngAfterViewInit(): void {
+    const input = document.querySelector('.search-bar input');
+    if (input) {
+      input.addEventListener('focus', event => {
+        event.preventDefault();
+        window.scrollTo(0, 0);
+      });
+    }
   }
 }

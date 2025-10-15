@@ -2,35 +2,37 @@
 @import 'bootstrap/scss/variables';
 
 /* ==========================================================================
-Navbar (FIXE)
+   Navbar FIXE
 ========================================================================== */
-
 .custom-navbar {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 1000;
+  z-index: 1100;
+  height: 90px;
+  background: #f7fdf6;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #f7fdf6;
   padding: 10px 20px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
-  height: 90px;
 }
 
-/* Pour que le contenu ne passe PAS sous la navbar */
-#app-view-container {
-  padding-top: 100px !important; /* correspond à la navbar height */
+/* ✅ Appliquer l'espace sous la navbar au reste du contenu */
+#app-view-container,
+.container-fluid,
+main,
+.router-outlet {
+  padding-top: 90px;
 }
 
 /* Logo */
 .navbar-logo img {
-  height: 200px;
+  height: 90px;
 }
 
-/* Menu centré */
+/* Menu */
 .navbar-menu {
   list-style: none;
   display: flex;
@@ -51,6 +53,19 @@ Navbar (FIXE)
   text-decoration: none;
   display: inline-block;
 }
+
+.menu-item:hover {
+  color: #f4c01e;
+  font-weight: 700;
+}
+
+.menu-item.active {
+  color: #f4c01e;
+  font-weight: 700;
+  border-color: #f4c01e;
+}
+
+/* Profil utilisateur */
 .user-display {
   display: flex;
   align-items: center;
@@ -64,20 +79,6 @@ Navbar (FIXE)
   cursor: pointer;
 }
 
-/* Survol : GOLD + GRAS */
-.menu-item:hover {
-  color: #f4c01e;
-  font-weight: 700;
-}
-
-/* Onglet actif (cliqué) : GOLD + GRAS */
-.menu-item.active {
-  color: #f4c01e;
-  font-weight: 700;
-  border-color: #f4c01e;
-}
-
-/* Profil */
 .navbar-profile fa-icon,
 .navbar-profile img {
   font-size: 28px;
@@ -89,4 +90,70 @@ Navbar (FIXE)
 
 .navbar-profile .nav-link {
   padding: 0;
+}
+
+/* ==========================================================================
+   RESPONSIVE : TABLETTES (≤ 992px)
+========================================================================== */
+@media (max-width: 992px) {
+  .custom-navbar {
+    flex-wrap: wrap;
+    height: auto;
+    padding: 10px 15px;
+  }
+
+  #app-view-container,
+  .container-fluid,
+  main,
+  .router-outlet {
+    padding-top: 110px; /* si la navbar prend + de place */
+  }
+
+  .navbar-logo img {
+    height: 70px;
+  }
+
+  .navbar-menu {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .navbar-profile {
+    margin-top: 10px;
+  }
+}
+
+/* ==========================================================================
+   RESPONSIVE : MOBILES (≤ 576px)
+========================================================================== */
+@media (max-width: 576px) {
+  .custom-navbar {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  #app-view-container,
+  .container-fluid,
+  main,
+  .router-outlet {
+    padding-top: 130px;
+  }
+
+  .navbar-menu {
+    flex-direction: column;
+    width: 100%;
+    gap: 12px;
+    margin: 10px 0;
+    align-items: center;
+  }
+
+  .menu-item {
+    width: 100%;
+    text-align: center;
+  }
+
+  .navbar-profile {
+    margin-top: 10px;
+  }
 }

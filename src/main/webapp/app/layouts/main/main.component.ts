@@ -7,24 +7,23 @@ import { AccountService } from 'app/core/auth/account.service';
 import { AppPageTitleStrategy } from 'app/app-page-title-strategy';
 import FooterComponent from '../footer/footer.component';
 import PageRibbonComponent from '../profiles/page-ribbon.component';
-import NavbarComponent from 'app/layouts/navbar/navbar.component';
 
 @Component({
   standalone: true,
   selector: 'jhi-main',
   templateUrl: './main.component.html',
-  styleUrls: ['./main.component.scss'],
+  styleUrl: './main.component.scss',
   providers: [AppPageTitleStrategy],
-  imports: [RouterOutlet, NavbarComponent, FooterComponent, PageRibbonComponent],
+  imports: [RouterOutlet, FooterComponent, PageRibbonComponent],
 })
 export default class MainComponent implements OnInit {
-  private readonly renderer: Renderer2;
+  private renderer: Renderer2;
 
-  private readonly router = inject(Router);
-  private readonly appPageTitleStrategy = inject(AppPageTitleStrategy);
-  private readonly accountService = inject(AccountService);
-  private readonly translateService = inject(TranslateService);
-  private readonly rootRenderer = inject(RendererFactory2);
+  private router = inject(Router);
+  private appPageTitleStrategy = inject(AppPageTitleStrategy);
+  private accountService = inject(AccountService);
+  private translateService = inject(TranslateService);
+  private rootRenderer = inject(RendererFactory2);
 
   constructor() {
     this.renderer = this.rootRenderer.createRenderer(document.querySelector('html'), null);

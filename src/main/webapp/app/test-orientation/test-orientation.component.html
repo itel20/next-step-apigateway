@@ -1,0 +1,59 @@
+<div class="orientation-page">
+  <div class="search-bar">
+    <input type="text" placeholder="Rechercher..." [(ngModel)]="searchQuery" />
+    <button class="btn-search" (click)="onSearch()">
+      <fa-icon [icon]="'search'"></fa-icon>
+    </button>
+  </div>
+  <div class="orientation-header">
+    <div class="orientation-badge">
+      <fa-icon [icon]="faBullseye" class="icon"></fa-icon>
+
+      <div class="hero">
+        <div class="hero-header">
+          <h2 class="titre">Trouve la filière qui te correspond</h2>
+        </div>
+        <p class="para">Réponds à quelques questions pour découvrir les orientations adaptées à ton profil.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="orientation-card">
+    <h4 class="soustitre">Ton parcours actuel</h4>
+    <p class="question">Dans quelle classe es-tu actuellement ?</p>
+
+    <form (ngSubmit)="onSubmit()" #classForm="ngForm">
+      <div class="options">
+        <label class="option" [class.active]="selectedClass === 'Seconde'">
+          <input type="radio" name="classe" value="Seconde" [(ngModel)]="selectedClass" />
+          <span>Seconde</span>
+        </label>
+
+        <label class="option" [class.active]="selectedClass === 'Première'">
+          <input type="radio" name="classe" value="Première" [(ngModel)]="selectedClass" />
+          <span>Première</span>
+        </label>
+
+        <label class="option" [class.active]="selectedClass === 'Terminale'">
+          <input type="radio" name="classe" value="Terminale" [(ngModel)]="selectedClass" />
+          <span>Terminale</span>
+        </label>
+
+        <label class="option" [class.active]="selectedClass === 'Autre'">
+          <input type="radio" name="classe" value="Autre" [(ngModel)]="selectedClass" />
+          <span>Autre</span>
+          <input
+            *ngIf="selectedClass === 'Autre'"
+            type="text"
+            [(ngModel)]="otherClass"
+            name="otherClass"
+            placeholder="Précise ta classe"
+            class="input-autre"
+          />
+        </label>
+      </div>
+
+      <button type="submit" class="next-btn" [disabled]="!selectedClass || (selectedClass === 'Autre' && !otherClass)">Suivant →</button>
+    </form>
+  </div>
+</div>

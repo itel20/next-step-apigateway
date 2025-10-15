@@ -3,13 +3,15 @@
 ========================================================================= */
 :host {
   display: block;
-  margin-top: 0 !important;
+  margin-top: 0; /* ou 120px */
 }
 
 .homepage {
+  margin-top: 0; // ✅ ajoute l'espace manquant
   max-width: 100%;
-  margin: 0 auto;
-  padding: 0 90px 40px 90px; // haut = 0, côtés = 90px, bas = 40px
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 90px 40px 90px;
   color: #1d4830;
   font-family: 'Helvetica Neue', Arial, sans-serif;
   background: #f4fff5;

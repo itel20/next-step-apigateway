@@ -8,6 +8,7 @@ import NavbarComponent from 'app/layouts/navbar/navbar.component';
 import { loadEntityRoutes } from './core/microfrontend';
 import ChatbotPageComponent from './chatbot-page/chatbot-page.component';
 import { TestOrientationComponent } from './test-orientation/test-orientation.component';
+import ParcoursComponent from './parcours/parcours.component';
 
 const routes: Routes = [
   {
@@ -19,6 +20,10 @@ const routes: Routes = [
     path: '',
     loadComponent: () => import('./parcours/parcours.component'),
     title: 'parcours.title',
+  },
+  {
+    path: 'parcours',
+    component: ParcoursComponent,
   },
   {
     path: 'test-orientation',

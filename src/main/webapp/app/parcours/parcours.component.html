@@ -1,0 +1,105 @@
+<div class="parcours-page">
+  <!-- Top menu (3 static buttons) -->
+  <div class="top-menu">
+    <button class="menu-btn">
+      <fa-icon [icon]="faBriefcase"></fa-icon>
+      <span>Filières &amp; Métiers</span>
+    </button>
+
+    <button class="menu-btn">
+      <fa-icon [icon]="faUniversity"></fa-icon>
+      <span>Écoles &amp; Universités</span>
+    </button>
+
+    <button class="menu-btn">
+      <fa-icon [icon]="faGraduationCap"></fa-icon>
+      <span>Bourses &amp; Concours</span>
+    </button>
+  </div>
+
+  <!-- Search bar + filter -->
+  <div class="search-filter">
+    <div class="search-input">
+      <fa-icon [icon]="faSearch" class="search-icon"></fa-icon>
+      <input
+        type="text"
+        placeholder="Rechercher une filière ou un métier..."
+        [(ngModel)]="searchQuery"
+        (keyup.enter)="onSearch()"
+        aria-label="Rechercher"
+      />
+    </div>
+
+    <div class="actions">
+      <button class="filter-btn" (click)="onFilter()">
+        <fa-icon [icon]="faFilter"></fa-icon>
+        <span>Filtre avancé</span>
+      </button>
+
+      <button class="floating-action" aria-label="Action principale">
+        <fa-icon [icon]="faBriefcase"></fa-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Cards grid -->
+  <main class="cards-grid">
+    <article class="card" *ngFor="let item of parcoursList">
+      <header class="card-top">
+        <div class="title-wrap">
+          <h3 class="title">{{ item.titre }}</h3>
+          <span class="marker">—</span>
+          <span class="categorie">{{ item.categorie }}</span>
+        </div>
+
+        <div class="card-icons">
+          <fa-icon [icon]="faHeart" class="icon-heart"></fa-icon>
+          <fa-icon [icon]="faBug" class="icon-bug"></fa-icon>
+        </div>
+      </header>
+
+      <section class="card-stats">
+        <div class="stat">
+          <div class="big">{{ item.difficulte }}</div>
+          <div class="label">Difficulté</div>
+        </div>
+
+        <div class="stat">
+          <div class="big percentage green">{{ item.emploi }}%</div>
+          <div class="label">Emploi</div>
+        </div>
+
+        <div class="stat">
+          <div class="big percentage yellow">{{ item.satisfaction }}%</div>
+          <div class="label">Satisfaction</div>
+        </div>
+      </section>
+
+      <section class="taux">
+        <div class="taux-label">Taux d'emploi</div>
+        <div class="taux-bar">
+          <div class="taux-fill" [style.width.%]="item.tauxEmploi"></div>
+        </div>
+        <div class="taux-percent">{{ item.tauxEmploi }}%</div>
+      </section>
+
+      <section class="meta">
+        <div class="meta-row">
+          <fa-icon [icon]="faDollarSign"></fa-icon>
+          <span>{{ item.salaire }}</span>
+        </div>
+        <div class="meta-row">
+          <fa-icon [icon]="faStopwatch"></fa-icon>
+          <span>{{ item.duree }}</span>
+        </div>
+      </section>
+
+      <footer class="card-footer">
+        <button class="explore-btn" (click)="openDetail(item)">
+          <fa-icon [icon]="faBars"></fa-icon>
+          <span>Explorez en Détail</span>
+        </button>
+      </footer>
+    </article>
+  </main>
+</div>

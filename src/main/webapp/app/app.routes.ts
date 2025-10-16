@@ -16,6 +16,11 @@ const routes: Routes = [
     title: 'home.title',
   },
   {
+    path: '',
+    loadComponent: () => import('./parcours/parcours.component'),
+    title: 'parcours.title',
+  },
+  {
     path: 'test-orientation',
     loadComponent: () => import('./test-orientation/test-orientation.component').then(m => m.TestOrientationComponent),
   },

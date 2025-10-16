@@ -7,6 +7,7 @@ import { AccountService } from 'app/core/auth/account.service';
 import { AppPageTitleStrategy } from 'app/app-page-title-strategy';
 import FooterComponent from '../footer/footer.component';
 import PageRibbonComponent from '../profiles/page-ribbon.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   standalone: true,
@@ -14,7 +15,7 @@ import PageRibbonComponent from '../profiles/page-ribbon.component';
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss',
   providers: [AppPageTitleStrategy],
-  imports: [RouterOutlet, FooterComponent, PageRibbonComponent],
+  imports: [RouterOutlet, CommonModule, FooterComponent, PageRibbonComponent],
 })
 export default class MainComponent implements OnInit {
   isChatbotPage = false;

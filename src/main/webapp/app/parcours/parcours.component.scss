@@ -1,0 +1,284 @@
+/* Page wrapper */
+.parcours-page {
+  background: #f1fbf4;
+  padding: 18px 28px;
+  min-height: 100vh;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+}
+
+/* Top menu */
+.top-menu {
+  display: flex;
+  gap: 12px;
+  max-width: 1200px;
+  margin: 0 auto 18px;
+  .menu-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    padding: 8px 12px;
+    background: #fff;
+    border: 1px solid rgba(30, 125, 50, 0.07);
+    border-radius: 22px;
+    color: #0f3d2e;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03);
+    &:hover {
+      transform: translateY(-1px);
+    }
+    fa-icon {
+      font-size: 16px;
+      color: #1e7d32;
+    }
+  }
+}
+
+/* Search + actions row */
+.search-filter {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 1200px;
+  margin: 14px auto 24px;
+  justify-content: space-between;
+
+  .search-input {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #fff;
+    border-radius: 8px;
+    padding: 8px 12px;
+    flex: 1;
+    border: 1px solid #e6f4ea;
+
+    .search-icon {
+      color: #6b8f76;
+    }
+    input {
+      border: 0;
+      outline: none;
+      flex: 1;
+      font-size: 14px;
+      background: transparent;
+    }
+  }
+
+  .actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    .filter-btn {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      background: #e8f5e9;
+      border: 1px solid #cfead7;
+      color: #1e7d32;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      &:hover {
+        background: #dff0df;
+      }
+      fa-icon {
+        color: #1e7d32;
+      }
+    }
+
+    .floating-action {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: linear-gradient(90deg, #1e7d32, #c9a800);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+    }
+  }
+}
+
+/* Grid of cards */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Individual card */
+.card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 18px;
+  border: 2px solid #8ad39b;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  min-height: 360px;
+}
+
+/* header row */
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  .title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    .title {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 700;
+      color: #0f3d2e;
+    }
+    .marker {
+      color: #f0c419;
+      font-weight: 700;
+      margin-left: 4px;
+    }
+    .categorie {
+      background: #1e7d32;
+      color: #fff;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      margin-left: 8px;
+    }
+  }
+  .card-icons {
+    display: flex;
+    gap: 12px;
+    fa-icon {
+      font-size: 18px;
+      color: #6b8f76;
+    }
+  }
+}
+
+/* stats row */
+.card-stats {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  .stat {
+    text-align: center;
+    .big {
+      font-size: 20px;
+      font-weight: 800;
+      color: #0f3d2e;
+    }
+    .label {
+      font-size: 12px;
+      color: #7a8f82;
+      margin-top: 6px;
+    }
+  }
+  .percentage.green {
+    color: #1e7d32;
+  }
+  .percentage.yellow {
+    color: #f0c419;
+  }
+}
+
+/* taux section */
+.taux {
+  margin-top: 18px;
+  .taux-label {
+    font-size: 13px;
+    color: #333;
+    margin-bottom: 8px;
+  }
+  .taux-bar {
+    background: #ececec;
+    height: 8px;
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+    .taux-fill {
+      background: linear-gradient(90deg, #000, #000);
+      height: 100%;
+      width: 0%;
+      transition: width 0.6s ease;
+    }
+  }
+  .taux-percent {
+    text-align: right;
+    font-size: 12px;
+    color: #666;
+    margin-top: 6px;
+  }
+}
+
+/* meta rows */
+.meta {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  .meta-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #666;
+    fa-icon {
+      color: #6b8f76;
+    }
+  }
+}
+
+/* footer */
+.card-footer {
+  margin-top: auto;
+  display: flex;
+  justify-content: center;
+  .explore-btn {
+    width: 100%;
+    max-width: 520px;
+    background: linear-gradient(90deg, #1e7d32, #1e7d32);
+    color: #fff;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-weight: 700;
+    fa-icon {
+      color: #fff;
+    }
+  }
+}
+
+/* Responsive */
+@media (max-width: 1100px) {
+  .cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 720px) {
+  .cards-grid {
+    grid-template-columns: 1fr;
+  }
+  .top-menu {
+    flex-direction: column;
+  }
+  .search-filter {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+}

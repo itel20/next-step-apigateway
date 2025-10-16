@@ -1,22 +1,33 @@
 /* --- Page entière --- */
 html,
 body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  width: 100%;
-  background-color: #f0fdf4 !important; /* priorité forcée */
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  margin: 0 !important;
+  padding: 0 !important;
+  height: 100% !important;
+  width: 100% !important;
+  background-color: #f0fdf4 !important; /* Vert clair */
   font-family: 'Segoe UI', sans-serif;
+  display: block !important; /* Empêche le centrage global */
 }
 
-/* --- Conteneur principal --- */
+/* Supprime tout fond noir résiduel sur l'élément racine */
+jhi-app,
+app-root {
+  background-color: transparent !important;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* --- Conteneur principal du loader --- */
 .custom-loader {
   text-align: center;
-  transform: translateY(-20px);
   width: 100%;
+  height: 100vh; /* plein écran */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 /* --- Logo qui tourne --- */
@@ -30,7 +41,7 @@ body {
 
 /* --- Texte en dessous du logo --- */
 .custom-loader p {
-  margin-top: 20px;
+  /*margin-top: 20px;*/
   color: #333;
   font-size: 18px;
   font-weight: 500;

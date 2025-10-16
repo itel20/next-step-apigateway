@@ -1,5 +1,5 @@
 import { Component, OnInit, Renderer2, RendererFactory2, inject } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import dayjs from 'dayjs/esm';
 
@@ -18,7 +18,7 @@ import { CommonModule } from '@angular/common';
   imports: [RouterOutlet, FooterComponent, PageRibbonComponent, FormsModule, CommonModule],
 })
 export default class MainComponent implements OnInit {
-  [x: string]: any;
+  isChatbotPage = false;
   private renderer: Renderer2;
 
   private router = inject(Router);
@@ -39,6 +39,12 @@ export default class MainComponent implements OnInit {
       this.appPageTitleStrategy.updateTitle(this.router.routerState.snapshot);
       dayjs.locale(langChangeEvent.lang);
       this.renderer.setAttribute(document.querySelector('html'), 'lang', langChangeEvent.lang);
+    });
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        // ✅ Mets ici l'URL EXACTE du chatbot
+        this.isChatbotPage = event.urlAfterRedirects.includes('/chatbot');
+      }
     });
   }
 }

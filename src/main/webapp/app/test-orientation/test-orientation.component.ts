@@ -3,19 +3,21 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBullseye } from '@fortawesome/free-solid-svg-icons';
-import { faLaptopCode, faPencilAlt, faTasks } from '@fortawesome/free-solid-svg-icons';
+import Swal from 'sweetalert2';
+
 @Component({
   selector: 'jhi-test-orientation',
   standalone: true,
   imports: [CommonModule, FormsModule, FontAwesomeModule],
   templateUrl: './test-orientation.component.html',
-  styleUrl: './test-orientation.component.scss',
+  styleUrls: ['./test-orientation.component.scss'],
 })
 export class TestOrientationComponent {
   selectedClass = '';
   otherClass = '';
   searchQuery = '';
   faBullseye = faBullseye;
+
   step = 1;
   maxStep = 6;
 
@@ -128,16 +130,54 @@ export class TestOrientationComponent {
   // ✅ Étape 6 — Résumé
   answers: any = {};
 
-  nextStep(): void {
-    if (this.step < this.maxStep) {
-      this.step++;
-    } else {
-      alert('Merci pour tes réponses ! Ton profil sera généré prochainement.');
+  async nextStep(): Promise<void> {
+    if (this.isStepValid()) {
+      if (this.step < this.maxStep) {
+        this.step++;
+      } else {
+        const SwalModule = await import('sweetalert2');
+        SwalModule.default.fire({
+          title: 'Merci !',
+          text: 'Ton profil sera généré prochainement.',
+          icon: 'success',
+          confirmButtonText: 'OK',
+        });
+      }
     }
   }
 
   prevStep(): void {
     if (this.step > 1) this.step--;
+  }
+
+  /** Vérifie si toutes les questions de l’étape courante ont été remplies */
+  isStepValid(): boolean {
+    let questions: any[] = [];
+    switch (this.step) {
+      case 1:
+        questions = this.parcoursQuestions;
+        break;
+      case 2:
+        questions = this.passionsQuestions;
+        break;
+      case 3:
+        questions = this.comportementQuestions;
+        break;
+      case 4:
+        questions = this.aspirationsQuestions;
+        break;
+      case 5:
+        questions = this.aptitudesQuestions[0].subQuestions;
+        break;
+    }
+
+    return questions.every(q => {
+      const answer = this.answers[q.model];
+      // Si c’est un tableau (multi-sélection)
+      if (Array.isArray(answer)) return answer.length > 0;
+      // Si c’est une valeur simple (note, choix unique)
+      return answer !== undefined && answer !== null && answer !== '';
+    });
   }
 
   onSubmit(): void {
@@ -159,6 +199,23 @@ export class TestOrientationComponent {
     } else {
       // Retirer la valeur si décochée
       this.answers[model] = this.answers[model].filter((v: string) => v !== value);
+    }
+  }
+  // Sélection unique
+  selectOption(model: string, value: any): void {
+    this.answers[model] = value;
+  }
+
+  // Sélection multiple (cases à cocher stylisées)
+  toggleOption(model: string, value: any): void {
+    if (!this.answers[model]) {
+      this.answers[model] = [];
+    }
+    const index = this.answers[model].indexOf(value);
+    if (index > -1) {
+      this.answers[model].splice(index, 1);
+    } else {
+      this.answers[model].push(value);
     }
   }
 }

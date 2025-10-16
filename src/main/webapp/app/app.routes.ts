@@ -19,6 +19,10 @@ const routes: Routes = [
     path: 'test-orientation',
     loadComponent: () => import('./test-orientation/test-orientation.component').then(m => m.TestOrientationComponent),
   },
+  {
+    path: 'actus',
+    loadComponent: () => import('./actus/actus.component').then(m => m.ActusComponent),
+  },
 
   {
     path: '',

@@ -1,0 +1,45 @@
+<div class="actus-container">
+  <!-- Actualités / Évènements -->
+  <div class="actus-left">
+    <h2>Actualités</h2>
+    <div *ngFor="let a of actusEvents" class="actu-card">
+      <h3>{{ a.title }}</h3>
+      <p>{{ a.description }}</p>
+    </div>
+  </div>
+
+  <!-- Droite : Sujets et Témoignages -->
+  <div class="actus-right">
+    <!-- Sujets et interactions -->
+    <div class="topics-section">
+      <h2>Sujets et interactions</h2>
+      <div *ngFor="let t of topics" class="topic-card">
+        <b>Sujet :</b> {{ t.subject }}
+        <p>
+          <b>{{ t.user }} :</b> "{{ t.comment }}"
+        </p>
+        <div class="topic-footer">
+          <span>👍 {{ t.likes }}</span> - <span>💬 {{ t.responses }}</span>
+          <span *ngIf="t.certified" class="certified">✅ Conseiller certifié</span>
+        </div>
+      </div>
+      <button class="btn-light-gray">Vos questions...</button>
+    </div>
+
+    <!-- Témoignages -->
+    <div class="testimonials-section">
+      <h2>Témoignages de Bacheliers</h2>
+      <div *ngFor="let t of testimonials" class="testimonial-card">
+        <p>"{{ t.quote }}"</p>
+        <small>{{ t.name }} - {{ t.age }} ans - {{ t.school }}</small>
+        <div class="testimonial-footer">
+          <span>👍 {{ t.likes }}</span> - <span>💬 {{ t.comments }}</span>
+        </div>
+      </div>
+      <div class="testimonial-buttons">
+        <button class="btn-yellow">Partager un témoignage</button>
+        <button class="btn-yellow" (click)="loadMoreTestimonials()">Voir plus</button>
+      </div>
+    </div>
+  </div>
+</div>

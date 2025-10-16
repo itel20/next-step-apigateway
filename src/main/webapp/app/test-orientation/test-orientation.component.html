@@ -1,10 +1,4 @@
 <div class="orientation-page">
-  <div class="search-bar">
-    <input type="text" placeholder="Rechercher..." [(ngModel)]="searchQuery" />
-    <button class="btn-search" (click)="onSearch()">
-      <fa-icon [icon]="'search'"></fa-icon>
-    </button>
-  </div>
   <div class="orientation-header">
     <div class="orientation-badge">
       <fa-icon [icon]="faBullseye" class="icon"></fa-icon>
@@ -20,8 +14,8 @@
     </div>
   </div>
   <div class="progress-container">
-    <div class="progress-bar" [style.width.%]="(step / maxStep) * 100">
-      <span class="progress-text">{{ (step / maxStep) * 100 | number: '1.0-0' }}%</span>
+    <div class="progress-bar" [style.width.%]="((step - 1) / maxStep) * 100">
+      <span class="progress-text">{{ ((step - 1) / maxStep) * 100 | number: '1.0-0' }}%</span>
     </div>
   </div>
 

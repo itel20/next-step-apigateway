@@ -44,8 +44,8 @@ main,
 /* Boutons */
 .menu-item {
   background: #ffffff;
-  border: 2px solid #f4c01e;
-  color: #15803d;
+  border: 2px solid #f4c01e; /* or doré */
+  color: #15803d; /* texte vert */
   border-radius: 18px;
   padding: 6px 18px;
   font-weight: 600;
@@ -55,17 +55,18 @@ main,
 }
 
 .menu-item:hover {
+  background: #15803d;
+  border-color: #f4c01e;
   color: #f4c01e;
-  font-weight: 700;
 }
 
 .menu-item.active {
+  background: #15803d;
+  border-color: #f4c01e;
   color: #f4c01e;
   font-weight: 700;
-  border-color: #f4c01e;
 }
 
-/* Profil utilisateur */
 .user-display {
   display: flex;
   align-items: center;

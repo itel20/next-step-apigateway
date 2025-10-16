@@ -14,6 +14,7 @@ import {
   faDollarSign,
   faStopwatch,
   faBars,
+  faHeart,
 } from '@fortawesome/free-solid-svg-icons';
 
 interface Parcours {
@@ -46,6 +47,7 @@ export default class ParcoursComponent {
   faDollarSign = faDollarSign;
   faStopwatch = faStopwatch;
   faBars = faBars;
+  faHeart = faHeart;
 
   searchQuery = '';
 
@@ -130,6 +132,7 @@ export default class ParcoursComponent {
       faDollarSign,
       faStopwatch,
       faBars,
+      faHeart,
     );
   }
 

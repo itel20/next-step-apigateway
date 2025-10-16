@@ -1,23 +1,16 @@
 <div class="chatbot-container">
   <div class="chat-window">
-    <!-- Logo centré -->
     <div class="chat-logo">
-      <img src="content/images/image%2011.png" alt="Next Step Sénégal" />
+      <img src="content/images/image 11.png" alt="Next Step Sénégal" />
     </div>
-
-    <!-- Zone de chat vide pour l’instant -->
-    <div class="chat-content"></div>
   </div>
 
-  <!-- Bloc bas (barre + bouton + menus) -->
   <div class="chat-footer">
     <div class="menu-wrapper">
-      <!-- Bouton principal -->
       <button class="menu-toggle" (click)="toggleMenu()">
         <fa-icon [icon]="isMenuOpen ? faTimes : faPlus"></fa-icon>
       </button>
 
-      <!-- Sous-menus -->
       <div class="submenu" [class.open]="isMenuOpen">
         <button class="submenu-item" (click)="addPhoto()">
           <fa-icon [icon]="faCamera"></fa-icon>
@@ -30,10 +23,8 @@
       </div>
     </div>
 
-    <!-- Barre de saisie -->
     <input type="text" placeholder="Poser votre question..." class="chat-input" />
 
-    <!-- Bouton envoyer -->
     <button class="send-btn">
       <fa-icon [icon]="faPaperPlane"></fa-icon>
     </button>

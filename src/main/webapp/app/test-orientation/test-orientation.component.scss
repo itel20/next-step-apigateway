@@ -175,3 +175,33 @@
   align-items: center;
   gap: 0.5rem; /* espace entre l’icône et le titre */
 }
+.aptitudes-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+
+  th,
+  td {
+    border: 1px solid #ddd;
+    text-align: center;
+    padding: 0.5rem;
+  }
+
+  th {
+    background: #f0f0f0;
+  }
+}
+
+.navigation-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+
+  .prev-btn {
+    background: #ccc;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+}

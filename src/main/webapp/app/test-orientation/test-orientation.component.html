@@ -13,47 +13,99 @@
         <div class="hero-header">
           <h2 class="titre">Trouve la filière qui te correspond</h2>
         </div>
+
         <p class="para">Réponds à quelques questions pour découvrir les orientations adaptées à ton profil.</p>
+        <p class="etape">Étape {{ step }} / {{ maxStep }}</p>
       </div>
     </div>
   </div>
 
   <div class="orientation-card">
-    <h4 class="soustitre">Ton parcours actuel</h4>
-    <p class="question">Dans quelle classe es-tu actuellement ?</p>
-
-    <form (ngSubmit)="onSubmit()" #classForm="ngForm">
-      <div class="options">
-        <label class="option" [class.active]="selectedClass === 'Seconde'">
-          <input type="radio" name="classe" value="Seconde" [(ngModel)]="selectedClass" />
-          <span>Seconde</span>
-        </label>
-
-        <label class="option" [class.active]="selectedClass === 'Première'">
-          <input type="radio" name="classe" value="Première" [(ngModel)]="selectedClass" />
-          <span>Première</span>
-        </label>
-
-        <label class="option" [class.active]="selectedClass === 'Terminale'">
-          <input type="radio" name="classe" value="Terminale" [(ngModel)]="selectedClass" />
-          <span>Terminale</span>
-        </label>
-
-        <label class="option" [class.active]="selectedClass === 'Autre'">
-          <input type="radio" name="classe" value="Autre" [(ngModel)]="selectedClass" />
-          <span>Autre</span>
-          <input
-            *ngIf="selectedClass === 'Autre'"
-            type="text"
-            [(ngModel)]="otherClass"
-            name="otherClass"
-            placeholder="Précise ta classe"
-            class="input-autre"
-          />
-        </label>
+    <!-- Étape 1 : Parcours scolaire -->
+    <div *ngIf="step === 1">
+      <h4 class="soustitre">Parcours scolaire</h4>
+      <div *ngFor="let q of parcoursQuestions" class="question">
+        <label>{{ q.label }}</label>
+        <div class="options">
+          <div *ngFor="let option of q.options">
+            <input type="radio" [name]="q.model" [value]="option" [(ngModel)]="answers[q.model]" />
+            <span>{{ option }}</span>
+          </div>
+          <!-- Option "Autre" si nécessaire -->
+          <div *ngIf="q.options.includes('Autre')">
+            <input type="text" placeholder="Précisez..." [(ngModel)]="otherClass" />
+          </div>
+        </div>
       </div>
+    </div>
 
-      <button type="submit" class="next-btn" [disabled]="!selectedClass || (selectedClass === 'Autre' && !otherClass)">Suivant →</button>
-    </form>
+    <!-- Étape 2 : Passions -->
+    <div *ngIf="step === 2">
+      <h4 class="soustitre">Passions</h4>
+      <div *ngFor="let q of passionsQuestions" class="question">
+        <label>{{ q.label }}</label>
+        <div class="options">
+          <div *ngFor="let option of q.options">
+            <input type="checkbox" [value]="option" [(ngModel)]="answers[q.model]" (change)="onCheckboxChange($event, q.model)" />
+            <span>{{ option }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Étape 3 : Comportements et attitude -->
+    <div *ngIf="step === 3">
+      <h4 class="soustitre">Comportements et attitude</h4>
+      <div *ngFor="let q of comportementQuestions" class="question">
+        <label>{{ q.label }}</label>
+        <div class="options">
+          <div *ngFor="let option of q.options">
+            <input type="radio" [name]="q.model" [value]="option" [(ngModel)]="answers[q.model]" />
+            <span>{{ option }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Étape 4 : Aspirations et valeurs -->
+    <div *ngIf="step === 4">
+      <h4 class="soustitre">Aspirations et valeurs</h4>
+      <div *ngFor="let q of aspirationsQuestions" class="question">
+        <label>{{ q.label }}</label>
+        <div class="options">
+          <div *ngFor="let option of q.options">
+            <input type="radio" [name]="q.model" [value]="option" [(ngModel)]="answers[q.model]" />
+            <span>{{ option }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Étape 5 : Aptitudes / compétences -->
+    <div *ngIf="step === 5">
+      <h4 class="soustitre">Aptitudes et compétences</h4>
+      <div *ngFor="let q of aptitudesQuestions" class="question">
+        <label>{{ q.label }}</label>
+        <div class="options sub-question" *ngFor="let sq of q.subQuestions">
+          <span>{{ sq.skill }}</span>
+          <div *ngFor="let s of sq.scale">
+            <input type="radio" [name]="sq.model" [value]="s" [(ngModel)]="answers[sq.model]" />
+            <span>{{ s }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Étape 6 : Résumé -->
+    <div *ngIf="step === 6">
+      <h4 class="soustitre">Résumé</h4>
+      <pre>{{ answers | json }}</pre>
+    </div>
+  </div>
+
+  <!-- Boutons navigation -->
+  <div class="navigation-buttons">
+    <button (click)="prevStep()" [disabled]="step === 1">Précédent</button>
+    <button (click)="nextStep()">{{ step === maxStep ? 'Terminer' : 'Suivant' }}</button>
   </div>
 </div>

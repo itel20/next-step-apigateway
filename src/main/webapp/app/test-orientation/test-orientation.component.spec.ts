@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { TestOrientationComponent } from './test-orientation.component';
 
 describe('TestOrientationComponent', () => {

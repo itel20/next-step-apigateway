@@ -1,101 +1,313 @@
 <div class="parcours-page">
   <!-- Top menu (3 static buttons) -->
   <div class="top-menu">
-    <button class="menu-btn">
+    <button class="menu-btn" [ngClass]="{ active: activeMenu === 1 }" (click)="activeMenu = 1">
       <fa-icon [icon]="faBriefcase"></fa-icon>
-      <span>Filières &amp; Métiers</span>
+      <span>Filières & Métiers</span>
     </button>
 
-    <button class="menu-btn">
+    <button class="menu-btn" [ngClass]="{ active: activeMenu === 2 }" (click)="activeMenu = 2">
       <fa-icon [icon]="faUniversity"></fa-icon>
-      <span>Écoles &amp; Universités</span>
+      <span>Écoles & Universités</span>
     </button>
 
-    <button class="menu-btn">
+    <button class="menu-btn" [ngClass]="{ active: activeMenu === 3 }" (click)="activeMenu = 3">
       <fa-icon [icon]="faGraduationCap"></fa-icon>
-      <span>Bourses &amp; Concours</span>
+      <span>Bourses & Concours</span>
     </button>
   </div>
 
-  <!-- Search bar + filter -->
-  <div class="search-filter">
-    <div class="search-input">
-      <fa-icon [icon]="faSearch" class="search-icon"></fa-icon>
-      <input
-        type="text"
-        placeholder="Rechercher une filière ou un métier..."
-        [(ngModel)]="searchQuery"
-        (keyup.enter)="onSearch()"
-        aria-label="Rechercher"
-      />
+  <!-- ✅ ONGLET 1 : FILIÈRES & MÉTIERS -->
+  <div *ngIf="activeMenu === 1">
+    <!-- Search bar + filter -->
+    <div class="search-filter">
+      <div class="search-input">
+        <fa-icon [icon]="faSearch" class="search-icon"></fa-icon>
+        <input
+          type="text"
+          placeholder="Rechercher une filière ou un métier..."
+          [(ngModel)]="searchQuery"
+          (keyup.enter)="onSearch()"
+          aria-label="Rechercher"
+        />
+      </div>
+
+      <div class="actions">
+        <button class="filter-btn" (click)="onFilter()">
+          <fa-icon [icon]="faFilter"></fa-icon>
+          <span>Filtre avancé</span>
+        </button>
+      </div>
     </div>
 
-    <div class="actions">
-      <button class="filter-btn" (click)="onFilter()">
-        <fa-icon [icon]="faFilter"></fa-icon>
-        <span>Filtre avancé</span>
-      </button>
-    </div>
+    <!-- Cards grid -->
+    <main class="cards-grid">
+      <article class="card" *ngFor="let item of parcoursList">
+        <header class="card-top">
+          <div class="title-wrap">
+            <h3 class="title">{{ item.titre }}</h3>
+            <span class="marker">—</span>
+            <span class="categorie">{{ item.categorie }}</span>
+          </div>
+
+          <div class="card-icons">
+            <fa-icon [icon]="faHeart" class="icon-heart"></fa-icon>
+            <fa-icon [icon]="faBug" class="icon-bug"></fa-icon>
+          </div>
+        </header>
+
+        <section class="card-stats">
+          <div class="stat">
+            <div class="big">{{ item.difficulte }}</div>
+            <div class="label">Difficulté</div>
+          </div>
+
+          <div class="stat">
+            <div class="big percentage green">{{ item.emploi }}%</div>
+            <div class="label">Emploi</div>
+          </div>
+
+          <div class="stat">
+            <div class="big percentage yellow">{{ item.satisfaction }}%</div>
+            <div class="label">Satisfaction</div>
+          </div>
+        </section>
+
+        <section class="taux">
+          <div class="taux-label">Taux d'emploi</div>
+          <div class="taux-bar">
+            <div class="taux-fill" [style.width.%]="item.tauxEmploi"></div>
+          </div>
+          <div class="taux-percent">{{ item.tauxEmploi }}%</div>
+        </section>
+
+        <section class="meta">
+          <div class="meta-row">
+            <fa-icon [icon]="faDollarSign"></fa-icon>
+            <span>{{ item.salaire }}</span>
+          </div>
+          <div class="meta-row">
+            <fa-icon [icon]="faStopwatch"></fa-icon>
+            <span>{{ item.duree }}</span>
+          </div>
+        </section>
+
+        <footer class="card-footer">
+          <button class="explore-btn" (click)="openDetail(item)">
+            <fa-icon [icon]="faBars"></fa-icon>
+            <span>Explorez en Détail</span>
+          </button>
+        </footer>
+      </article>
+    </main>
   </div>
 
-  <!-- Cards grid -->
-  <main class="cards-grid">
-    <article class="card" *ngFor="let item of parcoursList">
-      <header class="card-top">
-        <div class="title-wrap">
-          <h3 class="title">{{ item.titre }}</h3>
-          <span class="marker">—</span>
-          <span class="categorie">{{ item.categorie }}</span>
-        </div>
+  <!-- ✅ ONGLET 2 : ÉCOLES & UNIVERSITÉS -->
+  <div *ngIf="activeMenu === 2" class="ecoles-page">
+    <!-- Search + filters -->
+    <div class="search-filter ecoles-search">
+      <div class="search-input">
+        <fa-icon [icon]="faSearch" class="search-icon"></fa-icon>
+        <input
+          type="text"
+          placeholder="Rechercher une école ou université..."
+          [(ngModel)]="searchQueryEcole"
+          (keyup.enter)="onSearchEcole()"
+        />
+      </div>
 
-        <div class="card-icons">
-          <fa-icon [icon]="faHeart" class="icon-heart"></fa-icon>
-          <fa-icon [icon]="faBug" class="icon-bug"></fa-icon>
-        </div>
-      </header>
+      <div class="actions">
+        <select [(ngModel)]="selectedType" (change)="filterEcoles()">
+          <option value="">Type</option>
+          <option value="Publique">Publique</option>
+          <option value="Privée">Privée</option>
+        </select>
 
-      <section class="card-stats">
-        <div class="stat">
-          <div class="big">{{ item.difficulte }}</div>
-          <div class="label">Difficulté</div>
-        </div>
+        <select [(ngModel)]="selectedVille" (change)="filterEcoles()">
+          <option value="">Ville</option>
+          <option *ngFor="let v of villes" [value]="v">{{ v }}</option>
+        </select>
+      </div>
+    </div>
 
-        <div class="stat">
-          <div class="big percentage green">{{ item.emploi }}%</div>
-          <div class="label">Emploi</div>
-        </div>
+    <!-- Cards grid (écoles) -->
+    <main class="cards-grid ecoles-grid">
+      <article class="card-ecole" *ngFor="let eco of ecolesListFiltrees">
+        <div class="card-ecole-inner">
+          <header class="ecole-header">
+            <div>
+              <h3 class="ecole-title">{{ eco.nom }}</h3>
+              <div class="ecole-tags">
+                <span class="tag type">{{ eco.type }}</span>
+                <span class="tag rank">{{ eco.classement }}</span>
+              </div>
+            </div>
 
-        <div class="stat">
-          <div class="big percentage yellow">{{ item.satisfaction }}%</div>
-          <div class="label">Satisfaction</div>
-        </div>
-      </section>
+            <div class="fav-wrap">
+              <button class="fav-btn" (click)="toggleFavori(eco)" [title]="eco.favori ? 'Retirer des favoris' : 'Ajouter aux favoris'">
+                <fa-icon [icon]="faHeart"></fa-icon>
+              </button>
+            </div>
+          </header>
 
-      <section class="taux">
-        <div class="taux-label">Taux d'emploi</div>
-        <div class="taux-bar">
-          <div class="taux-fill" [style.width.%]="item.tauxEmploi"></div>
-        </div>
-        <div class="taux-percent">{{ item.tauxEmploi }}%</div>
-      </section>
+          <div class="ecole-location">
+            <fa-icon [icon]="faMapMarkerAlt"></fa-icon>
+            <span>{{ eco.pays }}, {{ eco.ville }}</span>
+          </div>
 
-      <section class="meta">
-        <div class="meta-row">
-          <fa-icon [icon]="faDollarSign"></fa-icon>
-          <span>{{ item.salaire }}</span>
-        </div>
-        <div class="meta-row">
-          <fa-icon [icon]="faStopwatch"></fa-icon>
-          <span>{{ item.duree }}</span>
-        </div>
-      </section>
+          <!-- stats row -->
+          <div class="ecole-stats">
+            <div class="stat">
+              <div class="big">{{ eco.tauxSelectivite }}%</div>
+              <div class="label">Sélectivité</div>
+            </div>
+            <div class="stat">
+              <div class="big percentage blue">{{ eco.tauxInternational }}%</div>
+              <div class="label">International</div>
+            </div>
+            <div class="stat">
+              <div class="big percentage green">{{ formatPrice(eco.frais) }}</div>
+              <div class="label">Frais/an</div>
+            </div>
+          </div>
 
-      <footer class="card-footer">
-        <button class="explore-btn" (click)="openDetail(item)">
-          <fa-icon [icon]="faBars"></fa-icon>
-          <span>Explorez en Détail</span>
+          <!-- rating row -->
+          <div class="ecole-rating">
+            <div class="rating-left">
+              <fa-icon [icon]="faStar"></fa-icon>
+              <strong>{{ eco.note?.toFixed(1) || '—' }}</strong>
+              <span class="small">/5 ({{ eco.avis || 0 }} avis)</span>
+            </div>
+            <div class="rating-right">
+              <button class="globe-btn" *ngIf="eco.site" (click)="openSite(eco.site)">
+                <fa-icon [icon]="faGlobe"></fa-icon>
+              </button>
+            </div>
+          </div>
+
+          <!-- filieres -->
+          <div class="ecole-filieres">
+            <div class="label-filieres">Filieres disponibles :</div>
+            <div class="filieres-list">
+              <span class="pill" *ngFor="let f of eco.filieresDisponibles; let i = index" [class.more]="i >= 3">
+                {{ f }}
+              </span>
+              <span *ngIf="eco.filieresDisponibles.length > 3" class="pill more">+{{ eco.filieresDisponibles.length - 3 }}</span>
+            </div>
+          </div>
+
+          <!-- action button -->
+          <div class="ecole-action">
+            <button class="voir-btn" (click)="voirDetailsEcole(eco)">
+              <fa-icon [icon]="faBookOpen"></fa-icon>
+              <span>Voir la fiche complète</span>
+            </button>
+          </div>
+        </div>
+      </article>
+    </main>
+  </div>
+
+  <!-- ✅ ONGLET 3 : BOURSES & CONCOURS -->
+  <div *ngIf="activeMenu === 3" class="bourses-page">
+    <!-- Search + type + alerts -->
+    <div class="search-filter bourses-search">
+      <div class="search-input">
+        <fa-icon [icon]="faSearch" class="search-icon"></fa-icon>
+        <input
+          type="text"
+          placeholder="Rechercher une bourse ou concours..."
+          [(ngModel)]="bourseSearchQuery"
+          (keyup.enter)="onSearchBourse()"
+        />
+      </div>
+
+      <div class="actions">
+        <select [(ngModel)]="bourseSelectedType" (change)="filterBourses()">
+          <option value="">Type</option>
+          <option value="Bourse">Bourse</option>
+          <option value="Concours">Concours</option>
+        </select>
+
+        <button class="alerts-btn" title="Alertes">
+          <fa-icon [icon]="faBell"></fa-icon>
+          <span class="badge">3</span>
         </button>
-      </footer>
-    </article>
-  </main>
+      </div>
+    </div>
+
+    <!-- Bourses grid -->
+    <main class="cards-grid bourses-grid">
+      <article class="card-bourse" *ngFor="let b of boursesListFiltrees">
+        <header class="bourse-header">
+          <h3 class="bourse-title">{{ b.titre }}</h3>
+          <div class="bourse-icons">
+            <span class="tag small" *ngFor="let t of b.tags">{{ t }}</span>
+            <button class="trophy" title="Favoris"><fa-icon [icon]="faTrophy"></fa-icon></button>
+          </div>
+        </header>
+
+        <div class="bourse-amount">
+          <div class="amount">{{ b.montant }}</div>
+          <div class="period">{{ b.periodicite }}</div>
+        </div>
+
+        <div class="bourse-stats">
+          <div class="col">
+            <div class="big">{{ b.beneficiaries }}</div>
+            <div class="label">Bénéficiaires</div>
+          </div>
+          <div class="col">
+            <div class="big">{{ b.acceptance }}</div>
+            <div class="label">Acceptation</div>
+          </div>
+          <div class="col">
+            <div class="big">{{ b.beneficiaries ? b.beneficiaries : '—' }}</div>
+            <div class="label">Autre</div>
+          </div>
+        </div>
+
+        <div class="bourse-deadline" *ngIf="b.deadline">
+          <fa-icon [icon]="faCalendarAlt"></fa-icon>
+          <span>Date limite: {{ formatDateIso(b.deadline) }}</span>
+        </div>
+
+        <div class="bourse-criteres">
+          <strong>Critères:</strong>
+          <ul>
+            <li *ngFor="let c of b.criteres">{{ c }}</li>
+          </ul>
+        </div>
+
+        <footer class="bourse-footer">
+          <button class="details-btn" (click)="voirDetailsBourse(b)">Plus de Details</button>
+        </footer>
+      </article>
+    </main>
+
+    <!-- Conseil box -->
+    <section class="conseils-box">
+      <div class="conseils-inner">
+        <h3>Conseils pour maximiser vos chances</h3>
+        <div class="conseils-grid">
+          <div class="col">
+            <h4>Préparation du dossier</h4>
+            <ul>
+              <li>Préparez vos documents 2 semaines à l'avance</li>
+              <li>Personnalisez votre lettre de motivation</li>
+              <li>Demandez des lettres de recommandation</li>
+            </ul>
+          </div>
+          <div class="col">
+            <h4>Stratégie de candidature</h4>
+            <ul>
+              <li>Candidatez à plusieurs bourses</li>
+              <li>Respectez scrupuleusement les délais</li>
+              <li>Suivez l'état de vos candidatures</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
 </div>

@@ -33,6 +33,10 @@ const routes: Routes = [
     path: 'actus',
     loadComponent: () => import('./actus/actus.component').then(m => m.ActusComponent),
   },
+  {
+    path: 'conseils',
+    loadComponent: () => import('./conseils/conseils.component').then(m => m.ConseilsComponent),
+  },
 
   {
     path: '',

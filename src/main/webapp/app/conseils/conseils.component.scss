@@ -1,0 +1,249 @@
+/* Container principal */
+.actus-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+  padding: 2rem;
+  font-family: 'Poppins', sans-serif;
+  background: #f4fff5;
+  flex-wrap: wrap;
+}
+
+/* === SECTIONS === */
+.left-section,
+.right-section {
+  flex: 1;
+  min-width: 300px;
+}
+
+/* === CARDS === */
+.card {
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 1.2rem;
+  transition: 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.icon-header {
+  font-size: 1.3rem;
+  color: #1e7d32;
+}
+
+/* === CONSEILLER === */
+.conseiller-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.avatar {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: #1e7d32;
+  padding: 5px;
+}
+
+.details h4 {
+  margin-bottom: 0.4rem;
+  color: #1e293b;
+}
+
+.details p {
+  margin: 0.25rem 0;
+  font-size: 0.9rem;
+  color: #475569;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: 0.3s;
+  border: none;
+}
+
+.btn-green {
+  background: #1e7d32;
+  color: white;
+}
+
+.btn-green:hover {
+  background: #16a34a;
+}
+
+.btn-outline {
+  background: transparent;
+  color: #1e7d32;
+  border: 1px solid #c9a800;
+}
+
+.btn-outline:hover {
+  background: #c9a800;
+  color: white;
+}
+
+/* === A LA UNE === */
+.media-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.media {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 0.6rem;
+}
+
+.media-icon {
+  width: 45px;
+  height: 45px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.4rem;
+}
+
+.youtube {
+  background: #fee2e2;
+  color: #ef4444;
+}
+
+.guide {
+  background: #f4fff5;
+  color: #1e7d32;
+}
+
+.media-text p {
+  margin: 0;
+  font-weight: 500;
+  color: #1e293b;
+}
+
+/* === FAQ === */
+.faq-item {
+  background: #f9fafb;
+  border-radius: 10px;
+  margin-bottom: 0.8rem;
+  padding: 0.7rem 1rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.faq-item:hover {
+  background: #eef2ff;
+}
+
+.faq-question {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #1e7d32;
+  font-weight: 500;
+}
+
+.faq-answer {
+  display: none;
+  padding-left: 1.8rem;
+  color: #475569;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.faq-item.open .faq-answer {
+  display: block;
+  animation: fadeIn 0.3s ease-in;
+}
+
+.faq-item.open .faq-question i {
+  transform: rotate(90deg);
+  transition: 0.3s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.faq-input:focus {
+  outline: none;
+  border-color: #c9a800;
+  box-shadow: 0 0 0 2px #bfdbfe;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 900px) {
+  .actus-container {
+    flex-direction: column;
+  }
+}
+
+.avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+lucide-icon {
+  color: #1976d2;
+}
+.faq-input-container {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.faq-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px 0 0 4px;
+  outline: none;
+}
+
+.btn-send {
+  padding: 8px 12px;
+  background: linear-gradient(90deg, #1e7d32, #c9a800); /* vert, comme ton bouton RDV */
+  color: white;
+  border: none;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+}
+
+.btn-send i {
+  font-size: 16px;
+}

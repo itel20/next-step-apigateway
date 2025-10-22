@@ -102,6 +102,58 @@
     </main>
   </div>
 
+  <!-- ✅ POPUP DÉTAIL EN HAUT DE LA PAGE -->
+  <div class="popup-overlay" *ngIf="selectedParcours">
+    <div class="popup-content">
+      <button class="close-btn" (click)="closeDetail()">×</button>
+
+      <h2>{{ selectedParcours.titre }}</h2>
+      <p class="subtitle">Formation complète pour devenir {{ selectedParcours.titre.toLowerCase() }}</p>
+
+      <div class="popup-grid">
+        <!-- Formation universitaire -->
+        <div class="popup-section">
+          <h3>Formation Universitaire</h3>
+          <ul>
+            <li *ngFor="let u of selectedParcours.formationUniversitaire">{{ u.nom }} ⭐ {{ u.note }}/5</li>
+          </ul>
+        </div>
+
+        <!-- Débouchés -->
+        <div class="popup-section">
+          <h3>Débouchés principaux</h3>
+          <div class="debouches">
+            <button *ngFor="let d of selectedParcours.debouches">{{ d }}</button>
+          </div>
+        </div>
+
+        <!-- Compétences -->
+        <div class="popup-section">
+          <h3>Compétences développées</h3>
+          <div class="skills">
+            <span *ngFor="let c of selectedParcours.competences">{{ c }}</span>
+          </div>
+        </div>
+
+        <!-- Témoignages -->
+        <div class="popup-section temoignage">
+          <h3>Témoignages</h3>
+          <div class="temoignage-card" *ngIf="selectedParcours.temoignage">
+            <div class="avatar">
+              {{ selectedParcours.temoignage.nom.charAt(0) }}
+            </div>
+            <div class="text">
+              <strong>{{ selectedParcours.temoignage.nom }}</strong
+              ><br />
+              <small>{{ selectedParcours.temoignage.specialite }}</small>
+              <blockquote>“{{ selectedParcours.temoignage.citation }}”</blockquote>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ✅ ONGLET 2 : ÉCOLES & UNIVERSITÉS -->
   <div *ngIf="activeMenu === 2" class="ecoles-page">
     <!-- Search + filters -->
@@ -206,6 +258,137 @@
         </div>
       </article>
     </main>
+  </div>
+
+  <!-- ✅ POPUP FICHE ÉCOLE -->
+  <div *ngIf="showFiche && ecole" class="popup-fiche">
+    <div class="popup-overlay" (click)="fermerPopup()"></div>
+
+    <div class="popup-content">
+      <button class="close-btn" (click)="fermerPopup()">
+        <fa-icon [icon]="faTimes"></fa-icon>
+      </button>
+
+      <!-- 🔹 En-tête -->
+      <div class="fiche-header">
+        <h2>{{ ecole.nom }}</h2>
+        <div class="fiche-meta">
+          <span class="type">{{ ecole.type }}</span>
+          <span class="note">⭐ {{ ecole.note }}/5 ({{ ecole.avis }} avis)</span>
+        </div>
+        <p class="description">{{ ecole.description.join(' ') }}</p>
+      </div>
+
+      <!-- 🔸 Statistiques générales -->
+      <div class="section stats">
+        <h3><fa-icon [icon]="faChartBar"></fa-icon> Statistiques générales</h3>
+        <div class="grid-4">
+          <div class="stat-item">
+            <fa-icon [icon]="faUsers"></fa-icon>
+            <span class="value">{{ ecole.stats.etudiants }}</span>
+            <p>Étudiants</p>
+          </div>
+          <div class="stat-item">
+            <fa-icon [icon]="faUserTie"></fa-icon>
+            <span class="value">{{ ecole.stats.enseignants }}</span>
+            <p>Enseignants</p>
+          </div>
+          <div class="stat-item">
+            <fa-icon [icon]="faFlask"></fa-icon>
+            <span class="value">{{ ecole.stats.laboratoires }}</span>
+            <p>Laboratoires</p>
+          </div>
+          <div class="stat-item">
+            <fa-icon [icon]="faBook"></fa-icon>
+            <span class="value">{{ ecole.stats.bibliotheques }}</span>
+            <p>Bibliothèques</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 🔹 Informations pratiques -->
+      <div class="section infos">
+        <h3><fa-icon [icon]="faInfoCircle"></fa-icon> Informations pratiques</h3>
+        <ul>
+          <li *ngFor="let info of ecole.infosPratiques">
+            {{ info.label }} : <strong>{{ info.valeur }}</strong>
+          </li>
+        </ul>
+      </div>
+
+      <!-- 🔸 Filières et spécialités -->
+      <div class="section filieres">
+        <h3><fa-icon [icon]="faGraduationCap"></fa-icon> Filières et spécialités</h3>
+        <div class="grid-2">
+          <div *ngFor="let f of ecole.filieres" class="filiere-item">
+            <h4>{{ f.nom }}</h4>
+            <p>{{ f.etudiants }} étudiants</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 🔸 Processus d’admission -->
+      <div class="section admission">
+        <h3><fa-icon [icon]="faClipboardCheck"></fa-icon> Processus d’admission</h3>
+        <div class="admission-grid">
+          <div class="modalites">
+            <p>
+              Campusen : <strong>{{ ecole.admission.campusen ? 'Oui' : 'Non' }}</strong>
+            </p>
+            <p>
+              Dossier : <strong>{{ ecole.admission.dossier ? 'Oui' : 'Non' }}</strong>
+            </p>
+            <p>
+              Concours : <strong>{{ ecole.admission.concours ? 'Oui' : 'Non' }}</strong>
+            </p>
+          </div>
+          <div class="stats-admission">
+            <p>
+              Taux d’acceptation : <strong>{{ ecole.admission.tauxAcceptation }}%</strong>
+            </p>
+            <p>
+              Points BAC requis : <strong>{{ ecole.admission.pointsBAC }}</strong>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 🔹 Insertion professionnelle -->
+      <div class="section insertion">
+        <h3><fa-icon [icon]="faBriefcase"></fa-icon> Insertion professionnelle</h3>
+        <p>
+          Taux d’insertion : <strong>{{ ecole.insertion.tauxInsertion }}%</strong>
+        </p>
+        <p>
+          Salaire moyen de sortie : <strong>{{ ecole.insertion.salaireMoyen }}</strong>
+        </p>
+      </div>
+
+      <!-- 🔹 Vie étudiante -->
+      <div class="section vie">
+        <h3><fa-icon [icon]="faUsersLine"></fa-icon> Vie étudiante</h3>
+        <ul>
+          <li>
+            Associations : <strong>{{ ecole.vie.associations }}</strong>
+          </li>
+          <li>
+            Clubs : <strong>{{ ecole.vie.clubs }}</strong>
+          </li>
+          <li>
+            Culture : <strong>{{ ecole.vie.activites }}</strong>
+          </li>
+        </ul>
+      </div>
+
+      <!-- 🔹 Témoignage -->
+      <div class="section temoignage">
+        <h3><fa-icon [icon]="faQuoteLeft"></fa-icon> Témoignage étudiant</h3>
+        <blockquote>"{{ ecole.temoignage.commentaire }}"</blockquote>
+        <p class="auteur">
+          <strong>{{ ecole.temoignage.nom }}</strong> ({{ ecole.temoignage.niveau }})
+        </p>
+      </div>
+    </div>
   </div>
 
   <!-- ✅ ONGLET 3 : BOURSES & CONCOURS -->

@@ -1,0 +1,93 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+<div class="actus-container">
+  <!-- Section gauche -->
+  <div class="left-section">
+    <!-- Nos conseillers -->
+    <div class="card conseiller-card">
+      <div class="card-header">
+        <i class="fas fa-user-graduate icon-header"></i>
+        <h3>Nos conseillers</h3>
+      </div>
+
+      <div class="conseiller-info">
+        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Avatar conseiller" class="avatar" />
+
+        <div class="details">
+          <h4>{{ conseiller.nom }}</h4>
+          <p><i class="fas fa-compass"></i> {{ conseiller.specialite }}</p>
+          <p><i class="fas fa-language"></i> {{ conseiller.langues }}</p>
+          <p><i class="fas fa-map-marker-alt"></i> {{ conseiller.ville }}</p>
+          <p><i class="fas fa-calendar-check"></i> {{ conseiller.disponibilite }}</p>
+
+          <button class="btn btn-green"><i class="fas fa-calendar-plus"></i> Prendre RDV</button>
+        </div>
+      </div>
+
+      <button class="btn btn-outline">+ Voir plus</button>
+    </div>
+
+    <!-- À la une -->
+    <div class="card a-la-une">
+      <div class="card-header">
+        <i class="fas fa-newspaper icon-header"></i>
+        <h3>À la une</h3>
+      </div>
+
+      <div class="media-items">
+        <div *ngFor="let media of medias" class="media">
+          <div class="media-icon" [ngClass]="{ youtube: media.type === 'video', guide: media.type === 'guide' }">
+            <i
+              [ngClass]="{
+                'fab fa-youtube': media.type === 'video',
+                'fas fa-book-open': media.type === 'guide',
+              }"
+            ></i>
+          </div>
+
+          <div class="media-text">
+            <p>{{ media.titre }}</p>
+            <button [class]="'btn ' + media.bouton">
+              <i
+                [ngClass]="{
+                  'fas fa-play': media.type === 'video',
+                  'fas fa-book-reader': media.type === 'guide',
+                }"
+              ></i>
+              {{ media.action }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn-outline">+ Voir plus</button>
+    </div>
+  </div>
+
+  <!-- Section droite (FAQ dynamique) -->
+  <div class="right-section">
+    <div class="card-header">
+      <i class="fas fa-question-circle icon-header"></i>
+      <h3>Questions fréquentes</h3>
+    </div>
+
+    <div class="faq">
+      <div class="faq-item" *ngFor="let item of faqs; let i = index" (click)="toggleFaq(i)" id="faq-{{ i }}">
+        <div class="faq-question">
+          <i class="fas fa-chevron-right"></i>
+          <span>{{ item.question }}</span>
+        </div>
+        <div class="faq-answer">
+          <p>{{ item.reponse }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-input-container">
+      <input type="text" class="faq-input" placeholder="Posez votre question..." />
+      <button class="btn-send">
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </div>
+  </div>
+</div>

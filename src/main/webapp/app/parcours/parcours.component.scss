@@ -903,63 +903,77 @@
 }
 
 /* ===============================
-   POPUP FICHE ÉCOLE — STYLE PRO
+   POPUP FICHE ÉCOLE — VERSION FINALE PRO
    =============================== */
 
 .popup-fiche {
   position: fixed;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100%;
   height: 100vh;
   background: rgba(0, 0, 0, 0.45);
-  z-index: 9999;
+  z-index: 20000; /* ✅ toujours au-dessus de la navbar */
   display: flex;
   justify-content: center;
   align-items: flex-start;
   overflow-y: auto;
-  padding-top: 130px;
+  padding-top: 100px; /* espace avec la navbar */
+  animation: fadeIn 0.4s ease forwards;
 
-  // ===== Contenu principal =====
-  .popup-content {
-    background: #ffffff;
-    width: 85%;
-    max-width: 1100px;
-    border-radius: 20px;
-    padding: 3rem 4rem;
-    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.25);
-    animation: fadeIn 0.4s ease;
-    font-family: 'Poppins', 'Segoe UI', sans-serif;
-    color: #1d1d1d;
-    margin-bottom: 100px;
-    position: relative;
+  /* ✅ Overlay clickable */
+  .popup-overlay {
+    position: fixed;
+    inset: 0;
+    background: transparent;
+    z-index: 1;
   }
 
-  // ===== Bouton fermeture =====
+  /* ✅ Contenu principal */
+  .popup-content {
+    position: relative;
+    z-index: 2;
+    background: #fff;
+    width: 85%;
+    max-width: 1000px;
+    border-radius: 18px;
+    padding: 2.5rem;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+    animation: slideDown 0.45s ease forwards;
+
+    h2 {
+      margin-top: 0;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #1a237e;
+    }
+  }
+
+  /* ===== Bouton fermeture ===== */
   .close-btn {
     position: absolute;
     top: 25px;
-    right: 30px;
+    right: 25px;
     background: #f5f5f5;
     border: none;
-    width: 40px;
-    height: 40px;
+    width: 42px;
+    height: 42px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #333;
     cursor: pointer;
+    font-size: 1.2rem;
     transition: all 0.3s ease;
 
     &:hover {
-      background: #ffdddd;
+      background: #ffeaea;
       color: #d32f2f;
       transform: rotate(90deg);
     }
   }
 
-  // ===== En-tête =====
+  /* ===== En-tête ===== */
   .fiche-header {
     text-align: center;
     margin-bottom: 2.5rem;
@@ -968,7 +982,7 @@
       font-size: 2.2rem;
       font-weight: 700;
       color: #1a237e;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.6rem;
     }
 
     .note {
@@ -985,7 +999,7 @@
     }
   }
 
-  // ===== Section générique =====
+  /* ===== Section générique ===== */
   .section {
     margin-bottom: 2rem;
     border-radius: 14px;
@@ -1006,6 +1020,10 @@
       gap: 10px;
       color: #1d1d1d;
       margin-bottom: 1.2rem;
+
+      fa-icon {
+        color: #1a73e8;
+      }
     }
 
     p,
@@ -1017,7 +1035,7 @@
     }
   }
 
-  // ====== Bloc Statistiques ======
+  /* ===== Statistiques ===== */
   .section.stats {
     background: #eef3ff;
 
@@ -1049,7 +1067,7 @@
     }
   }
 
-  // ===== Informations pratiques =====
+  /* ===== Informations pratiques ===== */
   .section.infos {
     background: #fffbe6;
 
@@ -1066,7 +1084,7 @@
     }
   }
 
-  // ===== Filières =====
+  /* ===== Filières ===== */
   .section.filieres {
     background: #e7f8ec;
 
@@ -1086,7 +1104,7 @@
     }
   }
 
-  // ===== Admission =====
+  /* ===== Admission ===== */
   .section.admission {
     background: #fff9e6;
 
@@ -1099,299 +1117,9 @@
         font-weight: 500;
       }
     }
-    /* ===========================
-   POPUP (MODALE DE DÉTAIL)
-=========================== */
-
-    .popup-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(25, 25, 25, 0.45);
-      backdrop-filter: blur(3px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.35s ease;
-
-      &.active {
-        opacity: 1;
-        pointer-events: all;
-
-        .popup-content {
-          transform: scale(1);
-          opacity: 1;
-        }
-      }
-    }
-
-    /* === Fenêtre principale du popup === */
-    .popup-content {
-      background: #ffffff;
-      border: 2px solid #27ae60;
-      border-radius: 16px;
-      box-shadow: 0 10px 25px rgba(39, 174, 96, 0.2);
-      width: 90%;
-      max-width: 920px;
-      padding: 2rem;
-      position: relative;
-      transform: scale(0.9);
-      opacity: 0;
-      transition: all 0.35s ease-in-out;
-      animation: fadeInUp 0.45s ease forwards;
-
-      @media (max-width: 768px) {
-        padding: 1.2rem;
-      }
-    }
-
-    /* === Animation d’apparition === */
-    @keyframes fadeInUp {
-      0% {
-        opacity: 0;
-        transform: translateY(25px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* === Header === */
-    .popup-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 1.2rem;
-
-      h2 {
-        font-size: 1.8rem;
-        font-weight: 700;
-        color: #222;
-        margin: 0;
-      }
-
-      .close-btn {
-        background: #27ae60;
-        color: #fff;
-        border: none;
-        border-radius: 50%;
-        width: 34px;
-        height: 34px;
-        font-size: 1.2rem;
-        font-weight: bold;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.25s ease;
-
-        &:hover {
-          transform: rotate(90deg) scale(1.05);
-          background: #219150;
-        }
-      }
-    }
-
-    /* === Sous-titre / Description === */
-    .popup-subtitle {
-      color: #555;
-      font-size: 0.95rem;
-      margin-bottom: 1.5rem;
-    }
-
-    /* === Grille principale des sections === */
-    .popup-sections {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-      gap: 1.2rem;
-
-      section {
-        border: 1px solid #27ae60;
-        border-radius: 12px;
-        background: #fefefe;
-        padding: 1rem;
-        transition: all 0.3s ease;
-
-        &:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 6px 14px rgba(39, 174, 96, 0.12);
-        }
-
-        h3 {
-          font-weight: 600;
-          font-size: 1.1rem;
-          color: #222;
-          margin-bottom: 0.7rem;
-        }
-      }
-    }
-
-    /* === Formation Universitaire === */
-    .universite-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-
-      li {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin: 0.6rem 0;
-        font-size: 0.95rem;
-        font-weight: 500;
-        color: #333;
-
-        .stars {
-          display: flex;
-          align-items: center;
-          color: #f2c94c;
-          font-weight: 600;
-          font-size: 0.9rem;
-        }
-      }
-    }
-
-    /* === Débouchés === */
-    .debouches {
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-
-      .debouche-item {
-        background: #e9f7ef;
-        border: 1px solid #b7dfbe;
-        border-radius: 8px;
-        padding: 0.6rem 0.9rem;
-        display: flex;
-        align-items: center;
-        gap: 0.6rem;
-        color: #2f5132;
-        font-weight: 500;
-        font-size: 0.95rem;
-        transition: all 0.25s ease;
-
-        &:hover {
-          background: #d7f1df;
-          transform: translateX(3px);
-        }
-
-        fa-icon {
-          color: #27ae60;
-        }
-      }
-    }
-
-    /* === Compétences développées === */
-    .competences {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-
-      .tag {
-        border: 1px solid #27ae60;
-        border-radius: 20px;
-        padding: 0.35rem 0.9rem;
-        font-size: 0.85rem;
-        font-weight: 500;
-        color: #27ae60;
-        background: #fff;
-        transition: all 0.25s ease;
-
-        &:hover {
-          background: #27ae60;
-          color: #fff;
-          transform: scale(1.05);
-        }
-      }
-    }
-
-    /* === Témoignage === */
-    .temoignage {
-      .temoin {
-        display: flex;
-        align-items: center;
-        gap: 0.8rem;
-        margin-bottom: 0.8rem;
-
-        .avatar {
-          width: 42px;
-          height: 42px;
-          background: #27ae60;
-          border-radius: 50%;
-          color: #fff;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-weight: 700;
-          font-size: 1.1rem;
-          box-shadow: 0 2px 6px rgba(39, 174, 96, 0.25);
-          transition: all 0.25s ease;
-
-          &:hover {
-            transform: scale(1.1);
-          }
-        }
-
-        .info {
-          .name {
-            font-weight: 600;
-            font-size: 1rem;
-          }
-          .role {
-            font-size: 0.85rem;
-            color: #555;
-          }
-        }
-      }
-
-      .quote {
-        background: #eaf7ef;
-        border-left: 4px solid #27ae60;
-        padding: 0.8rem 1rem;
-        border-radius: 8px;
-        font-style: italic;
-        font-size: 0.9rem;
-        color: #333;
-        animation: fadeIn 0.5s ease;
-      }
-    }
-
-    /* === Animation de la citation === */
-    @keyframes fadeIn {
-      0% {
-        opacity: 0;
-        transform: translateY(8px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* === Responsive === */
-    @media (max-width: 600px) {
-      .popup-content {
-        width: 95%;
-        padding: 1rem;
-      }
-
-      .popup-sections {
-        grid-template-columns: 1fr;
-      }
-
-      .popup-header h2 {
-        font-size: 1.4rem;
-      }
-    }
   }
 
-  // ===== Insertion professionnelle =====
+  /* ===== Insertion professionnelle ===== */
   .section.insertion {
     background: #eafdf4;
     text-align: center;
@@ -1403,12 +1131,12 @@
     }
   }
 
-  // ===== Vie étudiante =====
+  /* ===== Vie étudiante ===== */
   .section.vie {
     background: #fff3f3;
   }
 
-  // ===== Témoignage =====
+  /* ===== Témoignage ===== */
   .section.temoignage {
     background: #f5f2ff;
 
@@ -1427,7 +1155,7 @@
     }
   }
 
-  // ===== Bouton site =====
+  /* ===== Bouton site ===== */
   .btn-site {
     display: block;
     margin: 2rem auto 0;
@@ -1448,7 +1176,7 @@
     }
   }
 
-  // ===== Animation =====
+  /* ===== Animations ===== */
   @keyframes fadeIn {
     from {
       opacity: 0;
@@ -1458,5 +1186,230 @@
       opacity: 1;
       transform: translateY(0);
     }
+  }
+
+  @keyframes slideDown {
+    from {
+      transform: translateY(-25px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 768px) {
+    padding-top: 80px;
+
+    .popup-content {
+      width: 95%;
+      padding: 1.8rem;
+    }
+
+    .close-btn {
+      top: 15px;
+      right: 15px;
+      width: 36px;
+      height: 36px;
+    }
+  }
+}
+
+/* --- POPUP OVERLAY --- */
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  //:backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeIn 0.3s ease-in-out forwards;
+}
+
+/* --- POPUP CONTENT --- */
+.popup-content {
+  background: #ffffff;
+  border-radius: 20px;
+  max-width: 900px;
+  width: 90%;
+  padding: 2rem 2.5rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  position: relative;
+  overflow-y: auto;
+  max-height: 85vh;
+  animation: slideUp 0.4s ease-out forwards;
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease;
+}
+
+/* --- CLOSE BUTTON --- */
+.close-btn {
+  position: absolute;
+  top: 12px;
+  right: 15px;
+  background: transparent;
+  border: none;
+  font-size: 2rem;
+  color: #444;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    color 0.2s ease;
+
+  &:hover {
+    color: #e63946;
+    transform: rotate(90deg);
+  }
+}
+
+/* --- TITRES ET SOUS-TITRES --- */
+h2 {
+  font-size: 2rem;
+  color: #2b2b2b;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.subtitle {
+  color: #666;
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+/* --- GRID LAYOUT --- */
+.popup-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- SECTION --- */
+.popup-section {
+  background: #fafafa;
+  border-radius: 15px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+  h3 {
+    font-size: 1.2rem;
+    color: #1d3557;
+    margin-bottom: 1rem;
+    border-left: 4px solid #457b9d;
+    padding-left: 10px;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      background: #fff;
+      margin-bottom: 8px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+  }
+}
+
+/* --- DÉBOUCHÉS --- */
+.debouches button {
+  background: #457b9d;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  margin: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.3s ease;
+
+  &:hover {
+    background: #1d3557;
+  }
+}
+
+/* --- COMPÉTENCES --- */
+.skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+
+  span {
+    background: #f1faee;
+    border-radius: 12px;
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    color: #333;
+    border: 1px solid #a8dadc;
+  }
+}
+
+/* --- TÉMOIGNAGE --- */
+.temoignage-card {
+  display: flex;
+  align-items: flex-start;
+  background: #fff;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  gap: 1rem;
+
+  .avatar {
+    width: 50px;
+    height: 50px;
+    background: #457b9d;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.3rem;
+  }
+
+  .text {
+    blockquote {
+      margin: 0.5rem 0;
+      font-style: italic;
+      color: #444;
+    }
+
+    small {
+      color: #777;
+    }
+  }
+}
+
+/* --- ANIMATIONS --- */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(40px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
   }
 }

@@ -32,6 +32,11 @@ const routes: Routes = [
     loadComponent: () => import('./gateway/gateway.component'),
     title: 'gateway.title',
   },
+  {
+    path: 'dashboard',
+    loadComponent: () => import('./dashboard/dashboard.component'),
+    title: 'dashboard.title',
+  },
   /* jhipster-needle-add-admin-route - JHipster will add admin routes here */
 ];
 

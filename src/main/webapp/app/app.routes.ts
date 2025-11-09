@@ -70,6 +70,11 @@ const routes: Routes = [
     path: 'nextstepsenegal',
     loadChildren: () => loadEntityRoutes('nextstepsenegal'),
   },
+  {
+    path: 'dashboard',
+    loadComponent: () => import('./admin/dashboard/dashboard.component'),
+    title: 'dashboard.title',
+  },
   ...errorRoute,
 ];
 

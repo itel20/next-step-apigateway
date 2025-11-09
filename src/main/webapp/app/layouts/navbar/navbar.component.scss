@@ -158,3 +158,181 @@ main,
     margin-top: 10px;
   }
 }
+/* ========================================================================== */
+/* NAVBAR PUBLIQUE */
+/* ========================================================================== */
+
+.custom-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1100;
+  height: 90px;
+  background: #f7fdf6;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+}
+
+.navbar-logo img {
+  height: 85px;
+}
+
+.navbar-menu {
+  list-style: none;
+  display: flex;
+  gap: 18px;
+  margin: 0;
+  padding: 0;
+}
+
+.menu-item {
+  background: #ffffff;
+  border: 2px solid #f4c01e;
+  color: #15803d;
+  border-radius: 18px;
+  padding: 6px 18px;
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+}
+
+.menu-item:hover,
+.menu-item.active {
+  background: #15803d;
+  color: #f4c01e;
+  border-color: #f4c01e;
+}
+
+.user-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #15803d;
+  font-weight: 600;
+}
+
+.profile-icon {
+  font-size: 26px;
+}
+
+/* ========================================================================== */
+/* NAVBAR ADMIN (SIDEBAR) */
+/* ========================================================================== */
+
+.admin-navbar {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 260px;
+    height: 100vh;
+    background: #f7fdf6;
+    border-right: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+  }
+
+  .logo {
+    text-align: center;
+    padding: 25px 10px 15px;
+  }
+
+  .logo img {
+    height: 55px;
+  }
+
+  .logo h3 {
+    color: #15803d;
+    margin: 10px 0 0;
+    font-weight: 700;
+  }
+
+  .logo p {
+    color: #6b7280;
+    font-size: 14px;
+    margin: 0;
+  }
+
+  .menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .menu li {
+    padding: 14px 24px;
+    color: #1d4830;
+    font-weight: 600;
+    cursor: pointer;
+    border-left: 3px solid transparent;
+    transition: all 0.2s ease;
+  }
+
+  .menu li:hover,
+  .menu li.active {
+    background: #e7f8eb;
+    border-left: 3px solid #15803d;
+    color: #15803d;
+  }
+
+  .footer {
+    padding: 15px 20px;
+    border-top: 1px solid #e2e8f0;
+  }
+
+  .profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .avatar {
+    background: #15803d;
+    color: #fff;
+    font-weight: bold;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .logout {
+    background: none;
+    border: none;
+    color: #dc2626;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+  }
+
+  .logout:hover {
+    text-decoration: underline;
+  }
+}
+
+/* ========================================================================== */
+/* RESPONSIVE */
+/* ========================================================================== */
+
+@media (max-width: 992px) {
+  .custom-navbar {
+    flex-wrap: wrap;
+    height: auto;
+    padding: 10px 15px;
+  }
+
+  .navbar-logo img {
+    height: 70px;
+  }
+}

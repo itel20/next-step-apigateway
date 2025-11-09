@@ -1,90 +1,89 @@
-<nav class="custom-navbar" data-cy="navbar">
-  <!-- Logo -->
+<!-- ✅ ADMIN NAVBAR (si ROLE_ADMIN) -->
+<nav *ngIf="isAdmin()" class="admin-navbar">
+  <div class="sidebar">
+    <div class="logo">
+      <img src="content/images/image%2011.png" alt="Admin" />
+      <h3>Next Step Sénégal</h3>
+      <p>Administration AI+</p>
+    </div>
+
+    <ul class="menu">
+      <li routerLink="/admin/dashboard" routerLinkActive="active">Tableau de bord</li>
+      <li routerLink="/admin/utilisateurs" routerLinkActive="active">Gestion des utilisateurs</li>
+      <li routerLink="/admin/etablissements" routerLinkActive="active">Établissements</li>
+      <li routerLink="/admin/orientations" routerLinkActive="active">Orientations</li>
+      <li routerLink="/admin/bourses" routerLinkActive="active">Bourses & Concours</li>
+      <li routerLink="/admin/module-ia" routerLinkActive="active">Module IA</li>
+      <li routerLink="/admin/parametres" routerLinkActive="active">Paramètres</li>
+    </ul>
+
+    <div class="footer">
+      <div class="profile">
+        <div class="avatar">
+          {{ account()?.firstName ? account()?.firstName!.charAt(0) : '' }}
+          {{ account()?.lastName ? account()?.lastName!.charAt(0) : '' }}
+        </div>
+        <div>
+          <strong>{{ account()?.firstName }} {{ account()?.lastName }}</strong>
+          <p>Super Admin</p>
+        </div>
+      </div>
+      <button class="logout" (click)="logout()">
+        <fa-icon icon="sign-out-alt"></fa-icon>
+        Déconnexion
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ✅ NAVBAR PUBLIQUE / UTILISATEUR -->
+<nav *ngIf="!isAdmin()" class="custom-navbar" data-cy="navbar">
+  <!-- LOGO -->
   <div class="navbar-logo">
     <img src="content/images/image%2011.png" alt="Logo" />
   </div>
 
-  <!-- Menu central -->
-  <ul class="navbar-menu">
+  <!-- ✅ Menu visible uniquement pour ROLE_USER -->
+  <ul *ngIf="isUser()" class="navbar-menu">
     <li>
-      <a class="menu-item" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()"
-        >Accueil</a
-      >
+      <a class="menu-item" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Accueil</a>
     </li>
-
     <li>
-      <a
-        class="menu-item"
-        routerLink="/test-orientation"
-        routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: true }"
-        (click)="collapseNavbar()"
-        >Test d’orientation</a
-      >
+      <a class="menu-item" routerLink="/test-orientation" routerLinkActive="active">Test d’orientation</a>
     </li>
-
     <li>
-      <a
-        class="menu-item"
-        routerLink="/parcours"
-        routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: true }"
-        (click)="collapseNavbar()"
-        >Parcours</a
-      >
+      <a class="menu-item" routerLink="/parcours" routerLinkActive="active">Parcours</a>
     </li>
-
     <li>
-      <a
-        class="menu-item"
-        routerLink="/conseils"
-        routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: true }"
-        (click)="collapseNavbar()"
-        >Conseils & Accompagnements</a
-      >
+      <a class="menu-item" routerLink="/conseils" routerLinkActive="active">Conseils & Accompagnements</a>
     </li>
-
     <li>
-      <a
-        class="menu-item"
-        routerLink="/actus"
-        routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: true }"
-        (click)="collapseNavbar()"
-        >Actus & Événements</a
-      >
+      <a class="menu-item" routerLink="/actus" routerLinkActive="active">Actus & Événements</a>
     </li>
   </ul>
 
-  <!-- Profil (placé correctement dans un conteneur à part) -->
-  <div
-    ngbDropdown
-    class="nav-item dropdown pointer navbar-profile"
-    display="dynamic"
-    routerLinkActive="active"
-    [routerLinkActiveOptions]="{ exact: true }"
-  >
-    <a class="nav-link dropdown-toggle user-display" ngbDropdownToggle href="javascript:void(0);" id="account-menu" data-cy="accountMenu">
+  <!-- ✅ Icône de connexion / profil -->
+  <div ngbDropdown class="nav-item dropdown pointer navbar-profile">
+    <a class="nav-link dropdown-toggle user-display" ngbDropdownToggle>
       <fa-icon icon="user-graduate" class="profile-icon"></fa-icon>
       <span *ngIf="account()">{{ account()?.firstName }} {{ account()?.lastName }}</span>
     </a>
 
-    <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="account-menu">
-      <ng-container *ngIf="account() !== null; else notLogged">
+    <ul class="dropdown-menu" ngbDropdownMenu>
+      <ng-container *ngIf="accountExists(); else notLogged">
         <li>
-          <a class="dropdown-item" (click)="logout()" id="logout" data-cy="logout">
-            <fa-icon icon="sign-out-alt" [fixedWidth]="true"></fa-icon>
-            <span jhiTranslate="global.menu.account.logout">Déconnexion</span>
+          <a class="dropdown-item" (click)="logout()">
+            <fa-icon icon="sign-out-alt"></fa-icon>
+            Déconnexion
           </a>
         </li>
       </ng-container>
 
       <ng-template #notLogged>
         <li>
-          <a class="dropdown-item" (click)="login()" id="login" data-cy="login">
-            <fa-icon icon="sign-in-alt" [fixedWidth]="true"></fa-icon>
-            <span jhiTranslate="global.menu.account.login">S'authentifier</span>
+          <a class="dropdown-item" (click)="login()">
+            <fa-icon icon="sign-in-alt"></fa-icon>
+            S'authentifier
           </a>
         </li>
       </ng-template>

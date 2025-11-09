@@ -259,22 +259,6 @@ angular-cli removes postcss-rtl processed inline css, processed rules must be ad
    ✅ Correction RESPONSIVE du décalage sous la navbar fixe
 ============================================================ */
 
-.navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1050;
-  width: 100%;
-  transition: all 0.3s ease-in-out;
-}
-
-/* Conteneur global du contenu */
-.app-content {
-  margin-top: 80px; /* hauteur moyenne par défaut */
-  transition: margin-top 0.3s ease-in-out;
-}
-
 /* 🔹 Ajustement pour tablettes (navbar plus haute) */
 @media (max-width: 992px) {
   .app-content {

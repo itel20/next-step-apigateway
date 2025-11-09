@@ -1,45 +1,47 @@
-import { Component, Injector, OnInit, createNgModule, inject, signal } from '@angular/core';
+import { Component, Injector, OnInit, inject, signal, createNgModule } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-
 import { StateStorageService } from 'app/core/auth/state-storage.service';
 import SharedModule from 'app/shared/shared.module';
-import HasAnyAuthorityDirective from 'app/shared/auth/has-any-authority.directive';
 import { VERSION } from 'app/app.constants';
 import { LANGUAGES } from 'app/config/language.constants';
 import { AccountService } from 'app/core/auth/account.service';
 import { LoginService } from 'app/login/login.service';
 import { ProfileService } from 'app/layouts/profiles/profile.service';
 import { EntityNavbarItems } from 'app/entities/entity-navbar-items';
-
 import { loadNavbarItems, loadTranslationModule } from 'app/core/microfrontend';
-import ActiveMenuDirective from './active-menu.directive';
 import NavbarItem from './navbar-item.model';
 
 @Component({
   standalone: true,
   selector: 'jhi-navbar',
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.scss',
-  imports: [RouterModule, SharedModule, HasAnyAuthorityDirective],
+  styleUrls: ['./navbar.component.scss'],
+  imports: [RouterModule, SharedModule],
 })
 export default class NavbarComponent implements OnInit {
+  // === États généraux ===
   inProduction?: boolean;
-  isNavbarCollapsed = signal(true);
-  languages = LANGUAGES;
   openAPIEnabled?: boolean;
   version = '';
-  account = inject(AccountService).trackCurrentAccount();
+  languages = LANGUAGES;
+  isNavbarCollapsed = signal(true);
   entitiesNavbarItems: NavbarItem[] = [];
   nextstepsenegalEntityNavbarItems: NavbarItem[] = [];
 
+  // === Données utilisateur ===
+  account = inject(AccountService).trackCurrentAccount();
+  isAdminRole = signal(false);
+  isUserRole = signal(false);
+
+  // === Services ===
+  private readonly accountService = inject(AccountService);
   private readonly loginService = inject(LoginService);
   private readonly translateService = inject(TranslateService);
   private readonly stateStorageService = inject(StateStorageService);
-  private readonly injector = inject(Injector);
-  private readonly accountService = inject(AccountService);
   private readonly profileService = inject(ProfileService);
   private readonly router = inject(Router);
+  private readonly injector = inject(Injector);
 
   constructor() {
     if (VERSION) {
@@ -49,16 +51,35 @@ export default class NavbarComponent implements OnInit {
 
   ngOnInit(): void {
     this.entitiesNavbarItems = EntityNavbarItems;
-    this.profileService.getProfileInfo().subscribe(profileInfo => {
-      this.inProduction = profileInfo.inProduction;
-      this.openAPIEnabled = profileInfo.openAPIEnabled;
+
+    this.profileService.getProfileInfo().subscribe(info => {
+      this.inProduction = info.inProduction;
+      this.openAPIEnabled = info.openAPIEnabled;
     });
 
+    // 🔍 Vérifie les rôles dès que l'utilisateur est connecté
     this.accountService.getAuthenticationState().subscribe(account => {
+      if (account) {
+        const roles = account.authorities;
+        this.isAdminRole.set(roles.includes('ROLE_ADMIN'));
+        this.isUserRole.set(roles.includes('ROLE_USER'));
+
+        // ✅ Redirige automatiquement les admins vers leur tableau de bord
+        if (this.isAdminRole()) {
+          this.router.navigate(['/admin/dashboard']);
+        }
+      } else {
+        // Utilisateur déconnecté → redirection vers la page d'accueil publique
+        this.isAdminRole.set(false);
+        this.isUserRole.set(false);
+        this.router.navigate(['/']);
+      }
+
       this.loadMicrofrontendsEntities();
     });
   }
 
+  // === Méthodes utilitaires ===
   changeLanguage(languageKey: string): void {
     this.stateStorageService.storeLocale(languageKey);
     this.translateService.use(languageKey);
@@ -68,6 +89,10 @@ export default class NavbarComponent implements OnInit {
     this.isNavbarCollapsed.set(true);
   }
 
+  toggleNavbar(): void {
+    this.isNavbarCollapsed.update(value => !value);
+  }
+
   login(): void {
     this.loginService.login();
   }
@@ -75,30 +100,30 @@ export default class NavbarComponent implements OnInit {
   logout(): void {
     this.collapseNavbar();
     this.loginService.logout();
-    this.router.navigate(['']);
+    this.router.navigate(['/']);
   }
 
-  toggleNavbar(): void {
-    this.isNavbarCollapsed.update(isNavbarCollapsed => !isNavbarCollapsed);
+  accountExists(): boolean {
+    return !!this.account();
   }
 
-  loadMicrofrontendsEntities(): void {
-    // Lazy load microfrontend entities.
-    loadNavbarItems('nextstepsenegal').then(
-      async items => {
-        this.nextstepsenegalEntityNavbarItems = items;
-        try {
-          const LazyTranslationModule = await loadTranslationModule('nextstepsenegal');
-          createNgModule(LazyTranslationModule, this.injector);
-        } catch (error) {
-          // eslint-disable-next-line no-console
-          console.log('Error loading nextstepsenegal translation module', error);
-        }
-      },
-      (error: unknown) => {
-        // eslint-disable-next-line no-console
-        console.log('Error loading nextstepsenegal entities', error);
-      },
-    );
+  isAdmin(): boolean {
+    return this.isAdminRole();
+  }
+
+  isUser(): boolean {
+    return this.isUserRole();
+  }
+
+  async loadMicrofrontendsEntities(): Promise<void> {
+    try {
+      const items = await loadNavbarItems('nextstepsenegal');
+      this.nextstepsenegalEntityNavbarItems = items;
+
+      const LazyTranslationModule = await loadTranslationModule('nextstepsenegal');
+      createNgModule(LazyTranslationModule, this.injector);
+    } catch {
+      // silencieux
+    }
   }
 }

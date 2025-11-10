@@ -9,6 +9,8 @@ import { loadEntityRoutes } from './core/microfrontend';
 import ChatbotPageComponent from './chatbot-page/chatbot-page.component';
 import { TestOrientationComponent } from './test-orientation/test-orientation.component';
 import ParcoursComponent from './parcours/parcours.component';
+import DashboardComponent from './admin/dashboard/dashboard.component';
+import UserManagementComponent from './admin/user-management/user-management.component';
 
 const routes: Routes = [
   {
@@ -43,6 +45,16 @@ const routes: Routes = [
     component: NavbarComponent,
     outlet: 'navbar',
   },
+  {
+    path: '',
+    component: DashboardComponent,
+    outlet: 'navbar',
+  },
+  {
+    path: '',
+    component: UserManagementComponent,
+    outlet: 'UserManagement',
+  },
 
   {
     path: 'chatbot',
@@ -74,6 +86,11 @@ const routes: Routes = [
     path: 'dashboard',
     loadComponent: () => import('./admin/dashboard/dashboard.component'),
     title: 'dashboard.title',
+  },
+  {
+    path: 'user-management',
+    loadComponent: () => import('./admin/user-management/user-management.component'),
+    title: 'user-management',
   },
   ...errorRoute,
 ];

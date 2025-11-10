@@ -19,6 +19,7 @@ sharedDependencies = {
   '@angular/common/http': sharedDependencies['@angular/common'],
   'rxjs/operators': sharedDependencies.rxjs,
 };
+sharedDependencies['@swimlane/ngx-charts'] = { singleton: true, strictVersion: false, requiredVersion: '^21.1.0' };
 
 // eslint-disable-next-line no-unused-vars
 module.exports = (config, options, targetOptions) => {

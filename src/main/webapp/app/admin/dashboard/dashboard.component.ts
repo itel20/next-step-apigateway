@@ -4,7 +4,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 // Note: if you don't use Angular Material, ignore Card imports above.
 
 @Component({
-  selector: 'jhi-admin-dashboard',
+  selector: 'jhi-dashboard',
   standalone: true,
   imports: [CommonModule, NgxChartsModule],
   templateUrl: './dashboard.component.html',

@@ -1,17 +1,26 @@
 <jhi-page-ribbon></jhi-page-ribbon>
 
-<!-- ✅ Navbar FIXE placée hors du flux -->
+<!-- ✅ Navbar (horizontale pour user ou verticale pour admin) -->
 <router-outlet name="navbar"></router-outlet>
 
-<div class="app-content">
+<!-- ✅ Conteneur principal -->
+<div
+  class="app-content"
+  [ngClass]="{
+    'admin-layout': isAdminRole,
+    'user-layout': !isAdminRole,
+  }"
+>
+  <!-- ✅ Breadcrumb -->
   <router-outlet name="breadCrumb"></router-outlet>
 
-  <div class="container-fluid">
+  <!-- ✅ Contenu dynamique -->
+  <div class="container-fluid main-container">
     <div class="card jh-card">
       <router-outlet></router-outlet>
     </div>
   </div>
 </div>
-<br />
-<br />
-<jhi-footer *ngIf="!isChatbotPage"></jhi-footer>
+
+<!-- ✅ Footer uniquement sur les pages utilisateur -->
+<jhi-footer *ngIf="!isAdminRole && !isChatbotPage"></jhi-footer>

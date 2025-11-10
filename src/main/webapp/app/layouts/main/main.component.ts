@@ -19,6 +19,7 @@ import { CommonModule } from '@angular/common';
 })
 export default class MainComponent implements OnInit {
   isChatbotPage = false;
+  isAdminRole = false;
   private renderer: Renderer2;
 
   private router = inject(Router);
@@ -45,6 +46,9 @@ export default class MainComponent implements OnInit {
         // ✅ Mets ici l'URL EXACTE du chatbot
         this.isChatbotPage = event.urlAfterRedirects.includes('/chatbot');
       }
+    });
+    this.accountService.getAuthenticationState().subscribe(account => {
+      this.isAdminRole = account?.authorities.includes('ROLE_ADMIN') ?? false;
     });
   }
 }

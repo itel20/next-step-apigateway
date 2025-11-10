@@ -6,3 +6,40 @@
 .body {
   background-color: #f4fff5;
 }
+.app-content {
+  background-color: #f4fff5;
+  min-height: 100vh;
+  transition: margin-left 0.3s ease;
+  box-sizing: border-box;
+  padding-top: 90px; // pour les utilisateurs avec navbar horizontale
+}
+
+.user-layout {
+  margin-left: 0;
+}
+
+.admin-layout {
+  margin-left: 250px; // même largeur que ta sidebar admin
+  padding-top: 20px; // pas de navbar fixe en haut
+  background-color: #f9fff9;
+}
+
+.main-container .jh-card {
+  margin-top: 20px;
+  border: none;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+}
+
+@media (max-width: 992px) {
+  .admin-layout {
+    margin-left: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-content {
+    padding-top: 120px;
+  }
+}

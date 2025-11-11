@@ -290,3 +290,29 @@ angular-cli removes postcss-rtl processed inline css, processed rules must be ad
     margin-top: 140px;
   }
 }
+/* ===========================================================
+   ✅ Alignement global du contenu avec la sidebar admin
+   (pour éviter que les pages mordent sur la navbar verticale)
+=========================================================== */
+
+.app-content {
+  margin-left: 250px; /* largeur fixe de la sidebar */
+  padding: 30px 40px;
+  background-color: #f8fdf9;
+  min-height: 100vh;
+  transition: margin-left 0.3s ease;
+  box-sizing: border-box;
+}
+
+/* 🔹 Si la navbar est horizontale (mode user), pas de décalage */
+.user-layout .app-content {
+  margin-left: 0;
+  padding-top: 90px; /* espace sous la navbar horizontale */
+}
+
+/* 🔹 Option responsive : sidebar masquée sur mobile */
+@media (max-width: 992px) {
+  .app-content {
+    margin-left: 0;
+  }
+}

@@ -42,6 +42,11 @@ const routes: Routes = [
     loadComponent: () => import('./user-management/user-management.component'),
     title: 'user-management.title',
   },
+  {
+    path: 'etablissements',
+    loadComponent: () => import('./etablissements/etablissements.component'),
+    title: 'etablissements',
+  },
   /* jhipster-needle-add-admin-route - JHipster will add admin routes here */
 ];
 

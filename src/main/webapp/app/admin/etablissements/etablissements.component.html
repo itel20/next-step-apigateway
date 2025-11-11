@@ -1,1 +1,116 @@
-<p>etablissements works!</p>
+<div class="etablissements-container">
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+    <div>
+      <h2 class="fw-bold text-success">Gestion des établissements</h2>
+      <p class="text-muted">Gérer les universités, ISEP et écoles privées</p>
+    </div>
+    <button class="btn btn-success"><i class="bi bi-plus-lg me-2"></i> Ajouter un établissement</button>
+  </div>
+
+  <!-- 🔍 Recherche et filtres -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-6 position-relative">
+      <i class="bi bi-search position-absolute top-50 translate-middle-y ms-3 text-muted"></i>
+      <input type="text" class="form-control ps-5" placeholder="Rechercher par nom, prénom ou email..." [(ngModel)]="searchTerm" />
+    </div>
+
+    <div class="col-md-3">
+      <select class="form-select" [(ngModel)]="filterType">
+        <option value="all">Tous les types</option>
+        <option value="Public">Public</option>
+        <option value="Privé">Privé</option>
+      </select>
+    </div>
+
+    <div class="col-md-3">
+      <select class="form-select" [(ngModel)]="filterRegion">
+        <option value="all">Toutes les régions</option>
+        <option value="Dakar">Dakar</option>
+        <option value="Saint-Louis">Saint-Louis</option>
+        <option value="Diourbel">Diourbel</option>
+        <option value="Thiès">Thiès</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- 📋 Table des établissements -->
+  <div class="table-responsive shadow-sm bg-white rounded-3 p-2">
+    <table class="table align-middle">
+      <thead class="bg-light">
+        <tr>
+          <th>Nom</th>
+          <th>Type</th>
+          <th>Région</th>
+          <th>Filières</th>
+          <th>Statut</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let i of filteredInstitutions">
+          <td>
+            <strong>{{ i.nom }}</strong
+            ><br />
+            <small class="text-muted">Taux d'insertion: {{ i.tauxInsertion }}</small>
+          </td>
+          <td>
+            <span class="badge" [ngClass]="i.type === 'Public' ? 'bg-success' : 'bg-secondary'">
+              {{ i.type }}
+            </span>
+          </td>
+          <td>{{ i.region }}</td>
+          <td>{{ i.filieres }} filières</td>
+          <td>
+            <span
+              class="badge d-inline-flex align-items-center"
+              [ngClass]="i.statut === 'Validé' ? 'bg-success-subtle text-success' : 'bg-warning text-dark'"
+            >
+              <i class="bi me-1" [ngClass]="i.statut === 'Validé' ? 'bi-check-circle' : 'bi-exclamation-circle'"></i>
+              {{ i.statut }}
+            </span>
+          </td>
+          <td class="text-end">
+            <button class="btn btn-outline-secondary btn-sm me-1" (click)="openDetails(i)">
+              <i class="bi bi-eye"></i>
+            </button>
+            <button class="btn btn-outline-primary btn-sm me-1">
+              <i class="bi bi-pencil"></i>
+            </button>
+            <button class="btn btn-outline-danger btn-sm">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="text-muted mt-3">Affichage de {{ filteredInstitutions.length }} établissement(s)</p>
+  </div>
+
+  <!-- 🔍 Détails -->
+  <div class="modal fade show" tabindex="-1" [ngClass]="{ 'd-block': selectedInstitution }" *ngIf="selectedInstitution">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header bg-success text-white">
+          <h5 class="modal-title">{{ selectedInstitution?.nom }}</h5>
+          <button type="button" class="btn-close btn-close-white" (click)="closeDetails()"></button>
+        </div>
+        <div class="modal-body">
+          <p><strong>Type :</strong> {{ selectedInstitution?.type }}</p>
+          <p><strong>Région :</strong> {{ selectedInstitution?.region }}</p>
+          <p><strong>Nombre de filières :</strong> {{ selectedInstitution?.filieres }}</p>
+          <p><strong>Taux d'insertion :</strong> {{ selectedInstitution?.tauxInsertion }}</p>
+          <p><strong>Statut :</strong> {{ selectedInstitution?.statut }}</p>
+          <hr />
+          <p><strong>Contact :</strong> {{ selectedInstitution?.contact }}</p>
+          <p>
+            <strong>Site Web :</strong>
+            <a href="https://{{ selectedInstitution?.siteWeb }}" target="_blank">{{ selectedInstitution?.siteWeb }}</a>
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline-secondary" (click)="closeDetails()">Fermer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

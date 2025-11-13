@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NgClass } from '@angular/common';
+import { NgClass, NgForOf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 interface Etablissement {
@@ -17,7 +17,7 @@ interface Etablissement {
 @Component({
   selector: 'jhi-etablissements',
   standalone: true,
-  imports: [NgClass, FormsModule],
+  imports: [NgClass, FormsModule, NgForOf],
   templateUrl: './etablissements.component.html',
   styleUrl: './etablissements.component.scss',
 })

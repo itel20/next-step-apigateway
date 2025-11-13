@@ -39,7 +39,7 @@ export default class ParametresComponent {
     { id: 5, action: 'Export base de données', utilisateur: 'Abdou Kane', date: '2024-11-05 16:30', statut: 'Succès' },
   ];
 
-  darkMode: boolean = false;
-  twoFactorAuth: boolean = true;
-  sessionTimeout: boolean = true;
+  darkMode = false;
+  twoFactorAuth = true;
+  sessionTimeout = true;
 }

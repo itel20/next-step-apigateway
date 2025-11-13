@@ -65,6 +65,11 @@ const routes: Routes = [
   },
   {
     path: '',
+    component: ParcoursComponent,
+    outlet: 'parametres',
+  },
+  {
+    path: '',
     component: BoursesComponent,
     outlet: 'etablissements',
   },
@@ -124,6 +129,11 @@ const routes: Routes = [
     path: 'bourses',
     loadComponent: () => import('./admin/bourses/bourses.component'),
     title: 'etablissements',
+  },
+  {
+    path: 'parametre',
+    loadComponent: () => import('./admin/parametres/parametres.component'),
+    title: 'parametre',
   },
   ...errorRoute,
 ];

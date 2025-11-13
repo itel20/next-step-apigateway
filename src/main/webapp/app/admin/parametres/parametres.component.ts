@@ -24,7 +24,7 @@ interface ActivityLog {
   templateUrl: './parametres.component.html',
   styleUrl: './parametres.component.scss',
 })
-export class ParametresComponent {
+export default class ParametresComponent {
   userRoles: UserRole[] = [
     { id: 1, nom: 'Abdou Kane', role: 'Super Admin', email: 'abdou.kane@nextstep.sn', dernierAcces: '2024-11-06 15:32' },
     { id: 2, nom: 'Mariama Diallo', role: 'Modérateur', email: 'mariama.diallo@nextstep.sn', dernierAcces: '2024-11-06 14:18' },

@@ -57,6 +57,11 @@ const routes: Routes = [
     loadComponent: () => import('./bourses/bourses.component'),
     title: '',
   },
+  {
+    path: 'parametres',
+    loadComponent: () => import('./parametres/parametres.component'),
+    title: '',
+  },
   /* jhipster-needle-add-admin-route - JHipster will add admin routes here */
 ];
 

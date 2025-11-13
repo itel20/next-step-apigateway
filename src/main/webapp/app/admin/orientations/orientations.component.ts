@@ -108,13 +108,16 @@ export default class OrientationsComponent {
   ];
 
   filiereStatsData = [
-    { name: 'Informatique', demandes: 450 },
-    { name: 'Médecine', demandes: 380 },
-    { name: 'Génie Civil', demandes: 320 },
-    { name: 'Droit', demandes: 280 },
-    { name: 'Gestion', demandes: 250 },
-    { name: 'Lettres', demandes: 180 },
+    { name: 'Informatique', value: 450 },
+    { name: 'Médecine', value: 380 },
+    { name: 'Génie Civil', value: 320 },
+    { name: 'Droit', value: 280 },
+    { name: 'Gestion', value: 250 },
+    { name: 'Lettres', value: 180 },
   ];
+  colorScheme = {
+    domain: ['#2E7D32', '#FFA726', '#E53935'],
+  };
 
   statusData = [
     { name: 'Accepté', value: 1245, color: '#2E7D32' },

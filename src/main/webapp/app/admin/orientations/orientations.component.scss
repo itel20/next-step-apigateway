@@ -17,6 +17,7 @@
   padding: 1.5rem;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   border: 1px solid #e5e7eb;
+  overflow: hidden; /* ✅ Empêche les graphiques de déborder */
 }
 
 .card h3 {
@@ -35,6 +36,58 @@
 @media (min-width: 1024px) {
   .lg\:grid-cols-2 {
     grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ✅ Ajustement spécifique pour les graphiques */
+ngx-charts-bar-horizontal,
+ngx-charts-pie-chart {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* ✅ Contrôle strict de la taille du graphique */
+ngx-charts-bar-horizontal {
+  height: 250px !important;
+  max-height: 250px !important;
+  overflow: hidden;
+}
+
+ngx-charts-pie-chart {
+  height: 250px !important;
+  max-height: 250px !important;
+  overflow: hidden;
+}
+
+/* ✅ Ajustement du texte des graphiques */
+::ng-deep .ngx-charts text {
+  font-size: 12px !important;
+  font-family: 'Inter', sans-serif !important;
+  fill: #374151 !important;
+}
+
+/* ✅ Réduction de l’espace entre les barres */
+::ng-deep .bar {
+  rx: 4px !important;
+}
+
+::ng-deep .bar-series > g {
+  transform: scaleY(0.75) translateY(20px) !important;
+}
+
+/* ✅ Empêche les barres de s’étirer trop en responsive */
+@media (max-width: 768px) {
+  ngx-charts-bar-horizontal {
+    height: 200px !important;
+  }
+
+  ngx-charts-pie-chart {
+    height: 200px !important;
+  }
+
+  ::ng-deep .ngx-charts text {
+    font-size: 10px !important;
   }
 }
 

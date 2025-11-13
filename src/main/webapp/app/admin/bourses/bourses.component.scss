@@ -1,0 +1,113 @@
+/* Container général */
+.container {
+  padding: 1rem;
+
+  h1 {
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+  }
+
+  p.text-muted {
+    color: #6c757d;
+  }
+}
+
+/* Card bourse */
+.card {
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  }
+
+  .card-title {
+    font-weight: 600;
+  }
+
+  .badge {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.5rem;
+  }
+
+  .opacity-50 {
+    opacity: 0.6;
+  }
+
+  .position-absolute {
+    top: 0.5rem;
+    right: 0.5rem;
+    font-size: 2rem;
+  }
+}
+
+/* Input recherche avec icône */
+input.form-control {
+  padding-left: 2.5rem;
+  &:focus {
+    box-shadow: 0 0 0 0.2rem rgba(46, 125, 50, 0.25);
+    border-color: #2e7d32;
+  }
+}
+
+/* Modal personnalisée */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1050;
+
+  .card {
+    max-width: 800px;
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    background: #fff;
+    position: relative;
+  }
+
+  .btn-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+  }
+}
+
+/* Boutons principaux */
+.btn-success {
+  background-color: #2e7d32;
+  border-color: #2e7d32;
+
+  &:hover {
+    background-color: #1b5e20;
+    border-color: #1b5e20;
+  }
+}
+
+/* Liste des documents */
+ul {
+  padding-left: 1.2rem;
+
+  li {
+    margin-bottom: 0.25rem;
+    &::before {
+      content: '•';
+      color: #2e7d32;
+      display: inline-block;
+      width: 1em;
+      margin-left: -1em;
+    }
+  }
+}
+
+/* Responsive tweaks */
+@media (max-width: 576px) {
+  .d-flex.flex-column.flex-sm-row {
+    flex-direction: column !important;
+  }
+
+  .form-select.w-100.w-sm-auto,
+  .input-group {
+    width: 100% !important;
+  }
+}

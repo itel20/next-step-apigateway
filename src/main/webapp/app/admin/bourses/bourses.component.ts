@@ -22,7 +22,7 @@ interface Scholarship {
   templateUrl: './bourses.component.html',
   styleUrl: './bourses.component.scss',
 })
-export class BoursesComponent {
+export default class BoursesComponent {
   searchTerm = '';
   filterType = 'all';
   filterStatus = 'all';

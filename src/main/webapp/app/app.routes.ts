@@ -13,6 +13,7 @@ import DashboardComponent from './admin/dashboard/dashboard.component';
 import UserManagementComponent from './admin/user-management/user-management.component';
 import EtablissementsComponent from './admin/etablissements/etablissements.component';
 import OrientationsComponent from './admin/orientations/orientations.component';
+import BoursesComponent from './admin/bourses/bourses.component';
 
 const routes: Routes = [
   {
@@ -60,6 +61,11 @@ const routes: Routes = [
   {
     path: '',
     component: EtablissementsComponent,
+    outlet: 'etablissements',
+  },
+  {
+    path: '',
+    component: BoursesComponent,
     outlet: 'etablissements',
   },
   {
@@ -112,6 +118,11 @@ const routes: Routes = [
   {
     path: 'orientations',
     loadComponent: () => import('./admin/orientations/orientations.component'),
+    title: 'etablissements',
+  },
+  {
+    path: 'bourses',
+    loadComponent: () => import('./admin/bourses/bourses.component'),
     title: 'etablissements',
   },
   ...errorRoute,

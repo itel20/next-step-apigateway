@@ -12,6 +12,7 @@ import ParcoursComponent from './parcours/parcours.component';
 import DashboardComponent from './admin/dashboard/dashboard.component';
 import UserManagementComponent from './admin/user-management/user-management.component';
 import EtablissementsComponent from './admin/etablissements/etablissements.component';
+import OrientationsComponent from './admin/orientations/orientations.component';
 
 const routes: Routes = [
   {
@@ -61,6 +62,11 @@ const routes: Routes = [
     component: EtablissementsComponent,
     outlet: 'etablissements',
   },
+  {
+    path: '',
+    component: OrientationsComponent,
+    outlet: 'orientations',
+  },
 
   {
     path: 'chatbot',
@@ -101,6 +107,11 @@ const routes: Routes = [
   {
     path: 'etablissements',
     loadComponent: () => import('./admin/etablissements/etablissements.component'),
+    title: 'etablissements',
+  },
+  {
+    path: 'orientations',
+    loadComponent: () => import('./admin/orientations/orientations.component'),
     title: 'etablissements',
   },
   ...errorRoute,

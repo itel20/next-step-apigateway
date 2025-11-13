@@ -43,6 +43,11 @@ const routes: Routes = [
     title: 'user-management.title',
   },
   {
+    path: 'orientations',
+    loadComponent: () => import('./orientations/orientations.component'),
+    title: 'user-management.title',
+  },
+  {
     path: 'etablissements',
     loadComponent: () => import('./etablissements/etablissements.component'),
     title: 'etablissements',

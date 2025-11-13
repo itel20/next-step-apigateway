@@ -1,0 +1,184 @@
+/* === Structure générale === */
+.space-y-6 {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1rem 2rem;
+  background-color: #f9fafb;
+  min-height: 100vh;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  color: #1e293b;
+}
+
+/* === Cartes === */
+.card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e5e7eb;
+}
+
+.card h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 1rem;
+}
+
+/* === Grille pour les graphiques === */
+.grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .lg\:grid-cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* === Header du tableau === */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.export-btn {
+  background-color: #2e7d32;
+  color: #fff;
+  border: none;
+  font-weight: 500;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.export-btn:hover {
+  background-color: #1b5e20;
+}
+
+/* === Filtres === */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.select {
+  padding: 0.6rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background-color: #fff;
+  font-size: 0.95rem;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.select:hover {
+  border-color: #2e7d32;
+}
+
+/* === Tableau === */
+.table-container {
+  margin-top: 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table thead {
+  background-color: #f5f7f9;
+}
+
+.table th {
+  text-align: left;
+  padding: 0.9rem;
+  font-weight: 600;
+  color: #111827;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.table td {
+  padding: 0.9rem;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 0.95rem;
+}
+
+.table tr:hover {
+  background-color: #f9fafb;
+}
+
+/* === Badge Série === */
+.badge {
+  background-color: #eef2ff;
+  color: #1e40af;
+  font-weight: 500;
+  font-size: 0.8rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 8px;
+}
+
+/* === Barre de progression === */
+.progress {
+  background-color: #e5e7eb;
+  border-radius: 8px;
+  height: 8px;
+  width: 120px;
+  overflow: hidden;
+  display: inline-block;
+  margin-right: 0.5rem;
+}
+
+.progress-bar {
+  background-color: #2e7d32;
+  height: 100%;
+  border-radius: 8px;
+  transition: width 0.3s ease-in-out;
+}
+
+/* === Statuts === */
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+  padding: 0.25rem 0.7rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+}
+
+.status.accept {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.status.pending {
+  background-color: #fff8e1;
+  color: #f9a825;
+}
+
+.status.refused {
+  background-color: #ffebee;
+  color: #e53935;
+}
+
+/* === Texte secondaire === */
+.text-gray-500 {
+  color: #6b7280;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+}

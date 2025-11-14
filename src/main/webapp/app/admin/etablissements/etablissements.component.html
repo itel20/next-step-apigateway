@@ -47,10 +47,7 @@
             <th>Nom</th>
             <th>Type</th>
             <th>Ville</th>
-            <th>Classement</th>
-            <th>Note</th>
             <th>Sélectivité</th>
-            <th>Frais/an</th>
             <th>Filières</th>
             <th class="text-end">Actions</th>
           </tr>
@@ -67,12 +64,7 @@
               <span class="badge rounded-pill" [ngClass]="inst.type === 'Public' ? 'bg-primary' : 'bg-secondary'">{{ inst.type }}</span>
             </td>
             <td>{{ inst.ville }}</td>
-            <td>{{ inst.classement }}</td>
-            <td>
-              <i class="bi bi-star-fill text-warning me-1"></i>{{ inst.note }} <small class="text-muted">({{ inst.nbAvis }})</small>
-            </td>
             <td>{{ inst.selectivite }}</td>
-            <td>{{ inst.fraisAn }}</td>
             <td>
               <div>
                 <span class="badge bg-light text-dark">{{ inst.filieres[0] }}</span>

@@ -1,115 +1,116 @@
-import { Component, OnInit } from '@angular/core';
-import { NgClass, NgForOf } from '@angular/common';
+import { Component } from '@angular/core';
+import { NgClass, NgForOf, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-interface Etablissement {
+interface Admission {
+  campusen: boolean;
+  dossier: boolean;
+  concours: boolean;
+  tauxAcceptation: string;
+  pointsBAC: string;
+}
+
+export interface Institution {
   id: number;
   nom: string;
-  type: string;
-  region: string;
-  filieres: number;
-  statut: string;
+  type: 'Public' | 'Privé';
+  ville: string;
+  pays: string;
+  classement: string;
+  note: number;
+  nbAvis: number;
+  selectivite: string;
+  international: string;
+  fraisAn: string;
+  filieres: string[];
+  description: string;
+  etudiants: number;
+  enseignants: number;
+  laboratoires: number;
+  bibliotheques: number;
   tauxInsertion: string;
-  contact: string;
-  siteWeb: string;
+  salairesMoyen: string;
+  admission: Admission;
+  infrastructures: string[];
+  associations: string[];
 }
 
 @Component({
   selector: 'jhi-etablissements',
   standalone: true,
-  imports: [NgClass, FormsModule, NgForOf],
+  imports: [FormsModule, NgForOf, NgIf, NgClass],
   templateUrl: './etablissements.component.html',
-  styleUrl: './etablissements.component.scss',
+  styleUrls: ['./etablissements.component.scss'],
 })
 export default class EtablissementsComponent {
+  // filtres
   searchTerm = '';
-  filterType = 'all';
-  filterRegion = 'all';
-  selectedInstitution: Etablissement | null = null;
+  filterType: 'all' | 'Public' | 'Privé' = 'all';
+  filterVille = 'all';
 
-  institutions: Etablissement[] = [
-    {
-      id: 1,
-      nom: 'Université Cheikh Anta Diop (UCAD)',
-      type: 'Public',
-      region: 'Dakar',
-      filieres: 42,
-      statut: 'Validé',
-      tauxInsertion: '78%',
-      contact: 'contact@ucad.edu.sn',
-      siteWeb: 'www.ucad.sn',
-    },
-    {
-      id: 2,
-      nom: 'Université Gaston Berger (UGB)',
-      type: 'Public',
-      region: 'Saint-Louis',
-      filieres: 28,
-      statut: 'Validé',
-      tauxInsertion: '75%',
-      contact: 'info@ugb.edu.sn',
-      siteWeb: 'www.ugb.sn',
-    },
-    {
-      id: 3,
-      nom: 'École Supérieure Polytechnique (ESP)',
-      type: 'Public',
-      region: 'Dakar',
-      filieres: 15,
-      statut: 'Validé',
-      tauxInsertion: '92%',
-      contact: 'esp@ucad.edu.sn',
-      siteWeb: 'www.esp.sn',
-    },
-    {
-      id: 4,
-      nom: 'Institut Africain de Management (IAM)',
-      type: 'Privé',
-      region: 'Dakar',
-      filieres: 12,
-      statut: 'En attente',
-      tauxInsertion: '68%',
-      contact: 'admission@iam.edu.sn',
-      siteWeb: 'www.iam.sn',
-    },
-    {
-      id: 5,
-      nom: 'Université Alioune Diop de Bambey',
-      type: 'Public',
-      region: 'Diourbel',
-      filieres: 18,
-      statut: 'Validé',
-      tauxInsertion: '71%',
-      contact: 'info@uadb.edu.sn',
-      siteWeb: 'www.uadb.edu.sn',
-    },
-    {
-      id: 6,
-      nom: 'Groupe HECI Polytechnique',
-      type: 'Privé',
-      region: 'Dakar',
-      filieres: 20,
-      statut: 'Validé',
-      tauxInsertion: '85%',
-      contact: 'info@heci.sn',
-      siteWeb: 'www.heci.sn',
-    },
+  // modales / sélection
+  selectedInstitution: Institution | null = null;
+  showDeleteConfirm = false;
+  institutionToDelete: Institution | null = null;
+
+  // données complètes
+  mockInstitutions: Institution[] = [
+    /* tes 6 institutions ici */
   ];
 
-  get filteredInstitutions(): Etablissement[] {
-    return this.institutions.filter(i => {
-      const matchesSearch = i.nom.toLowerCase().includes(this.searchTerm.toLowerCase());
-      const matchesType = this.filterType === 'all' || i.type === this.filterType;
-      const matchesRegion = this.filterRegion === 'all' || i.region === this.filterRegion;
-      return matchesSearch && matchesType && matchesRegion;
+  // getter filtré
+  get filteredInstitutions(): Institution[] {
+    return this.mockInstitutions.filter((inst: Institution) => {
+      const matchesSearch = inst.nom.toLowerCase().includes(this.searchTerm.toLowerCase());
+      const matchesType = this.filterType === 'all' || inst.type === this.filterType;
+      const matchesVille = this.filterVille === 'all' || inst.ville === this.filterVille;
+      return matchesSearch && matchesType && matchesVille;
     });
   }
 
-  openDetails(institution: Etablissement): void {
-    this.selectedInstitution = institution;
+  // ouvrir modal détails
+  openDetails(inst: Institution): void {
+    this.selectedInstitution = inst;
+    setTimeout(() => {
+      const el = document.querySelector('.modal-content');
+      if (el) (el as HTMLElement).scrollTop = 0;
+    }, 10);
   }
 
   closeDetails(): void {
     this.selectedInstitution = null;
+  }
+
+  // suppression
+  openDelete(inst: Institution): void {
+    this.institutionToDelete = inst;
+    this.showDeleteConfirm = true;
+  }
+
+  cancelDelete(): void {
+    this.institutionToDelete = null;
+    this.showDeleteConfirm = false;
+  }
+
+  confirmDelete(): void {
+    if (!this.institutionToDelete) return;
+    this.mockInstitutions = this.mockInstitutions.filter(i => i.id !== this.institutionToDelete!.id);
+
+    // fermer modales si nécessaires
+    if (this.selectedInstitution?.id === this.institutionToDelete.id) {
+      this.closeDetails();
+    }
+
+    this.institutionToDelete = null;
+    this.showDeleteConfirm = false;
+  }
+
+  // placeholders actions
+  addInstitution(): void {
+    alert('Ajouter un établissement (placeholder)');
+  }
+
+  editInstitution(inst: Institution): void {
+    alert(`Éditer ${inst.nom} (placeholder)`);
   }
 }

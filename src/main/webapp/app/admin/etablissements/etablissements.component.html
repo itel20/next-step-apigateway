@@ -1,45 +1,52 @@
-<div class="admin-page container py-4">
-  <!-- Header + Add -->
-  <div class="admin-header d-flex justify-content-between align-items-center mb-3">
+<div class="admin-container">
+  <!-- Header -->
+  <header class="admin-header">
     <div>
-      <h2 class="title">Gestion des Établissements</h2>
-      <p class="subtitle mb-0">Ajouter, modifier ou supprimer des écoles et universités</p>
+      <h2 class="header-title">Gestion des Établissements</h2>
+      <p class="header-subtitle">Ajouter, modifier ou supprimer des écoles et universités</p>
     </div>
 
-    <button class="btn btn-primary btn-add" (click)="addInstitution()"><i class="bi bi-plus-lg me-1"></i> Ajouter un établissement</button>
-  </div>
+    <button class="header-add-btn" (click)="addInstitution()">
+      <i class="bi bi-plus-lg"></i>
+      Ajouter un établissement
+    </button>
+  </header>
 
-  <!-- Search + Filters -->
-  <div class="card mb-3 p-3 filters">
-    <div class="filters-row">
-      <div class="search">
+  <!-- Filters -->
+  <section class="filter-card">
+    <div class="filter-grid">
+      <!-- Search -->
+      <div class="filter-search">
         <i class="bi bi-search search-icon"></i>
-        <input type="text" class="form-control" [(ngModel)]="searchTerm" placeholder="Rechercher une école ou université..." />
+        <input type="text" [(ngModel)]="searchTerm" placeholder="Rechercher une école ou université..." />
       </div>
 
-      <select class="form-select" [(ngModel)]="filterType">
+      <!-- Type -->
+      <select class="filter-select" [(ngModel)]="filterType">
         <option value="all">Tous les types</option>
         <option value="Public">Publique</option>
         <option value="Privé">Privée</option>
       </select>
 
-      <select class="form-select" [(ngModel)]="filterVille">
+      <!-- Ville -->
+      <select class="filter-select" [(ngModel)]="filterVille">
         <option value="all">Toutes les villes</option>
         <option value="Dakar">Dakar</option>
         <option value="Saint-Louis">Saint-Louis</option>
         <option value="Bambey">Bambey</option>
       </select>
 
-      <button class="btn btn-outline-secondary w-100" title="Options de filtre">
+      <!-- More filters -->
+      <button class="filter-more-btn" title="Options de filtre">
         <i class="bi bi-sliders"></i>
       </button>
     </div>
-  </div>
+  </section>
 
   <!-- Table -->
-  <div class="card p-0 table-wrap">
+  <section class="table-container">
     <div class="table-responsive">
-      <table class="table table-hover mb-0 admin-table">
+      <table class="institution-table">
         <thead>
           <tr>
             <th>Nom</th>
@@ -53,17 +60,15 @@
 
         <tbody>
           <tr *ngFor="let inst of filteredInstitutions">
-            <!-- Nom + ville -->
+            <!-- Nom & Pays -->
             <td>
-              <div>
-                <p class="mb-0 fw-bold">{{ inst.nom }}</p>
-                <small class="text-muted">📍 {{ inst.ville }}, {{ inst.pays }}</small>
-              </div>
+              <p class="fw-bold mb-0">{{ inst.nom }}</p>
+              <small class="text-muted">📍 {{ inst.ville }}, {{ inst.pays }}</small>
             </td>
 
-            <!-- Type with badge color -->
+            <!-- Type -->
             <td>
-              <span class="badge" [ngClass]="inst.type === 'Public' ? 'green' : 'gray'">
+              <span class="type-badge" [ngClass]="inst.type === 'Public' ? 'ok' : 'neutral'">
                 {{ inst.type }}
               </span>
             </td>
@@ -71,19 +76,19 @@
             <td>{{ inst.ville }}</td>
             <td>{{ inst.selectivite }}</td>
 
-            <!-- filières -->
+            <!-- Filieres -->
             <td>
-              <span class="pill primary">{{ inst.filieres[0] }}</span>
-              <span *ngIf="inst.filieres.length > 1" class="pill"> +{{ inst.filieres.length - 1 }} </span>
+              <span class="filiere-pill primary">{{ inst.filieres[0] }}</span>
+              <span *ngIf="inst.filieres.length > 1" class="filiere-pill"> +{{ inst.filieres.length - 1 }} </span>
             </td>
 
             <!-- Actions -->
-            <td class="text-end actions">
-              <button class="action-btn me-1" title="Voir" (click)="openDetails(inst)">
+            <td class="action-buttons">
+              <button class="action-btn" title="Voir" (click)="openDetails(inst)">
                 <i class="bi bi-eye"></i>
               </button>
 
-              <button class="action-btn me-1" title="Éditer" (click)="editInstitution(inst)">
+              <button class="action-btn" title="Éditer" (click)="editInstitution(inst)">
                 <i class="bi bi-pencil"></i>
               </button>
 
@@ -95,7 +100,7 @@
         </tbody>
       </table>
     </div>
-  </div>
+  </section>
 
   <p class="text-center text-muted mt-2">Affichage de {{ filteredInstitutions.length }} établissement(s)</p>
 </div>

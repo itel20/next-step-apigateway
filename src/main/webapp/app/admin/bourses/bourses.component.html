@@ -1,98 +1,231 @@
-<div class="container py-4">
+<div class="bourses-page">
   <!-- Header -->
-  <div class="mb-4">
-    <h1 class="fw-bold">Gestion des bourses et concours</h1>
-    <p class="text-muted">Centraliser les offres de bourses et d'aides disponibles</p>
+  <div class="header d-flex justify-content-between align-items-center mb-3">
+    <div>
+      <h2>Gestion des Bourses &amp; Concours</h2>
+      <p>Ajouter, modifier ou supprimer des bourses et concours</p>
+    </div>
+    <button class="btn-add btn" (click)="addScholarship()">
+      <i class="bi bi-plus-lg"></i>
+      Ajouter une bourse
+    </button>
   </div>
 
   <!-- Search & Filters -->
-  <div class="card mb-4 p-3">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h2 class="h5 fw-semibold">Bourses disponibles</h2>
-      <button class="btn btn-success d-flex align-items-center"><i class="bi bi-plus-lg me-2"></i> Ajouter une bourse</button>
+  <div class="filters d-flex flex-wrap gap-2 mb-3 align-items-center">
+    <div class="search-wrapper flex-grow-1">
+      <i class="bi bi-search search-icon" aria-hidden="true"></i>
+      <input
+        type="text"
+        class="form-control search-input"
+        placeholder="Rechercher une bourse ou concours..."
+        [(ngModel)]="searchTerm"
+        aria-label="Recherche"
+      />
     </div>
 
-    <div class="d-flex flex-column flex-sm-row gap-2">
-      <div class="position-relative flex-grow-1">
-        <i class="bi bi-search position-absolute top-50 translate-middle-y ms-2 text-muted"></i>
-        <input type="text" [(ngModel)]="searchTerm" class="form-control ps-5" placeholder="Rechercher une bourse..." />
-      </div>
-      <select [(ngModel)]="filterType" class="form-select w-100 w-sm-auto">
-        <option value="all">Tous les types</option>
-        <option value="Nationale">Nationale</option>
-        <option value="Internationale">Internationale</option>
-      </select>
-      <select [(ngModel)]="filterStatus" class="form-select w-100 w-sm-auto">
-        <option value="all">Tous les statuts</option>
-        <option value="Active">Active</option>
-        <option value="Expirée">Expirée</option>
-      </select>
-    </div>
+    <select class="form-select select-type" [(ngModel)]="filterType" aria-label="Type">
+      <option value="all">Tous</option>
+      <option value="Bourse">Bourse</option>
+      <option value="Concours">Concours</option>
+    </select>
+
+    <button class="btn btn-outline-secondary notify-btn" title="Notifications">
+      <i class="bi bi-bell"></i>
+      <span class="badge-count" *ngIf="notificationsCount">{{ notificationsCount }}</span>
+    </button>
   </div>
 
-  <!-- Scholarship Cards -->
-  <div class="row g-3">
-    <div *ngFor="let s of filteredScholarships" class="col-12 col-md-6 col-lg-4">
-      <div class="card h-100 position-relative" [class.opacity-50]="s.statut === 'Expirée'">
-        <div class="position-absolute top-0 end-0 fs-1 p-2">{{ s.drapeau }}</div>
-        <div class="card-body d-flex flex-column">
-          <h5 class="card-title pe-5">{{ s.nom }}</h5>
-          <div class="mb-2 d-flex gap-2">
-            <span class="badge bg-secondary">{{ s.type }}</span>
-            <span [class]="'badge ' + (s.statut === 'Active' ? 'bg-success text-white' : 'bg-secondary')">{{ s.statut }}</span>
+  <!-- Table -->
+  <div class="table-wrapper">
+    <table class="table table-hover align-middle w-100">
+      <thead class="table-light">
+        <tr>
+          <th>Titre</th>
+          <th>Type</th>
+          <th>Tags</th>
+          <th>Montant</th>
+          <th>Bénéficiaires</th>
+          <th>Taux</th>
+          <th>Date limite</th>
+          <th>Organisme</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let s of filteredScholarships" (click)="selectScholarship(s)" class="cursor-pointer">
+          <td class="title-cell">
+            <p class="m-0 fw-medium">{{ s.titre }}</p>
+            <small class="text-muted d-block d-md-none">{{ s.organisme }} • {{ s.pays }}</small>
+          </td>
+
+          <td>
+            <span class="badge-type" [ngClass]="s.type === 'Bourse' ? 'badge-bourse' : 'badge-concours'">
+              {{ s.type }}
+            </span>
+          </td>
+
+          <td>
+            <div class="tags">
+              <span class="tag" *ngFor="let t of s.tags.slice(0, 2)">{{ t }}</span>
+              <span *ngIf="s.tags.length > 2" class="tag more">+{{ s.tags.length - 2 }}</span>
+            </div>
+          </td>
+
+          <td>
+            <div>
+              <div class="montant">{{ s.montant }}</div>
+              <small class="text-muted">{{ s.periodicite }}</small>
+            </div>
+          </td>
+
+          <td><i class="bi bi-people-fill me-1"></i>{{ s.beneficiaires }}</td>
+
+          <td>
+            <span class="taux">{{ s.tauxAcceptation }}</span>
+          </td>
+
+          <td><i class="bi bi-calendar-event me-1"></i>{{ s.dateLimite }}</td>
+
+          <td>
+            <div class="organisme">
+              <div class="fw-medium">{{ s.organisme }}</div>
+              <small class="text-muted">{{ s.pays }}</small>
+            </div>
+          </td>
+
+          <td class="actions text-end">
+            <button class="action-btn view" title="Voir" (click)="selectScholarship(s); $event.stopPropagation()">
+              <i class="bi bi-eye"></i>
+            </button>
+
+            <button class="action-btn edit" title="Modifier" (click)="editScholarship(s); $event.stopPropagation()">
+              <i class="bi bi-pencil"></i>
+            </button>
+
+            <button class="action-btn delete" title="Supprimer" (click)="deleteScholarship(s); $event.stopPropagation()">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        </tr>
+
+        <tr *ngIf="filteredScholarships.length === 0">
+          <td colspan="9" class="text-center py-4 text-muted">Aucune opportunité trouvée.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Modal / Details -->
+  <div class="modal-backdrop" *ngIf="selectedScholarship">
+    <div class="modal-panel">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ selectedScholarship.titre }}</h5>
+        <button class="btn-close" (click)="closeDialog()" aria-label="Fermer"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="meta mb-3 d-flex flex-wrap gap-2 align-items-center">
+          <span class="badge-type" [ngClass]="selectedScholarship.type === 'Bourse' ? 'badge-bourse' : 'badge-concours'">
+            {{ selectedScholarship.type }}
+          </span>
+
+          <div class="tags">
+            <span class="tag" *ngFor="let t of selectedScholarship.tags">{{ t }}</span>
           </div>
-          <p class="mb-1"><i class="bi bi-currency-dollar me-2"></i>{{ s.montant }}</p>
-          <p class="mb-1"><i class="bi bi-geo-alt me-2"></i>{{ s.pays }}</p>
-          <p class="mb-1"><i class="bi bi-building me-2"></i>{{ s.organisme }}</p>
-          <p class="mb-1"><i class="bi bi-calendar me-2"></i>{{ s.dateLimite }}</p>
-          <p class="mb-3"><i class="bi bi-people me-2"></i>{{ s.candidats }} bacheliers</p>
-          <button class="btn btn-success mt-auto" (click)="openDetails(s)">Voir les détails</button>
+
+          <div class="ms-auto text-end d-none d-md-block">
+            <div class="montant mb-1">{{ selectedScholarship.montant }}</div>
+            <small class="text-muted">{{ selectedScholarship.periodicite }}</small>
+          </div>
+        </div>
+
+        <p class="description text-muted">{{ selectedScholarship.description }}</p>
+
+        <!-- Key cards -->
+        <div class="key-grid mb-3">
+          <div class="key-card">
+            <i class="bi bi-currency-dollar icon-lg"></i>
+            <div class="k-title">Montant</div>
+            <div class="k-value">{{ selectedScholarship.montant }}</div>
+            <small class="text-muted">{{ selectedScholarship.periodicite }}</small>
+          </div>
+
+          <div class="key-card">
+            <i class="bi bi-people-fill icon-lg"></i>
+            <div class="k-title">Bénéficiaires</div>
+            <div class="k-value">{{ selectedScholarship.beneficiaires }}</div>
+          </div>
+
+          <div class="key-card">
+            <i class="bi bi-target icon-lg"></i>
+            <div class="k-title">Taux</div>
+            <div class="k-value">{{ selectedScholarship.tauxAcceptation }}</div>
+          </div>
+
+          <div class="key-card">
+            <i class="bi bi-calendar-event icon-lg text-warning"></i>
+            <div class="k-title">Date limite</div>
+            <div class="k-value">{{ selectedScholarship.dateLimite }}</div>
+          </div>
+        </div>
+
+        <!-- Organisme -->
+        <div class="organisme-block mb-3 p-3 bg-light rounded">
+          <div class="fw-semibold">{{ selectedScholarship.organisme }}</div>
+          <div class="text-muted">{{ selectedScholarship.pays }}</div>
+        </div>
+
+        <!-- Critères -->
+        <div class="mb-3">
+          <h6>Critères d'éligibilité</h6>
+          <div class="criteria-list">
+            <div *ngFor="let c of selectedScholarship.criteres" class="criteria-item">
+              <i class="bi bi-check-circle-fill text-success me-2"></i>
+              <span>{{ c }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Documents -->
+        <div class="mb-3">
+          <h6>Documents requis</h6>
+          <div class="docs-grid">
+            <div *ngFor="let d of selectedScholarship.documentsRequis" class="doc-item">
+              <i class="bi bi-file-earmark-text me-2"></i>
+              <span>{{ d }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="d-grid">
+          <button class="btn-apply" (click)="applyNow(selectedScholarship)"><i class="bi bi-send me-2"></i>Postuler maintenant</button>
         </div>
       </div>
     </div>
   </div>
 
-  <p class="text-muted mt-3">Affichage de {{ filteredScholarships.length }} bourse(s)</p>
-
-  <!-- Modal -->
-  <div *ngIf="selectedScholarship" class="modal-backdrop d-flex justify-content-center align-items-start pt-5">
-    <div class="card p-4 shadow" style="max-width: 800px; max-height: 80vh; overflow-y: auto; width: 100%; position: relative">
-      <button (click)="closeDetails()" class="btn-close position-absolute top-2 end-2"></button>
-      <div class="d-flex justify-content-between mb-3">
-        <div>
-          <h3>{{ selectedScholarship.nom }}</h3>
-          <p class="text-muted">{{ selectedScholarship.organisme }}</p>
+  <!-- Tips card (bottom) -->
+  <div class="tips mt-4">
+    <div class="tips-card p-3 rounded">
+      <h5><i class="bi bi-lightbulb me-2 text-primary"></i>Conseils pour maximiser vos chances</h5>
+      <div class="row">
+        <div class="col-md-6">
+          <ul>
+            <li>Commencez la préparation au moins 2 mois avant la date limite.</li>
+            <li>Vérifiez que tous vos documents sont certifiés et à jour.</li>
+            <li>Rédigez une lettre de motivation personnalisée.</li>
+          </ul>
         </div>
-        <div class="fs-1">{{ selectedScholarship.drapeau }}</div>
+        <div class="col-md-6">
+          <ul>
+            <li>Postulez à plusieurs bourses pour augmenter vos chances.</li>
+            <li>Préparez-vous pour d'éventuels entretiens ou tests.</li>
+            <li>Respectez scrupuleusement les délais.</li>
+          </ul>
+        </div>
       </div>
-
-      <div class="row mb-3 text-muted">
-        <div class="col-6"><strong>Type:</strong> {{ selectedScholarship.type }}</div>
-        <div class="col-6"><strong>Statut:</strong> {{ selectedScholarship.statut }}</div>
-        <div class="col-6"><strong>Montant:</strong> {{ selectedScholarship.montant }}</div>
-        <div class="col-6"><strong>Date limite:</strong> {{ selectedScholarship.dateLimite }}</div>
-        <div class="col-6"><strong>Pays:</strong> {{ selectedScholarship.pays }}</div>
-        <div class="col-6"><strong>Candidats:</strong> {{ selectedScholarship.candidats }}</div>
-      </div>
-
-      <div class="border-top pt-3 mb-3">
-        <h5>Description complète</h5>
-        <p>Cette bourse offre une opportunité exceptionnelle aux étudiants sénégalais méritants...</p>
-      </div>
-
-      <div class="border-top pt-3 mb-3">
-        <h5>Documents requis</h5>
-        <ul>
-          <li>Copie certifiée du diplôme du baccalauréat</li>
-          <li>Relevé de notes du baccalauréat</li>
-          <li>Lettre de motivation</li>
-          <li>CV détaillé</li>
-          <li>Copie de la carte d'identité nationale</li>
-        </ul>
-      </div>
-
-      <a href="#" class="text-success mb-3 d-block">Lien d'inscription</a>
-      <button class="btn btn-success w-100">Postuler maintenant</button>
     </div>
   </div>
 </div>

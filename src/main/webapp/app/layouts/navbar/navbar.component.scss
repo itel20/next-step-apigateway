@@ -336,3 +336,120 @@ main,
     height: 70px;
   }
 }
+/* ========================================================================== */
+/* RESPONSIVE GLOBAL */
+/* ========================================================================== */
+
+/* ----------- PUBLIC NAVBAR RESPONSIVE ----------- */
+
+@media (max-width: 992px) {
+  .custom-navbar {
+    height: auto;
+    flex-wrap: wrap;
+    padding: 10px 15px;
+  }
+
+  .navbar-logo img {
+    height: 65px;
+  }
+
+  .navbar-menu {
+    display: none; /* masqué sur tablette/mobile */
+    flex-direction: column;
+    width: 100%;
+    text-align: center;
+    gap: 12px;
+    margin-top: 10px;
+  }
+
+  .navbar-menu.open {
+    display: flex; /* visible si "open" */
+  }
+
+  .navbar-profile {
+    margin-left: auto;
+  }
+
+  /* Burger Menu */
+  .mobile-menu-btn {
+    display: block;
+    font-size: 28px;
+    color: #15803d;
+    margin-left: 15px;
+    cursor: pointer;
+  }
+}
+
+@media (max-width: 576px) {
+  .custom-navbar {
+    flex-direction: column;
+    padding: 12px 10px;
+  }
+
+  .navbar-menu {
+    width: 100%;
+  }
+
+  .menu-item {
+    width: 100%;
+    font-size: 14px;
+  }
+
+  .navbar-profile {
+    margin-top: 10px;
+  }
+}
+
+/* ========================================================================== */
+/* ADMIN SIDEBAR RESPONSIVE */
+/* ========================================================================== */
+
+.admin-navbar .sidebar {
+  transition: transform 0.3s ease-in-out;
+}
+
+/* ---- Mobile : sidebar masquée ---- */
+@media (max-width: 992px) {
+  .admin-navbar .sidebar {
+    transform: translateX(-100%); /* cachée */
+    width: 240px;
+    position: fixed;
+    z-index: 2000;
+  }
+
+  .admin-navbar .sidebar.open {
+    transform: translateX(0); /* visible */
+  }
+
+  /* Bouton hamburger pour admin */
+  .admin-hamburger {
+    display: block;
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 2100;
+    background: #15803d;
+    color: #fff;
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 22px;
+    cursor: pointer;
+  }
+
+  /* Décaler le contenu quand la sidebar est ouverte */
+  .admin-content.shifted {
+    margin-left: 240px;
+    transition: margin-left 0.3s;
+  }
+}
+
+/* Desktop : pas de bouton burger */
+@media (min-width: 993px) {
+  .admin-hamburger {
+    display: none;
+  }
+
+  .admin-content {
+    margin-left: 260px; /* sidebar visible normale */
+  }
+}

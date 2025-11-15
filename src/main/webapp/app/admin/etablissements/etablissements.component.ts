@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { NgClass, NgForOf, NgIf } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { DecimalPipe, NgClass, NgForOf, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 interface Admission {
@@ -10,10 +10,10 @@ interface Admission {
   pointsBAC: string;
 }
 
-export interface Institution {
+interface Institution {
   id: number;
   nom: string;
-  type: 'Public' | 'Privé';
+  type: string;
   ville: string;
   pays: string;
   classement: string;
@@ -38,23 +38,17 @@ export interface Institution {
 @Component({
   selector: 'jhi-etablissements',
   standalone: true,
-  imports: [FormsModule, NgForOf, NgIf, NgClass],
+  imports: [FormsModule, NgForOf, NgIf, NgClass, DecimalPipe],
   templateUrl: './etablissements.component.html',
-  styleUrls: ['./etablissements.component.scss'],
+  styleUrl: './etablissements.component.scss',
 })
 export default class EtablissementsComponent {
-  // filtres
   searchTerm = '';
-  filterType: 'all' | 'Public' | 'Privé' = 'all';
+  filterType = 'all';
   filterVille = 'all';
-
-  // modales / sélection
   selectedInstitution: Institution | null = null;
-  showDeleteConfirm = false;
-  institutionToDelete: Institution | null = null;
 
-  // données complètes
-  mockInstitutions: Institution[] = [
+  institutions: Institution[] = [
     {
       id: 1,
       nom: 'Université Cheikh Anta Diop (UCAD)',
@@ -238,9 +232,8 @@ export default class EtablissementsComponent {
     },
   ];
 
-  // getter filtré
   get filteredInstitutions(): Institution[] {
-    return this.mockInstitutions.filter((inst: Institution) => {
+    return this.institutions.filter(inst => {
       const matchesSearch = inst.nom.toLowerCase().includes(this.searchTerm.toLowerCase());
       const matchesType = this.filterType === 'all' || inst.type === this.filterType;
       const matchesVille = this.filterVille === 'all' || inst.ville === this.filterVille;
@@ -248,49 +241,22 @@ export default class EtablissementsComponent {
     });
   }
 
-  // ouvrir modal détails
-  openDetails(inst: Institution): void {
+  selectInstitution(inst: Institution): void {
     this.selectedInstitution = inst;
-    setTimeout(() => {
-      const el = document.querySelector('.modal-content');
-      if (el) (el as HTMLElement).scrollTop = 0;
-    }, 10);
   }
 
-  closeDetails(): void {
+  closeDialog(): void {
     this.selectedInstitution = null;
   }
-
-  // suppression
-  openDelete(inst: Institution): void {
-    this.institutionToDelete = inst;
-    this.showDeleteConfirm = true;
-  }
-
-  cancelDelete(): void {
-    this.institutionToDelete = null;
-    this.showDeleteConfirm = false;
-  }
-
-  confirmDelete(): void {
-    if (!this.institutionToDelete) return;
-    this.mockInstitutions = this.mockInstitutions.filter(i => i.id !== this.institutionToDelete!.id);
-
-    // fermer modales si nécessaires
-    if (this.selectedInstitution?.id === this.institutionToDelete.id) {
-      this.closeDetails();
-    }
-
-    this.institutionToDelete = null;
-    this.showDeleteConfirm = false;
-  }
-
-  // placeholders actions
-  addInstitution(): void {
-    alert('Ajouter un établissement (placeholder)');
+  viewInstitution(inst: Institution): void {
+    this.selectInstitution(inst);
   }
 
   editInstitution(inst: Institution): void {
-    alert(`Éditer ${inst.nom} (placeholder)`);
+    // console.log('Modifier:', inst);
+  }
+
+  deleteInstitution(inst: Institution): void {
+    // console.log('Supprimer:', inst);
   }
 }

@@ -1,106 +1,167 @@
-<div class="admin-container">
+<div class="container">
   <!-- Header -->
-  <header class="admin-header">
+  <div class="header d-flex justify-content-between align-items-center mb-3">
     <div>
-      <h2 class="header-title">Gestion des Établissements</h2>
-      <p class="header-subtitle">Ajouter, modifier ou supprimer des écoles et universités</p>
+      <h2>Gestion des Établissements</h2>
+      <p>Ajouter, modifier ou supprimer des écoles et universités</p>
     </div>
+    <button class="btn-add btn btn-success"><i class="bi bi-plus-lg"></i> Ajouter un établissement</button>
+  </div>
 
-    <button class="header-add-btn" (click)="addInstitution()">
-      <i class="bi bi-plus-lg"></i>
-      Ajouter un établissement
-    </button>
-  </header>
+  <!-- Search & Filters -->
+  <div class="filters d-flex flex-wrap gap-2 mb-3">
+    <input type="text" class="form-control flex-grow-1" placeholder="Rechercher une école ou université..." [(ngModel)]="searchTerm" />
 
-  <!-- Filters -->
-  <section class="filter-card">
-    <div class="filter-grid">
-      <!-- Search -->
-      <div class="filter-search">
-        <i class="bi bi-search search-icon"></i>
-        <input type="text" [(ngModel)]="searchTerm" placeholder="Rechercher une école ou université..." />
-      </div>
+    <select class="form-select w-auto" [(ngModel)]="filterType">
+      <option value="all">Tous les types</option>
+      <option value="Public">Public</option>
+      <option value="Privé">Privé</option>
+    </select>
 
-      <!-- Type -->
-      <select class="filter-select" [(ngModel)]="filterType">
-        <option value="all">Tous les types</option>
-        <option value="Public">Publique</option>
-        <option value="Privé">Privée</option>
-      </select>
-
-      <!-- Ville -->
-      <select class="filter-select" [(ngModel)]="filterVille">
-        <option value="all">Toutes les villes</option>
-        <option value="Dakar">Dakar</option>
-        <option value="Saint-Louis">Saint-Louis</option>
-        <option value="Bambey">Bambey</option>
-      </select>
-
-      <!-- More filters -->
-      <button class="filter-more-btn" title="Options de filtre">
-        <i class="bi bi-sliders"></i>
-      </button>
-    </div>
-  </section>
+    <select class="form-select w-auto" [(ngModel)]="filterVille">
+      <option value="all">Toutes les villes</option>
+      <option value="Dakar">Dakar</option>
+      <option value="Saint-Louis">Saint-Louis</option>
+      <option value="Bambey">Bambey</option>
+    </select>
+  </div>
 
   <!-- Table -->
-  <section class="table-container">
-    <div class="table-responsive">
-      <table class="institution-table">
-        <thead>
-          <tr>
-            <th>Nom</th>
-            <th>Type</th>
-            <th>Ville</th>
-            <th>Sélectivité</th>
-            <th>Filières</th>
-            <th class="text-end">Actions</th>
-          </tr>
-        </thead>
+  <div class="table-wrapper table-responsive">
+    <table class="table table-hover align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Nom</th>
+          <th>Type</th>
+          <th>Filières</th>
+          <th>Ville</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let inst of filteredInstitutions">
+          <td>{{ inst.nom }}</td>
+          <td>
+            <span class="badge" [ngClass]="inst.type === 'Public' ? 'bg-success' : 'bg-warning text-dark'">
+              {{ inst.type }}
+            </span>
+          </td>
+          <td>
+            {{ inst.filieres[0] }}<span *ngIf="inst.filieres.length > 1"> +{{ inst.filieres.length - 1 }}</span>
+          </td>
+          <td>{{ inst.ville }}</td>
+          <td class="text-end">
+            <!-- Actions avec icônes -->
+            <button class="btn btn-outline-primary btn-sm me-1" title="Voir" (click)="selectInstitution(inst); $event.stopPropagation()">
+              <i class="bi bi-eye"></i>
+            </button>
+            <button
+              class="btn btn-outline-secondary btn-sm me-1"
+              title="Modifier"
+              (click)="editInstitution(inst); $event.stopPropagation()"
+            >
+              <i class="bi bi-pencil"></i>
+            </button>
+            <button class="btn btn-outline-danger btn-sm" title="Supprimer" (click)="deleteInstitution(inst); $event.stopPropagation()">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-        <tbody>
-          <tr *ngFor="let inst of filteredInstitutions">
-            <!-- Nom & Pays -->
-            <td>
-              <p class="fw-bold mb-0">{{ inst.nom }}</p>
-              <small class="text-muted">📍 {{ inst.ville }}, {{ inst.pays }}</small>
-            </td>
+  <!-- Modal -->
+  <div class="modal" tabindex="-1" [ngClass]="{ 'show d-block': selectedInstitution }" *ngIf="selectedInstitution">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ selectedInstitution.nom }}</h5>
+          <button type="button" class="btn-close" (click)="closeDialog()"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Badge et note -->
+          <div class="mb-3">
+            <span class="badge" [ngClass]="selectedInstitution.type === 'Public' ? 'bg-success' : 'bg-warning text-dark'">
+              {{ selectedInstitution.type }}
+            </span>
+            <span class="ms-2">Note: {{ selectedInstitution.note }}/5 ({{ selectedInstitution.nbAvis }} avis)</span>
+          </div>
+          <p>{{ selectedInstitution.description }}</p>
 
-            <!-- Type -->
-            <td>
-              <span class="type-badge" [ngClass]="inst.type === 'Public' ? 'ok' : 'neutral'">
-                {{ inst.type }}
-              </span>
-            </td>
+          <!-- Statistiques -->
+          <div class="row text-center mb-3">
+            <div class="col">
+              <i class="bi bi-people-fill me-1"></i><strong>{{ selectedInstitution.etudiants | number }}</strong
+              ><br />Étudiants
+            </div>
+            <div class="col">
+              <i class="bi bi-person-badge-fill me-1"></i><strong>{{ selectedInstitution.enseignants }}</strong
+              ><br />Enseignants
+            </div>
+            <div class="col">
+              <i class="bi bi-flask me-1"></i><strong>{{ selectedInstitution.laboratoires }}</strong
+              ><br />Laboratoires
+            </div>
+            <div class="col">
+              <i class="bi bi-book me-1"></i><strong>{{ selectedInstitution.bibliotheques }}</strong
+              ><br />Bibliothèques
+            </div>
+          </div>
 
-            <td>{{ inst.ville }}</td>
-            <td>{{ inst.selectivite }}</td>
+          <!-- Filières -->
+          <h6><i class="bi bi-journal-text me-1"></i>Filières et spécialités</h6>
+          <ul class="list-group mb-3">
+            <li class="list-group-item" *ngFor="let f of selectedInstitution.filieres"><i class="bi bi-bookmark me-1"></i>{{ f }}</li>
+          </ul>
 
-            <!-- Filieres -->
-            <td>
-              <span class="filiere-pill primary">{{ inst.filieres[0] }}</span>
-              <span *ngIf="inst.filieres.length > 1" class="filiere-pill"> +{{ inst.filieres.length - 1 }} </span>
-            </td>
+          <!-- Admission -->
+          <h6><i class="bi bi-pencil-square me-1"></i>Admission</h6>
+          <div class="row mb-3">
+            <div class="col">
+              <i class="bi bi-check-circle me-1"></i>Campusen: {{ selectedInstitution.admission.campusen ? 'Oui' : 'Non' }}
+            </div>
+            <div class="col">
+              <i class="bi bi-file-earmark-text me-1"></i>Dossier: {{ selectedInstitution.admission.dossier ? 'Oui' : 'Non' }}
+            </div>
+            <div class="col"><i class="bi bi-award me-1"></i>Concours: {{ selectedInstitution.admission.concours ? 'Oui' : 'Non' }}</div>
+            <div class="col"><i class="bi bi-bar-chart-line me-1"></i>Taux: {{ selectedInstitution.admission.tauxAcceptation }}</div>
+            <div class="col"><i class="bi bi-journal-check me-1"></i>Points BAC: {{ selectedInstitution.admission.pointsBAC }}</div>
+          </div>
 
-            <!-- Actions -->
-            <td class="action-buttons">
-              <button class="action-btn" title="Voir" (click)="openDetails(inst)">
-                <i class="bi bi-eye"></i>
-              </button>
+          <!-- Insertion professionnelle -->
+          <h6><i class="bi bi-briefcase me-1"></i>Insertion professionnelle</h6>
+          <div class="row mb-3">
+            <div class="col"><i class="bi bi-graph-up me-1"></i>Taux d'insertion: {{ selectedInstitution.tauxInsertion }}</div>
+            <div class="col"><i class="bi bi-currency-dollar me-1"></i>Salaire moyen: {{ selectedInstitution.salairesMoyen }}</div>
+          </div>
 
-              <button class="action-btn" title="Éditer" (click)="editInstitution(inst)">
-                <i class="bi bi-pencil"></i>
-              </button>
+          <!-- Infrastructures -->
+          <h6><i class="bi bi-building me-1"></i>Infrastructures</h6>
+          <ul class="list-group mb-3">
+            <li class="list-group-item" *ngFor="let infra of selectedInstitution.infrastructures">
+              <i class="bi bi-house-door me-1"></i>{{ infra }}
+            </li>
+          </ul>
 
-              <button class="action-btn delete" title="Supprimer" (click)="openDelete(inst)">
-                <i class="bi bi-trash"></i>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+          <!-- Associations / Vie étudiante -->
+          <h6><i class="bi bi-people me-1"></i>Vie étudiante</h6>
+          <ul class="list-group mb-3">
+            <li class="list-group-item" *ngFor="let assoc of selectedInstitution.associations">
+              <i class="bi bi-person-lines-fill me-1"></i>{{ assoc }}
+            </li>
+          </ul>
+
+          <!-- Témoignage -->
+          <div class="alert alert-success">
+            <p>
+              <i class="bi bi-chat-left-text me-1"></i>"Une expérience enrichissante ! Les infrastructures sont modernes et le corps
+              professoral est très compétent. Je recommande vivement cet établissement."
+            </p>
+            <p><strong>Aminata Sow</strong> • Étudiante en 3ème année</p>
+          </div>
+        </div>
+      </div>
     </div>
-  </section>
-
-  <p class="text-center text-muted mt-2">Affichage de {{ filteredInstitutions.length }} établissement(s)</p>
+  </div>
 </div>

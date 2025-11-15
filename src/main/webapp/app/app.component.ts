@@ -5,6 +5,7 @@ import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { NgbDatepickerConfig } from '@ng-bootstrap/ng-bootstrap';
 import locale from '@angular/common/locales/fr';
 // jhipster-needle-angular-add-module-import JHipster will add new module here
+import { Router, RouterModule } from '@angular/router';
 
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { fontAwesomeIcons } from './config/font-awesome-icons';
@@ -24,7 +25,7 @@ export default class AppComponent {
   private readonly iconLibrary = inject(FaIconLibrary);
   private readonly dpConfig = inject(NgbDatepickerConfig);
 
-  constructor() {
+  constructor(private router: Router) {
     this.applicationConfigService.setEndpointPrefix(SERVER_API_URL);
     registerLocaleData(locale);
     this.iconLibrary.addIcons(...fontAwesomeIcons);

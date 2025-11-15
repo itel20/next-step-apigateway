@@ -31,6 +31,7 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.valid) {
       // Avec ton LoginService actuel, la méthode login ne prend pas de paramètres
       this.loginService.login();
+      this.router.navigate(['/home']);
     }
   }
 

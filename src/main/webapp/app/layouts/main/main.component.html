@@ -1,26 +1,36 @@
+<!-- Page Ribbon JHipster -->
 <jhi-page-ribbon></jhi-page-ribbon>
 
-<!-- ✅ Navbar (horizontale pour user ou verticale pour admin) -->
-<router-outlet name="navbar"></router-outlet>
+<!-- Navbar visible seulement hors login -->
+<ng-container *ngIf="!isLoginPage()">
+  <jhi-navbar></jhi-navbar>
+</ng-container>
 
-<!-- ✅ Conteneur principal -->
-<div
-  class="app-content"
-  [ngClass]="{
-    'admin-layout': isAdminRole,
-    'user-layout': !isAdminRole,
-  }"
->
-  <!-- ✅ Breadcrumb -->
-  <router-outlet name="breadCrumb"></router-outlet>
+<!-- Contenu principal hors login -->
+<ng-container *ngIf="!isLoginPage()">
+  <div
+    class="app-content"
+    [ngClass]="{
+      'admin-layout': isAdminRole,
+      'user-layout': !isAdminRole,
+    }"
+  >
+    <!-- Breadcrumb si nécessaire -->
+    <router-outlet name="breadCrumb"></router-outlet>
 
-  <!-- ✅ Contenu dynamique -->
-  <div class="container-fluid main-container">
-    <div class="card jh-card">
-      <router-outlet></router-outlet>
+    <!-- Contenu principal -->
+    <div class="container-fluid main-container">
+      <div class="card jh-card">
+        <router-outlet></router-outlet>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- ✅ Footer uniquement sur les pages utilisateur -->
-<jhi-footer *ngIf="!isAdminRole && !isChatbotPage"></jhi-footer>
+  <!-- Footer uniquement si non-admin et pas chatbot -->
+  <jhi-footer *ngIf="!isAdminRole && !isChatbotPage"></jhi-footer>
+</ng-container>
+
+<!-- Page Login (affichée seule, sans navbar ni footer) -->
+<ng-container *ngIf="isLoginPage()">
+  <router-outlet></router-outlet>
+</ng-container>

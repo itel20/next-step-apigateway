@@ -1,0 +1,66 @@
+<jhi-page-ribbon></jhi-page-ribbon>
+
+<!-- NAVBAR visible seulement hors login -->
+<ng-container *ngIf="!isLoginPage()">
+  <jhi-navbar></jhi-navbar>
+</ng-container>
+
+<!-- CONTENU NORMAL (pas login) -->
+<ng-container *ngIf="!isLoginPage()">
+  <div
+    class="app-content"
+    [ngClass]="{
+      'admin-layout': isAdminRole,
+      'user-layout': !isAdminRole,
+    }"
+  >
+    <router-outlet name="breadCrumb"></router-outlet>
+
+    <div class="container-fluid main-container">
+      <div class="card jh-card">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER (hors admin + hors chatbot) -->
+  <jhi-footer *ngIf="!isAdminRole && !isChatbotPage"></jhi-footer>
+</ng-container>
+
+<!-- PAGE LOGIN affichée seule -->
+<ng-container *ngIf="isLoginPage()">
+  <router-outlet></router-outlet>
+</ng-container>
+<jhi-page-ribbon></jhi-page-ribbon>
+
+<!-- NAVBAR visible seulement hors login -->
+<ng-container *ngIf="!isLoginPage()">
+  <jhi-navbar></jhi-navbar>
+</ng-container>
+
+<!-- CONTENU NORMAL (pas login) -->
+<ng-container *ngIf="!isLoginPage()">
+  <div
+    class="app-content"
+    [ngClass]="{
+      'admin-layout': isAdminRole,
+      'user-layout': !isAdminRole,
+    }"
+  >
+    <router-outlet name="breadCrumb"></router-outlet>
+
+    <div class="container-fluid main-container">
+      <div class="card jh-card">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER (hors admin + hors chatbot) -->
+  <jhi-footer *ngIf="!isAdminRole && !isChatbotPage"></jhi-footer>
+</ng-container>
+
+<!-- PAGE LOGIN affichée seule -->
+<ng-container *ngIf="isLoginPage()">
+  <router-outlet></router-outlet>
+</ng-container>

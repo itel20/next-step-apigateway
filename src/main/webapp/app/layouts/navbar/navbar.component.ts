@@ -102,6 +102,9 @@ export default class NavbarComponent implements OnInit {
     this.loginService.logout();
     this.router.navigate(['/']);
   }
+  isLoginPage(): boolean {
+    return this.router.url.startsWith('/login');
+  }
 
   accountExists(): boolean {
     return !!this.account();

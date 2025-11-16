@@ -12,7 +12,7 @@ import UserManagementComponent from './admin/user-management/user-management.com
 import EtablissementsComponent from './admin/etablissements/etablissements.component';
 import OrientationsComponent from './admin/orientations/orientations.component';
 import BoursesComponent from './admin/bourses/bourses.component';
-//import { NoAuthGuard } from './core/auth/no-auth.guard';
+// import { NoAuthGuard } from './core/auth/no-auth.guard';
 
 const routes: Routes = [
   {
@@ -71,14 +71,14 @@ const routes: Routes = [
     loadComponent: () => import('./layouts/navbar/navbar.component'),
     outlet: 'navbar',
   },
-  /*{
+  {
     path: 'admin',
     data: {
       authorities: [Authority.ADMIN],
     },
     canActivate: [UserRouteAccessService],
     loadChildren: () => import('./admin/admin.routes'),
-  },*/
+  },
   {
     path: 'entities',
     loadChildren: () => import(`./entities/entity.routes`),

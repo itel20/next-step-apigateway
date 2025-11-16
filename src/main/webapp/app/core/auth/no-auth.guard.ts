@@ -11,9 +11,9 @@ export const NoAuthGuard: CanActivateFn = (): Observable<boolean> => {
 
   return accountService.identity().pipe(
     map(account => {
-      if (account && account.authorities && account.authorities.length > 0) {
-        const role = account.authorities[0]; // ✅ string
+      const role = account?.authorities[0]; // Optional chaining et index sécurisé
 
+      if (role) {
         // 🔹 Redirection selon le rôle
         if (role === 'ROLE_ADMIN') {
           router.navigate(['/admin/dashboard']);

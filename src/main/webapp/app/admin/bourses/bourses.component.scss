@@ -1,11 +1,11 @@
 :host {
   display: block;
-  min-height: 100vh; /* occuper toute la hauteur de la page */
+  min-height: 100vh;
   margin: 0;
   font-family: 'Helvetica Neue', Arial, sans-serif;
   color: #1d4830;
   background: #f4fff5;
-  padding: 24px 48px; /* réduction padding pour mieux tenir sur petits écrans */
+  padding: 24px 48px;
   box-sizing: border-box;
 }
 
@@ -180,11 +180,11 @@
   }
 
   .badge-bourse {
-    background: #007bff; /* bleu principal */
+    background: #007bff;
   }
 
   .badge-concours {
-    background: #198754; /* vert */
+    background: #198754;
   }
 
   .tags {
@@ -212,6 +212,7 @@
     color: #007bff;
     font-weight: 700;
   }
+
   .taux {
     color: #007bff;
     font-weight: 700;
@@ -251,7 +252,7 @@
   }
 }
 
-/* Modal / details */
+/* Modal */
 .modal-backdrop {
   position: fixed;
   inset: 0;
@@ -300,7 +301,6 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 10px;
-  margin-bottom: 12px;
 
   @media (min-width: 768px) {
     grid-template-columns: repeat(4, 1fr);
@@ -322,6 +322,7 @@
       color: #335555;
       margin-top: 6px;
     }
+
     .k-value {
       font-weight: 700;
       color: #1d4830;
@@ -357,7 +358,7 @@
 }
 
 .btn-apply {
-  background: linear-gradient(90deg, #007bff, #0056b3);
+  background: linear-gradient(90deg, #1e7d32, #c9a800);
   color: white;
   border: none;
   padding: 12px;
@@ -380,13 +381,16 @@
   .key-grid {
     grid-template-columns: 1fr 1fr;
   }
+
   .modal-body {
     max-height: 60vh;
   }
+
   .search-wrapper {
     flex: 1 1 auto;
     min-width: 140px;
   }
+
   .select-type {
     flex: 0 0 150px;
   }

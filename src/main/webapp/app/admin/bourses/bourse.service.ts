@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { BourseConcours } from './bourse-concours.model';
+import { BourseConcours } from './bourse.model';
 
 @Injectable({ providedIn: 'root' })
 export class BourseConcoursService {
@@ -25,7 +25,8 @@ export class BourseConcoursService {
     return this.http.put<BourseConcours>(`${this.resourceUrl}/${id}`, bourse);
   }
 
-  delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.resourceUrl}/${id}`);
+  delete(id: number): Observable<{}> {
+    // ⬅️ Pas void !!!
+    return this.http.delete(`${this.resourceUrl}/${id}`);
   }
 }

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { NgIf, NgForOf, NgClass } from '@angular/common';
+import { BourseConcoursService } from './bourse.service';
+import { IBourseConcours, BourseConcours } from './bourse.model';
+import { NgClass, NgForOf, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { BourseConcoursService } from 'app/services/bourse.service';
-import { BourseConcours } from 'app/models/bourse.model';
 
 @Component({
   selector: 'jhi-bourses',
@@ -12,96 +12,93 @@ import { BourseConcours } from 'app/models/bourse.model';
   styleUrls: ['./bourses.component.scss'],
 })
 export default class BoursesComponent implements OnInit {
-  searchTerm = '';
-  filterType: 'all' | 'Bourse' | 'Concours' = 'all';
+  bourses: IBourseConcours[] = [];
+  selectedBourse: IBourseConcours | null = null;
+  isFormVisible = false;
 
-  scholarships: BourseConcours[] = [];
-  selectedScholarship: BourseConcours | null = null;
-  notificationsCount = 0;
-
-  constructor(private bcService: BourseConcoursService) {}
+  constructor(private bourseService: BourseConcoursService) {}
 
   ngOnInit(): void {
-    this.loadData();
+    this.loadAll();
   }
 
-  /** Charger depuis le backend */
-  loadData(): void {
-    this.bcService.getAll().subscribe({
-      next: res => {
-        this.scholarships = res;
+  loadAll(): void {
+    this.bourseService.getAll().subscribe({
+      next: data => (this.bourses = data),
+      error: err => console.error('Erreur chargement bourses:', err),
+    });
+  }
+
+  openCreate(): void {
+    this.selectedBourse = new BourseConcours();
+    this.isFormVisible = true;
+  }
+
+  openEdit(bourse: IBourseConcours): void {
+    this.selectedBourse = { ...bourse };
+    this.isFormVisible = true;
+  }
+
+  cancel(): void {
+    this.selectedBourse = null;
+    this.isFormVisible = false;
+  }
+
+  save(): void {
+    if (!this.selectedBourse) return;
+
+    const bourseToSend = new BourseConcours(
+      this.selectedBourse.id,
+      this.selectedBourse.titre,
+      this.selectedBourse.type,
+      this.selectedBourse.description,
+      this.selectedBourse.montant,
+      this.selectedBourse.periodicite,
+      this.selectedBourse.nombreBeneficiaires,
+      this.selectedBourse.tauxAcceptation,
+      this.selectedBourse.dateLimite,
+      this.selectedBourse.criteresEligibilite,
+      this.selectedBourse.tags,
+      this.selectedBourse.conseilsPratiques,
+      this.selectedBourse.favoris,
+      this.selectedBourse.pays,
+    );
+
+    let request;
+    if (bourseToSend.id === null) {
+      request = this.bourseService.create(bourseToSend);
+    } else {
+      request = this.bourseService.update(bourseToSend.id, bourseToSend);
+    }
+
+    request.subscribe({
+      next: () => {
+        this.loadAll();
+        this.cancel();
       },
-      error: err => console.error('Erreur chargement Bourses:', err),
+      error: err => console.error('Erreur sauvegarde:', err),
     });
   }
 
-  /** Filtres */
-  get filteredScholarships(): BourseConcours[] {
-    const q = this.searchTerm.trim().toLowerCase();
-    return this.scholarships.filter(s => {
-      const matchesSearch = !q || s.titre.toLowerCase().includes(q);
-      const matchesType = this.filterType === 'all' || s.type === this.filterType;
-      return matchesSearch && matchesType;
-    });
+  delete(id: number | null): void {
+    if (id === null) return;
+
+    if (confirm('Supprimer cette bourse ?')) {
+      this.bourseService.delete(id).subscribe({
+        next: () => this.loadAll(),
+        error: err => console.error('Erreur suppression:', err),
+      });
+    }
+  }
+  onCriteresChange(value: string): void {
+    if (this.selectedBourse) {
+      this.selectedBourse.criteresEligibilite = value.split(',').map((v: string) => v.trim());
+    }
   }
 
-  selectScholarship(s: BourseConcours): void {
-    this.selectedScholarship = s;
-  }
-
-  closeDialog(): void {
-    this.selectedScholarship = null;
-  }
-
-  /** Ajouter une bourse */
-  addScholarship(): void {
-    const titre = prompt('Titre de la bourse ?');
-    if (!titre) return;
-
-    const dto: BourseConcours = {
-      id: null,
-      titre,
-      type: 'Bourse',
-      montant: 0,
-      periodicite: '',
-      nombreBeneficiaires: 0,
-      tauxAcceptation: 0,
-      dateLimite: new Date(),
-      criteresEligibilite: [],
-      tags: [],
-      conseilsPratiques: '',
-      favoris: false,
-    };
-
-    this.bcService.create(dto).subscribe({
-      next: () => this.loadData(),
-    });
-  }
-
-  /** Modifier */
-  editScholarship(s: BourseConcours): void {
-    const newTitle = prompt('Nouveau titre ?', s.titre);
-    if (!newTitle) return;
-
-    const dto = { ...s, titre: newTitle };
-
-    this.bcService.update(s.id!, dto).subscribe({
-      next: () => this.loadData(),
-    });
-  }
-
-  /** Supprimer */
-  deleteScholarship(s: BourseConcours): void {
-    if (!confirm(`Supprimer "${s.titre}" ?`)) return;
-
-    this.bcService.delete(s.id!).subscribe({
-      next: () => this.loadData(),
-    });
-  }
-
-  /** CTA */
-  applyNow(s: BourseConcours | null): void {
-    if (!s) return;
-    alert(`Postuler à "${s.titre}" (implémenter la candidature)`);
+  onTagsChange(value: string): void {
+    if (this.selectedBourse) {
+      this.selectedBourse.tags = value.split(',').map((v: string) => v.trim());
+    }
   }
 }

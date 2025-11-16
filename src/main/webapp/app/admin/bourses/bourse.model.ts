@@ -1,35 +1,35 @@
 export interface IBourseConcours {
   id: number | null;
   titre: string;
-  type?: string | null;
-  description?: string | null;
-  montant?: number | null;
-  periodicite?: string | null;
-  nombreBeneficiaires?: number | null;
-  tauxAcceptation?: number | null;
-  dateLimite?: string | null;
-  criteresEligibilite?: string[] | null;
-  tags?: string[] | null;
-  conseilsPratiques?: string | null;
-  favoris?: boolean | null;
-  pays?: string | null;
+  type: string;
+  description: string;
+  montant: number;
+  periodicite: string;
+  nombreBeneficiaires: number;
+  tauxAcceptation: number;
+  dateLimite: string;
+  criteresEligibilite: string[];
+  tags: string[];
+  conseilsPratiques: string;
+  favoris?: boolean | null; // facultatif
+  pays: string;
 }
 
 export class BourseConcours implements IBourseConcours {
   constructor(
     public id: number | null = null,
-    public titre = '',
-    public type: string | null = null,
-    public description: string | null = null,
-    public montant: number | null = null,
-    public periodicite: string | null = null,
-    public nombreBeneficiaires: number | null = null,
-    public tauxAcceptation: number | null = null,
-    public dateLimite: string | null = null,
-    public criteresEligibilite: string[] | null = null,
-    public tags: string[] | null = null,
-    public conseilsPratiques: string | null = null,
-    public favoris: boolean | null = null,
-    public pays: string | null = null,
+    public titre = 'Titre non défini',
+    public type = 'Bourse',
+    public description = 'Description non définie',
+    public montant = 0,
+    public periodicite = 'Non définie',
+    public nombreBeneficiaires = 0,
+    public tauxAcceptation = 0,
+    public dateLimite: string = new Date().toISOString().split('T')[0], // date du jour
+    public criteresEligibilite: string[] = ['Non défini'],
+    public tags: string[] = ['Aucun'],
+    public conseilsPratiques = 'Aucun conseil disponible',
+    public favoris: boolean | null = null, // facultatif
+    public pays = 'Non défini',
   ) {}
 }

@@ -20,7 +20,9 @@ export class EtablissementService {
   }
 
   create(dto: EtablissementDTO): Observable<EtablissementDTO> {
-    return this.http.post<EtablissementDTO>(this.apiUrl, dto);
+    return this.http.post<EtablissementDTO>(this.apiUrl, dto, {
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 
   update(id: number, dto: EtablissementDTO): Observable<EtablissementDTO> {

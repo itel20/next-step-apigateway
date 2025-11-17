@@ -15,8 +15,14 @@ export default class EtablissementsComponent implements OnInit {
   searchTerm = '';
   filterType = 'all';
   filterVille = 'all';
+
   etablissements: EtablissementDTO[] = [];
   selectedInstitution: EtablissementDTO | null = null;
+
+  // Gestion modal création/édition
+  showFormModal = false;
+  editingInstitution = false;
+  formInstitution: EtablissementDTO = this.resetFormInstitution();
 
   constructor(private etablissementService: EtablissementService) {}
 
@@ -26,7 +32,10 @@ export default class EtablissementsComponent implements OnInit {
 
   loadEtablissements(): void {
     this.etablissementService.getAll().subscribe(data => {
-      this.etablissements = data;
+      this.etablissements = data.map(e => ({
+        ...e,
+        // filieresDisponibles est déjà un tableau, pas besoin de fallback
+      }));
     });
   }
 
@@ -39,42 +48,76 @@ export default class EtablissementsComponent implements OnInit {
     });
   }
 
+  // Modal détails
   selectInstitution(inst: EtablissementDTO): void {
     this.selectedInstitution = inst;
   }
 
   closeDialog(): void {
     this.selectedInstitution = null;
+    this.showFormModal = false;
   }
 
   editInstitution(inst: EtablissementDTO): void {
-    this.selectedInstitution = inst;
-    // Ici tu peux ouvrir un formulaire d'édition
+    this.formInstitution = { ...inst };
+    this.editingInstitution = true;
+    this.showFormModal = true;
   }
 
   deleteInstitution(inst: EtablissementDTO): void {
-    if (confirm(`Supprimer ${inst.nom} ?`)) {
-      this.etablissementService.delete(inst.id!).subscribe(() => this.loadEtablissements());
+    if (inst.id && confirm(`Supprimer ${inst.nom} ?`)) {
+      this.etablissementService.delete(inst.id).subscribe(() => this.loadEtablissements());
     }
   }
 
+  // Ouvrir le formulaire création
   openForm(): void {
-    this.selectedInstitution = {
+    this.formInstitution = this.resetFormInstitution();
+    this.editingInstitution = false;
+    this.showFormModal = true;
+  }
+  closeForm(): void {
+    this.showFormModal = false;
+    this.editingInstitution = false;
+    this.formInstitution = {} as any;
+  }
+
+  // Soumettre formulaire création/édition
+  saveInstitution(): void {
+    const payload: EtablissementDTO = { ...this.formInstitution };
+    if (!this.editingInstitution) {
+      delete payload.id; // <-- supprime l'id avant la création
+      this.etablissementService.create(payload).subscribe(() => {
+        this.loadEtablissements();
+        this.showFormModal = false;
+      });
+    } else {
+      this.etablissementService.update(payload.id!, payload).subscribe(() => {
+        this.loadEtablissements();
+        this.showFormModal = false;
+      });
+    }
+  }
+
+  // Réinitialiser l'objet formulaire
+  resetFormInstitution(): EtablissementDTO {
+    return {
+      filieresDisponibles: '',
+      id: 0,
       nom: '',
-      type: '',
+      type: 'Public',
       ville: '',
       pays: '',
       classement: 0,
       nombreEtudiants: 0,
       nombreEnseignants: 0,
-      laboratoiresBibliotheques: '',
-      fraisScolarite: 0,
       tauxSelectivite: 0,
-      filieresDisponibles: [],
+      fraisScolarite: 0,
       processusAdmission: '',
       tauxAcceptation: 0,
       pointsBacRequis: '',
       vieEtudiante: '',
+      laboratoiresBibliotheques: '',
       informationsPratiques: '',
       tauxInsertion: 0,
       salaireMoyen: 0,

@@ -2,21 +2,22 @@ export interface EtablissementDTO {
   id?: number;
   nom: string;
   type: string;
+  classement: number;
   ville: string;
   pays: string;
-  classement: number;
   nombreEtudiants: number;
   nombreEnseignants: number;
   laboratoiresBibliotheques: string;
+
+  filieresDisponibles: string;
   fraisScolarite: number;
-  tauxSelectivite: number;
-  filieresDisponibles: string[];
-  processusAdmission: string;
-  tauxAcceptation: number;
-  pointsBacRequis: string;
-  vieEtudiante: string;
   informationsPratiques: string;
-  tauxInsertion: number;
+  pointsBacRequis: string;
+  processusAdmission: string;
   salaireMoyen: number;
+  tauxAcceptation: number;
+  tauxInsertion: number;
+  tauxSelectivite: number;
   temoignages: string;
+  vieEtudiante: string;
 }

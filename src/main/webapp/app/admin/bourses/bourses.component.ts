@@ -13,10 +13,12 @@ import { FilterBoursePipe } from '../../pipes/filter-bourse.pipe';
   styleUrls: ['./bourses.component.scss'],
 })
 export default class BoursesComponent implements OnInit {
-  bourses: BourseConcours[] = [];
-  selectedBourse: BourseConcours | null = null;
+  bourses: IBourseConcours[] = []; // 👈 IBourseConcours pour éviter mismatch
+  selectedBourse: IBourseConcours | null = null; // 👈 plus de BourseConcours ici
+
   isFormVisible = false;
   showDetailsModal = false;
+
   searchTerm = '';
   filterType = '';
 
@@ -28,91 +30,37 @@ export default class BoursesComponent implements OnInit {
 
   loadAll(): void {
     this.bourseService.getAll().subscribe({
-      next: data => {
-        this.bourses = data.map(
-          b =>
-            new BourseConcours(
-              b.id,
-              b.titre ?? 'Non défini',
-              b.type ?? 'Bourse',
-              b.description ?? '',
-              b.montant ?? 0,
-              b.periodicite ?? '',
-              b.nombreBeneficiaires ?? 0,
-              b.tauxAcceptation ?? 0,
-              b.dateLimite ?? '',
-              b.criteresEligibilite ?? ['Non défini'],
-              b.tags ?? ['Aucun'],
-              b.conseilsPratiques ?? '',
-              b.favoris ?? false,
-              b.pays ?? '',
-            ),
-        );
-      },
+      next: data => (this.bourses = data),
       error: err => console.error('Erreur chargement bourses:', err),
     });
   }
 
   openCreate(): void {
-    this.selectedBourse = new BourseConcours();
+    this.selectedBourse = new BourseConcours(); // 👈 ça reste OK uniquement ici
     this.isFormVisible = true;
   }
 
-  openEdit(bourse: IBourseConcours): void {
-    this.selectedBourse = new BourseConcours(
-      bourse.id,
-      bourse.titre,
-      bourse.type,
-      bourse.description,
-      bourse.montant,
-      bourse.periodicite,
-      bourse.nombreBeneficiaires,
-      bourse.tauxAcceptation,
-      bourse.dateLimite,
-      bourse.criteresEligibilite.length ? bourse.criteresEligibilite : ['Non défini'],
-      bourse.tags.length ? bourse.tags : ['Aucun'],
-      bourse.conseilsPratiques,
-      bourse.favoris ?? false,
-      bourse.pays,
-    );
+  openEdit(b: IBourseConcours): void {
+    this.selectedBourse = { ...b, favoris: b.favoris ?? null }; // 👈 évite undefined
     this.isFormVisible = true;
   }
 
   save(): void {
     if (!this.selectedBourse) return;
 
-    const b = this.selectedBourse;
-    const request = b.id == null ? this.bourseService.create(b) : this.bourseService.update(b.id, b);
-
-    request.subscribe({
-      next: savedBourse => {
-        if (b.id == null) {
-          this.bourses.push(
-            new BourseConcours(
-              savedBourse.id,
-              savedBourse.titre,
-              savedBourse.type,
-              savedBourse.description,
-              savedBourse.montant,
-              savedBourse.periodicite,
-              savedBourse.nombreBeneficiaires,
-              savedBourse.tauxAcceptation,
-              savedBourse.dateLimite,
-              savedBourse.criteresEligibilite.length ? savedBourse.criteresEligibilite : ['Non défini'],
-              savedBourse.tags.length ? savedBourse.tags : ['Aucun'],
-              savedBourse.conseilsPratiques,
-              savedBourse.favoris ?? false,
-              savedBourse.pays,
-            ),
-          );
-        } else {
-          const index = this.bourses.findIndex(x => x.id === b.id);
-          if (index > -1) this.bourses[index] = b;
-        }
-        this.cancel();
-      },
-      error: err => console.error('Erreur sauvegarde:', err),
-    });
+    if (this.selectedBourse.id) {
+      // UPDATE
+      this.bourseService.update(this.selectedBourse.id, this.selectedBourse).subscribe(() => {
+        this.loadAll();
+        this.isFormVisible = false;
+      });
+    } else {
+      // CREATE
+      this.bourseService.create(this.selectedBourse).subscribe(() => {
+        this.loadAll();
+        this.isFormVisible = false;
+      });
+    }
   }
 
   delete(id: number | null): void {
@@ -125,23 +73,8 @@ export default class BoursesComponent implements OnInit {
     }
   }
 
-  viewDetails(bourse: IBourseConcours): void {
-    this.selectedBourse = new BourseConcours(
-      bourse.id,
-      bourse.titre,
-      bourse.type,
-      bourse.description,
-      bourse.montant,
-      bourse.periodicite,
-      bourse.nombreBeneficiaires,
-      bourse.tauxAcceptation,
-      bourse.dateLimite,
-      bourse.criteresEligibilite.length ? bourse.criteresEligibilite : ['Non défini'],
-      bourse.tags.length ? bourse.tags : ['Aucun'],
-      bourse.conseilsPratiques,
-      bourse.favoris ?? false, // ⚠️ conversion obligatoire ici
-      bourse.pays,
-    );
+  viewDetails(b: IBourseConcours): void {
+    this.selectedBourse = { ...b, favoris: b.favoris ?? null };
     this.showDetailsModal = true;
   }
 

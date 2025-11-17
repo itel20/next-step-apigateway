@@ -11,25 +11,25 @@ export interface IBourseConcours {
   criteresEligibilite: string[];
   tags: string[];
   conseilsPratiques: string;
-  favoris?: boolean | null; // facultatif
+  favoris?: boolean | null; // optionnel = cohérent avec la classe
   pays: string;
 }
 
 export class BourseConcours implements IBourseConcours {
   constructor(
     public id: number | null = null,
-    public titre = 'Titre non défini',
-    public type = 'Bourse',
-    public description = 'Description non définie',
+    public titre = '',
+    public type = '',
+    public description = '',
     public montant = 0,
-    public periodicite = 'Non définie',
+    public periodicite = '',
     public nombreBeneficiaires = 0,
     public tauxAcceptation = 0,
-    public dateLimite: string = new Date().toISOString().split('T')[0], // date du jour
-    public criteresEligibilite: string[] = ['Non défini'],
-    public tags: string[] = ['Aucun'],
-    public conseilsPratiques = 'Aucun conseil disponible',
-    public favoris: boolean | null = null, // facultatif
-    public pays = 'Non défini',
+    public dateLimite: string = new Date().toISOString().split('T')[0],
+    public criteresEligibilite: string[] = [''],
+    public tags: string[] = [''],
+    public conseilsPratiques = '',
+    public favoris?: boolean | null, // ⬅ devient optionnel ici aussi
+    public pays = '',
   ) {}
 }

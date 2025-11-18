@@ -43,13 +43,15 @@
             <span class="badge-cat">{{ o.categorie }}</span>
           </td>
           <td>
-            <span class="badge-diff" [ngClass]="difficultyClass(o.difficulte)">{{ o.difficulte }}</span>
+            <span class="badge-diff" [ngClass]="difficultyClass(o.difficulte)">
+              {{ o.difficulte }}
+            </span>
           </td>
           <td>
-            <i class="bi bi-graph-up"></i> <span class="muted">{{ o.tauxEmploi }}</span>
+            <i class="bi bi-graph-up"></i> <span class="muted">{{ o.tauxEmploi }}%</span>
           </td>
-          <td><i class="bi bi-star-fill star-icon"></i> {{ o.satisfaction }}</td>
-          <td class="text-primary">{{ o.salaireMoyen }}</td>
+          <td><i class="bi bi-star-fill star-icon"></i> {{ o.satisfaction }}/5</td>
+          <td class="text-primary">{{ o.salaireMoyen | number: '1.0-0' }} FCFA</td>
           <td><i class="bi bi-clock"></i> {{ o.dureeFormation }}</td>
           <td class="actions-col">
             <button class="icon-btn view" title="Voir" (click)="openDetails(o)">
@@ -81,7 +83,9 @@
           <h3>{{ selectedOrientation.titre }}</h3>
           <div class="meta">
             <span class="badge-cat">{{ selectedOrientation.categorie }}</span>
-            <span class="badge-diff" [ngClass]="difficultyClass(selectedOrientation.difficulte)">{{ selectedOrientation.difficulte }}</span>
+            <span class="badge-diff" [ngClass]="difficultyClass(selectedOrientation.difficulte)">
+              {{ selectedOrientation.difficulte }}
+            </span>
           </div>
         </div>
 
@@ -89,17 +93,17 @@
         <div class="metrics-grid">
           <div class="metric">
             <i class="bi bi-graph-up metric-icon"></i>
-            <div class="metric-value">{{ selectedOrientation.tauxEmploi }}</div>
+            <div class="metric-value">{{ selectedOrientation.tauxEmploi }}%</div>
             <div class="metric-label">Taux d'emploi</div>
           </div>
           <div class="metric">
             <i class="bi bi-star-fill metric-icon"></i>
-            <div class="metric-value">{{ selectedOrientation.satisfaction }}</div>
+            <div class="metric-value">{{ selectedOrientation.satisfaction }}/5</div>
             <div class="metric-label">Satisfaction</div>
           </div>
           <div class="metric">
             <i class="bi bi-currency-dollar metric-icon"></i>
-            <div class="metric-value">{{ selectedOrientation.salaireMoyen }}</div>
+            <div class="metric-value">{{ selectedOrientation.salaireMoyen | number: '1.0-0' }} FCFA</div>
             <div class="metric-label">Salaire moyen</div>
           </div>
           <div class="metric">
@@ -109,13 +113,12 @@
           </div>
         </div>
 
-        <!-- Formations -->
+        <!-- Formations / Universités -->
         <section class="section">
           <h4><i class="bi bi-mortarboard-fill"></i> Formations universitaires</h4>
           <div class="list-formation">
-            <div class="formation" *ngFor="let f of selectedOrientation.formations">
-              <div>{{ f.nom }}</div>
-              <div class="note"><i class="bi bi-star-fill"></i> {{ f.note }}</div>
+            <div class="formation" *ngFor="let f of selectedOrientation.universites">
+              <div>{{ f }}</div>
             </div>
           </div>
         </section>
@@ -137,12 +140,12 @@
         </section>
 
         <!-- Témoignage -->
-        <section class="section testimonial">
-          <div class="avatar">{{ getInitials(selectedOrientation.temoignage.nom) }}</div>
+        <section class="section testimonial" *ngIf="selectedOrientation.temoignages">
+          <div class="avatar">{{ getInitials(selectedOrientation.temoignages.nom) }}</div>
           <div>
-            <p class="quote">"{{ selectedOrientation.temoignage.texte }}"</p>
+            <p class="quote">"{{ selectedOrientation.temoignages.texte }}"</p>
             <p class="author">
-              <strong>{{ selectedOrientation.temoignage.nom }}</strong> • {{ selectedOrientation.temoignage.role }}
+              <strong>{{ selectedOrientation.temoignages.nom }}</strong> • {{ selectedOrientation.temoignages.role }}
             </p>
           </div>
         </section>

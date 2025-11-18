@@ -1,5 +1,5 @@
 export interface EtablissementDTO {
-  id?: number;
+  id?: number; // facultatif pour la création
   nom: string;
   type: string;
   classement: number;
@@ -8,16 +8,15 @@ export interface EtablissementDTO {
   nombreEtudiants: number;
   nombreEnseignants: number;
   laboratoiresBibliotheques: string;
-
-  filieresDisponibles: string;
   fraisScolarite: number;
-  informationsPratiques: string;
-  pointsBacRequis: string;
-  processusAdmission: string;
-  salaireMoyen: number;
-  tauxAcceptation: number;
-  tauxInsertion: number;
   tauxSelectivite: number;
-  temoignages: string;
+  filieresDisponibles: string[];
+  processusAdmission: string;
+  tauxAcceptation: number;
+  pointsBacRequis: string;
   vieEtudiante: string;
+  informationsPratiques: string;
+  tauxInsertion: number;
+  salaireMoyen: number;
+  temoignages: string;
 }

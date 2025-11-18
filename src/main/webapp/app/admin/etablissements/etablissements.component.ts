@@ -15,13 +15,14 @@ export default class EtablissementsComponent implements OnInit {
   searchTerm = '';
   filterType = 'all';
   filterVille = 'all';
+  filieresTemp = '';
 
   etablissements: EtablissementDTO[] = [];
   selectedInstitution: EtablissementDTO | null = null;
 
-  // Gestion modal création/édition
   showFormModal = false;
   editingInstitution = false;
+
   formInstitution: EtablissementDTO = this.resetFormInstitution();
 
   constructor(private etablissementService: EtablissementService) {}
@@ -30,15 +31,22 @@ export default class EtablissementsComponent implements OnInit {
     this.loadEtablissements();
   }
 
+  // -----------------------------------------------------------
+  // CHARGEMENT
+  // -----------------------------------------------------------
   loadEtablissements(): void {
+    this.etablissements = [];
     this.etablissementService.getAll().subscribe(data => {
-      this.etablissements = data.map(e => ({
-        ...e,
-        // filieresDisponibles est déjà un tableau, pas besoin de fallback
+      this.etablissements = data.map(inst => ({
+        ...inst,
+        filieresDisponibles: Array.isArray(inst.filieresDisponibles) ? inst.filieresDisponibles : [],
       }));
     });
   }
 
+  // -----------------------------------------------------------
+  // FILTRES + RECHERCHE
+  // -----------------------------------------------------------
   get filteredInstitutions(): EtablissementDTO[] {
     return this.etablissements.filter(e => {
       const matchesSearch = e.nom.toLowerCase().includes(this.searchTerm.toLowerCase());
@@ -48,7 +56,9 @@ export default class EtablissementsComponent implements OnInit {
     });
   }
 
-  // Modal détails
+  // -----------------------------------------------------------
+  // VOIR
+  // -----------------------------------------------------------
   selectInstitution(inst: EtablissementDTO): void {
     this.selectedInstitution = inst;
   }
@@ -58,51 +68,71 @@ export default class EtablissementsComponent implements OnInit {
     this.showFormModal = false;
   }
 
+  // -----------------------------------------------------------
+  // EDITION
+  // -----------------------------------------------------------
   editInstitution(inst: EtablissementDTO): void {
     this.formInstitution = { ...inst };
+
+    this.filieresTemp = Array.isArray(inst.filieresDisponibles) ? inst.filieresDisponibles.join(', ') : '';
+
     this.editingInstitution = true;
     this.showFormModal = true;
   }
 
+  // -----------------------------------------------------------
+  // SUPPRESSION
+  // -----------------------------------------------------------
   deleteInstitution(inst: EtablissementDTO): void {
     if (inst.id && confirm(`Supprimer ${inst.nom} ?`)) {
       this.etablissementService.delete(inst.id).subscribe(() => this.loadEtablissements());
     }
   }
 
-  // Ouvrir le formulaire création
+  // -----------------------------------------------------------
+  // OUVRIR FORM CREATION
+  // -----------------------------------------------------------
   openForm(): void {
     this.formInstitution = this.resetFormInstitution();
     this.editingInstitution = false;
     this.showFormModal = true;
   }
+
   closeForm(): void {
     this.showFormModal = false;
     this.editingInstitution = false;
-    this.formInstitution = {} as any;
+    this.formInstitution = this.resetFormInstitution();
   }
 
-  // Soumettre formulaire création/édition
+  // -----------------------------------------------------------
+  // SAVE CREATE / UPDATE
+  // -----------------------------------------------------------
   saveInstitution(): void {
-    const payload: EtablissementDTO = { ...this.formInstitution };
-    if (!this.editingInstitution) {
-      delete payload.id; // <-- supprime l'id avant la création
-      this.etablissementService.create(payload).subscribe(() => {
+    const hasFilieres = this.filieresTemp.trim().length > 0;
+
+    const payload: EtablissementDTO = {
+      ...this.formInstitution,
+      filieresDisponibles: hasFilieres ? this.filieresTemp.split(',').map(f => f.trim()) : [],
+    };
+
+    if (this.editingInstitution && payload.id) {
+      this.etablissementService.update(payload.id, payload).subscribe(() => {
         this.loadEtablissements();
         this.showFormModal = false;
       });
     } else {
-      this.etablissementService.update(payload.id!, payload).subscribe(() => {
+      this.etablissementService.create(payload).subscribe(() => {
         this.loadEtablissements();
         this.showFormModal = false;
       });
     }
   }
 
-  // Réinitialiser l'objet formulaire
+  // -----------------------------------------------------------
+  // RESET FORM INITIAL
+  // -----------------------------------------------------------
   resetFormInstitution(): EtablissementDTO {
     return {
-      filieresDisponibles: '',
       id: 0,
       nom: '',
       type: 'Public',
@@ -122,6 +152,7 @@ export default class EtablissementsComponent implements OnInit {
       tauxInsertion: 0,
       salaireMoyen: 0,
       temoignages: '',
+      filieresDisponibles: [],
     };
   }
 }

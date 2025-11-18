@@ -9,52 +9,34 @@
   box-sizing: border-box;
 }
 
-/* ===================== Header ===================== */
-.header {
+.header-wrapper {
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
-
-  @media (min-width: 640px) {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  h2 {
-    color: #1d4830;
-    margin: 0;
-    font-size: 26px;
-    font-weight: 700;
-  }
-
-  p {
-    margin: 0;
-    color: #335555;
-    font-size: 16px;
-  }
-}
-.btn-add {
-  align-self: flex-end;
-  background: linear-gradient(90deg, #1e7d32, #c9a800);
-  color: #fff;
-  border: none;
-  padding: 8px 15px;
-  border-radius: 6px;
-  font-weight: 500;
-  cursor: pointer;
-  display: flex;
+  justify-content: space-between; // header à gauche, bouton à droite
   align-items: center;
-  gap: 5px;
-  transition: 0.3s;
+  margin-bottom: 1.5rem;
+  gap: 1rem; // espace entre les deux
 
-  &:hover {
-    opacity: 0.85;
+  @media (max-width: 640px) {
+    flex-direction: column;
+    align-items: flex-start; // sur mobile, tout à gauche
   }
 
-  i {
-    font-size: 1rem;
+  .header-left {
+    display: flex;
+    flex-direction: column;
+
+    h2 {
+      color: #1d4830;
+      margin: 0;
+      font-size: 26px;
+      font-weight: 700;
+    }
+
+    p {
+      margin: 0;
+      color: #335555;
+      font-size: 16px;
+    }
   }
 }
 
@@ -88,6 +70,58 @@
     color: #1d4830;
     font-size: 14px;
     flex: 1;
+  }
+}
+
+.modal-content {
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+  border-bottom: none;
+}
+
+.modal-body p {
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.badge.public {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.badge.prive {
+  background-color: #ffc107;
+  color: #212529;
+}
+
+.btn-add-wrapper {
+  display: flex;
+  justify-content: flex-end; // met le bouton à droite
+  margin-bottom: 1.5rem;
+
+  .btn-add {
+    background: linear-gradient(90deg, #1e7d32, #c9a800);
+    color: #fff;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: 0.3s;
+
+    i {
+      font-size: 1rem;
+    }
+
+    &:hover {
+      opacity: 0.85;
+    }
   }
 }
 

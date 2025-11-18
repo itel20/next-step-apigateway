@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FilieresService } from './filieres.service';
-import { Filiere } from './filiere.model';
+import { Filiere } from './orientation.model';
 import { DecimalPipe, NgClass, NgForOf, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -24,15 +24,16 @@ export class OrientationsComponent implements OnInit {
 
   loadFilieres(): void {
     this.filieresService.getAll().subscribe({
-      next: data => (this.filieres = data),
-      error: err => console.error('Erreur récupération filières', err),
+      next: (data: Filiere[]) => (this.filieres = data),
+      error: (err: unknown) => console.error('Erreur récupération filières', err),
     });
   }
 
   get filteredOrientations(): Filiere[] {
     const q = this.searchTerm.trim().toLowerCase();
     if (!q) return this.filieres;
-    return this.filieres.filter(f => f.titre.toLowerCase().includes(q) || f.categorie.toLowerCase().includes(q));
+
+    return this.filieres.filter((f: Filiere) => f.titre.toLowerCase().includes(q) || f.categorie.toLowerCase().includes(q));
   }
 
   openDetails(f: Filiere): void {
@@ -44,11 +45,15 @@ export class OrientationsComponent implements OnInit {
   }
 
   deleteOrientation(f: Filiere): void {
-    if (!confirm(`Confirmer la suppression de "${f.titre}" ?`)) return;
     if (!f.id) return;
-    this.filieresService.delete(f.id).subscribe(() => {
-      this.filieres = this.filieres.filter(x => x.id !== f.id);
-      if (this.selectedOrientation?.id === f.id) this.closeDetails();
+    if (!confirm(`Confirmer la suppression de "${f.titre}" ?`)) return;
+
+    this.filieresService.delete(f.id).subscribe({
+      next: () => {
+        this.filieres = this.filieres.filter(x => x.id !== f.id);
+        if (this.selectedOrientation?.id === f.id) this.closeDetails();
+      },
+      error: (err: unknown) => console.error(err),
     });
   }
 

@@ -33,27 +33,26 @@
     color: #335555;
     font-size: 16px;
   }
+}
+.btn-add {
+  background: linear-gradient(90deg, #1e7d32, #c9a800);
+  color: #fff;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: 0.3s;
 
-  .btn-add {
-    background: linear-gradient(90deg, #1e7d32, #c9a800);
-    color: #fff;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 6px;
-    font-weight: 500;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    transition: 0.3s;
+  i {
+    font-size: 1rem;
+  }
 
-    i {
-      font-size: 1rem;
-    }
-
-    &:hover {
-      opacity: 0.85;
-    }
+  &:hover {
+    opacity: 0.85;
   }
 }
 
@@ -109,6 +108,184 @@
       }
     }
   }
+}
+/* Modal backdrop */
+/* Conteneur modal */
+/* ===================== MODAL GLOBAL ===================== */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  z-index: 10000;
+}
+
+/* Backdrop — effet légèrement flouté */
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(3px);
+  z-index: 1;
+}
+
+/* ===================== CONTENU DU POPUP ===================== */
+.modal-dialog {
+  position: relative;
+  background: #ffffff;
+  border-radius: 14px;
+  width: 520px;
+  max-width: 95%;
+  max-height: 90vh; /* limite la hauteur */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* pour arrondir correctement */
+  box-shadow: 0px 12px 28px rgba(0, 0, 0, 0.25);
+  animation: modalDrop 0.25s ease-out;
+}
+
+/* ===================== HEADER DU MODAL ===================== */
+.modal-content.form-modal > h3 {
+  margin: 20px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #1d4830;
+}
+
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  font-size: 1.6rem;
+  cursor: pointer;
+  color: #333;
+}
+
+/* ===================== CORPS DU MODAL (scrollable) ===================== */
+.modal-dialog {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-body {
+  padding: 0 20px 20px;
+  overflow-y: auto;
+  max-height: 75vh; /* permet le scroll si contenu trop grand */
+}
+
+/* ===================== FORMULAIRE ===================== */
+.form-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-bottom: 20px;
+}
+
+.form-modal .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-modal .form-group label {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.form-modal .form-group input,
+.form-modal .form-group select,
+.form-modal .form-group textarea {
+  padding: 10px 12px;
+  font-size: 0.95rem;
+  border: 1px solid #d2d2d2;
+  border-radius: 8px;
+  transition: border 0.2s ease;
+}
+
+.form-modal .form-group input:focus,
+.form-modal .form-group select:focus,
+.form-modal .form-group textarea:focus {
+  outline: none;
+  border-color: #1d4830;
+}
+
+/* textarea spécifique */
+.form-modal textarea {
+  resize: vertical;
+}
+
+/* ===================== ACTIONS ===================== */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin: 20px;
+}
+
+.btn-submit {
+  background: #1d4830;
+  color: #fff;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn-submit:hover {
+  background: #163b29;
+}
+
+.btn-cancel {
+  background: #e0e0e0;
+  color: #333;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+/* ===================== ANIMATION ===================== */
+@keyframes modalDrop {
+  from {
+    opacity: 0;
+    transform: translateY(-25px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ===================== RESPONSIVE ===================== */
+@media (max-width: 768px) {
+  .modal-dialog {
+    width: 95%;
+    max-height: 88vh;
+  }
+  .form-modal h3 {
+    font-size: 1rem;
+  }
+  .form-actions {
+    flex-direction: column;
+    gap: 8px;
+    margin: 16px;
+  }
+}
+
+/* Empêche le body de scroller */
+body.modal-open {
+  overflow: hidden;
 }
 
 /* ===================== Table ===================== */
@@ -225,163 +402,92 @@
   font-size: 13px;
   color: #335555;
 }
-
-/* ===================== Modal ===================== */
-.modal {
+.form-modal {
   position: fixed;
-  inset: 0;
-  z-index: 1000;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10001;
+  max-width: 700px;
+  width: 90%;
+  max-height: 80vh; // limite la hauteur pour le scroll
+  padding: 2rem;
+  background: #f4fff5;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  overflow-y: auto; // active le scroll vertical
 
-  .modal-backdrop {
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.35);
+  h3 {
+    color: #1e7d32;
+    margin-bottom: 1.5rem;
+    text-align: center;
   }
 
-  .modal-dialog {
-    position: relative;
-    margin: auto;
-    max-width: 900px;
-    max-height: 90vh;
-    overflow-y: auto;
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
 
-    .modal-content {
-      background: #fff;
-      border-radius: 12px;
-      padding: 1.5rem;
-      position: relative;
-    }
-
-    .modal-close {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      border: none;
-      background: none;
-      font-size: 22px;
-      cursor: pointer;
-      color: #1d4830;
-    }
-
-    .modal-header {
+    label {
+      font-weight: 600;
+      margin-bottom: 4px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      margin-bottom: 1rem;
-
-      h3 {
-        margin: 0;
-        font-size: 22px;
-        font-weight: 700;
-      }
-      .meta {
-        display: flex;
-        gap: 10px;
-      }
+      gap: 6px;
+      color: #335555;
     }
 
-    .metrics-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      margin-bottom: 18px;
-
-      .metric {
-        background: #ebfaf0;
-        border-radius: 12px;
-        padding: 12px;
-        text-align: center;
-
-        .metric-icon {
-          font-size: 22px;
-          color: #1e7d32;
-          margin-bottom: 6px;
-        }
-        .metric-value {
-          font-weight: 700;
-          font-size: 16px;
-          color: #1e7d32;
-        }
-        .metric-label {
-          font-size: 12px;
-          color: #335555;
-        }
-      }
+    input,
+    select,
+    textarea {
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 2px solid #c9a800;
+      font-size: 14px;
+      outline: none;
+      transition: 0.2s;
     }
 
-    .section {
-      margin-bottom: 18px;
-
-      h4 {
-        font-size: 16px;
-        color: #15803d;
-        margin-bottom: 8px;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-      }
-
-      .list-formation {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-      }
-      .formation {
-        background: #d6f5d9;
-        padding: 6px 12px;
-        border-radius: 12px;
-        font-size: 13px;
-        font-weight: 700;
-        color: #1e7d32;
-      }
-
-      .chips {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-      }
-
-      .chip,
-      .skill {
-        background: #ebfaf0;
-        border-radius: 12px;
-        padding: 6px 12px;
-        font-size: 13px;
-        font-weight: 700;
-        color: #1d4830;
-        border: none;
-        cursor: default;
-      }
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #1e7d32;
+      box-shadow: 0 0 4px #1e7d32;
     }
+  }
 
-    .testimonial {
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 1.5rem;
+
+    .btn-submit {
+      background: linear-gradient(90deg, #1e7d32, #c9a800);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
       display: flex;
-      gap: 12px;
-      background: #d6f5d9;
-      padding: 16px;
-      border-radius: 12px;
-      font-style: italic;
-      color: #1d4830;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.3s;
+    }
 
-      .avatar {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background: #1e7d32;
-        color: #fff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 700;
-      }
-
-      .quote {
-        margin: 0 0 6px 0;
-      }
-      .author {
-        margin: 0;
-        font-size: 13px;
-      }
+    .btn-cancel {
+      background: #f8d7da;
+      color: #842029;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
     }
   }
 }

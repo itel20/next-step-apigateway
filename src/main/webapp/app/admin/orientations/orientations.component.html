@@ -5,9 +5,6 @@
       <h2>Gestion des Filières & Métiers</h2>
       <p>Ajouter, modifier ou supprimer des filières et métiers</p>
     </div>
-    <button class="btn-add" (click)="alert('Ajouter une orientation (formulaire à implémenter)')">
-      <i class="bi bi-plus-lg"></i> Ajouter une filière
-    </button>
   </div>
 
   <!-- Search -->
@@ -20,6 +17,8 @@
       <button class="btn-filter" (click)="alert('Filtre avancé (à implémenter)')">Filtre avancé</button>
     </div>
   </div>
+
+  <button class="btn-add" (click)="openForm()"><i class="bi bi-plus-lg"></i> Ajouter une filière</button>
 
   <!-- Table -->
   <div class="table-wrapper">
@@ -57,7 +56,7 @@
             <button class="icon-btn view" title="Voir" (click)="openDetails(o)">
               <i class="bi bi-eye"></i>
             </button>
-            <button class="icon-btn edit" title="Modifier" (click)="editOrientation(o)">
+            <button class="icon-btn edit" title="Modifier" (click)="openForm(o)">
               <i class="bi bi-pencil"></i>
             </button>
             <button class="icon-btn delete" title="Supprimer" (click)="deleteOrientation(o)">
@@ -71,6 +70,110 @@
 
   <!-- Résultat count -->
   <p class="result-count">Affichage de {{ filteredOrientations.length }} orientation(s)</p>
+
+  <!-- Modal création / édition -->
+  <div class="modal" *ngIf="showFormModal">
+    <div class="modal-backdrop" (click)="closeForm()"></div>
+
+    <div class="modal-dialog">
+      <div class="modal-content form-modal">
+        <button class="modal-close" (click)="closeForm()">&times;</button>
+
+        <h3>{{ editingFiliere ? 'Modifier la filière' : 'Ajouter une nouvelle filière' }}</h3>
+
+        <form (ngSubmit)="submitForm()">
+          <!-- TITRE -->
+          <div class="form-group">
+            <label><i class="bi bi-card-text"></i> Titre</label>
+            <input type="text" [(ngModel)]="formData.titre" name="titre" required />
+          </div>
+
+          <!-- CATEGORIE -->
+          <div class="form-group">
+            <label><i class="bi bi-tags"></i> Catégorie</label>
+            <input type="text" [(ngModel)]="formData.categorie" name="categorie" required />
+          </div>
+
+          <!-- DESCRIPTION DETAILLEE -->
+          <div class="form-group">
+            <label><i class="bi bi-text-paragraph"></i> Description détaillée</label>
+            <textarea
+              name="descriptionDetaillee"
+              [(ngModel)]="formData.descriptionDetaillee"
+              rows="4"
+              placeholder="Décrire la filière en détails..."
+            ></textarea>
+          </div>
+
+          <!-- DIFFICULTÉ NUMERIQUE -->
+          <div class="form-group">
+            <label><i class="bi bi-speedometer2"></i> Difficulté</label>
+            <select [(ngModel)]="formData.difficulte" name="difficulte" required>
+              <option [value]="1">Faible</option>
+              <option [value]="2">Moyenne</option>
+              <option [value]="3">Élevée</option>
+              <option [value]="4">Très élevée</option>
+            </select>
+          </div>
+
+          <!-- TAUX EMPLOI -->
+          <div class="form-group">
+            <label><i class="bi bi-graph-up"></i> Taux d'emploi (%)</label>
+            <input type="number" [(ngModel)]="formData.tauxEmploi" name="tauxEmploi" min="0" max="100" />
+          </div>
+
+          <!-- SATISFACTION -->
+          <div class="form-group">
+            <label><i class="bi bi-star-fill"></i> Satisfaction (/5)</label>
+            <input type="number" [(ngModel)]="formData.satisfaction" name="satisfaction" min="0" max="5" step="0.1" />
+          </div>
+
+          <!-- SALAIRE -->
+          <div class="form-group">
+            <label><i class="bi bi-currency-dollar"></i> Salaire moyen</label>
+            <input type="number" [(ngModel)]="formData.salaireMoyen" name="salaireMoyen" />
+          </div>
+
+          <!-- DUREE -->
+          <div class="form-group">
+            <label><i class="bi bi-clock"></i> Durée formation</label>
+            <input type="text" [(ngModel)]="formData.dureeFormation" name="dureeFormation" />
+          </div>
+
+          <!-- UNIVERSITES -->
+          <div class="form-group">
+            <label><i class="bi bi-mortarboard-fill"></i> Universités / Formations</label>
+            <input type="text" [(ngModel)]="formData.universitesStr" name="universitesStr" placeholder="Séparez par une virgule" />
+          </div>
+
+          <!-- DEBOUCHES -->
+          <div class="form-group">
+            <label><i class="bi bi-briefcase-fill"></i> Débouchés</label>
+            <input type="text" [(ngModel)]="formData.debouchesStr" name="debouchesStr" placeholder="Séparez par une virgule" />
+          </div>
+
+          <!-- COMPETENCES -->
+          <div class="form-group">
+            <label><i class="bi bi-tools"></i> Compétences</label>
+            <input type="text" [(ngModel)]="formData.competencesStr" name="competencesStr" placeholder="Séparez par une virgule" />
+          </div>
+
+          <!-- TEMOIGNAGES -->
+          <div class="form-group">
+            <label><i class="bi bi-chat-left-quote"></i> Témoignage</label>
+            <textarea [(ngModel)]="formData.temoignages" name="temoignages" rows="3" placeholder="Ajouter un témoignage..."></textarea>
+          </div>
+
+          <!-- ACTIONS  -->
+          <div class="form-actions">
+            <button type="submit" class="btn-submit"><i class="bi bi-check-lg"></i> {{ editingFiliere ? 'Enregistrer' : 'Créer' }}</button>
+
+            <button type="button" class="btn-cancel" (click)="closeForm()"><i class="bi bi-x-lg"></i> Annuler</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 
   <!-- Modal détails -->
   <div class="modal" *ngIf="selectedOrientation">

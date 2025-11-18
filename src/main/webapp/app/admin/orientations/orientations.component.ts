@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FilieresService } from './filieres.service';
+import { FilieresService } from './orientation.service';
 import { Filiere } from './orientation.model';
 import { DecimalPipe, NgClass, NgForOf, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -11,10 +11,29 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './orientations.component.html',
   styleUrls: ['./orientations.component.scss'],
 })
-export class OrientationsComponent implements OnInit {
+export default class OrientationsComponent implements OnInit {
   searchTerm = '';
   filieres: Filiere[] = [];
   selectedOrientation: Filiere | null = null;
+  showFormModal = false;
+  editingFiliere: Filiere | null = null;
+  formData: any = {
+    titre: '',
+    categorie: '',
+    descriptionDetaillee: '',
+    difficulte: 1,
+    tauxEmploi: 0,
+    satisfaction: 0,
+    salaireMoyen: 0,
+    dureeFormation: '',
+    universitesStr: '',
+    debouchesStr: '',
+    competencesStr: '',
+    temoignages: '',
+  };
+  protected readonly alert = alert;
+
+  // Modal création/édition
 
   constructor(private filieresService: FilieresService) {}
 
@@ -32,10 +51,87 @@ export class OrientationsComponent implements OnInit {
   get filteredOrientations(): Filiere[] {
     const q = this.searchTerm.trim().toLowerCase();
     if (!q) return this.filieres;
-
     return this.filieres.filter((f: Filiere) => f.titre.toLowerCase().includes(q) || f.categorie.toLowerCase().includes(q));
   }
 
+  // ---------------- Formulaire ----------------
+  openForm(f?: Filiere): void {
+    if (f) {
+      this.editingFiliere = f;
+      this.formData = {
+        ...f,
+        universitesStr: f.universites?.join(', ') ?? '',
+        debouchesStr: f.debouches?.join(', ') ?? '',
+      };
+    } else {
+      this.editingFiliere = null;
+      this.formData = {
+        titre: '',
+        categorie: '',
+        descriptionDetaillee: '',
+        difficulte: 1,
+        tauxEmploi: 0,
+        satisfaction: 0,
+        salaireMoyen: 0,
+        dureeFormation: '',
+        universitesStr: '',
+        debouchesStr: '',
+        competencesStr: '',
+        temoignages: '',
+      };
+    }
+    this.showFormModal = true;
+  }
+
+  closeForm(): void {
+    this.showFormModal = false;
+  }
+
+  submitForm(): void {
+    const newFiliere: Filiere = {
+      id: this.editingFiliere?.id,
+      titre: this.formData.titre,
+      categorie: this.formData.categorie,
+      descriptionDetaillee: this.formData.descriptionDetaillee,
+      difficulte: this.formData.difficulte,
+      tauxEmploi: Number(this.formData.tauxEmploi),
+      satisfaction: Number(this.formData.satisfaction),
+      salaireMoyen: Number(this.formData.salaireMoyen),
+      dureeFormation: this.formData.dureeFormation,
+
+      universites: this.formData.universitesStr ? this.formData.universitesStr.split(',').map((u: string) => u.trim()) : [],
+
+      debouches: this.formData.debouchesStr ? this.formData.debouchesStr.split(',').map((d: string) => d.trim()) : [],
+
+      competences: this.formData.competencesStr ? this.formData.competencesStr.split(',').map((c: string) => c.trim()) : [],
+
+      temoignages: this.formData.temoignages, // backend attend STRING
+    };
+
+    if (this.editingFiliere) {
+      // Mise à jour
+      this.filieresService.update(this.editingFiliere.id!, newFiliere).subscribe({
+        next: (res: Filiere) => {
+          const index = this.filieres.findIndex(f => f.id === res.id);
+          if (index !== -1) this.filieres[index] = res;
+          if (this.selectedOrientation?.id === res.id) this.selectedOrientation = res;
+          this.closeForm();
+        },
+        error: (err: unknown) => console.error(err),
+      });
+    } else {
+      // Création
+      this.filieresService.create(newFiliere).subscribe({
+        next: (res: Filiere) => {
+          this.filieres.push(res);
+          this.closeForm();
+        },
+        error: (err: unknown) => console.error(err),
+      });
+    }
+  }
+
+  // ---------------- Détails et actions ----------------
   openDetails(f: Filiere): void {
     this.selectedOrientation = f;
   }
@@ -57,16 +153,17 @@ export class OrientationsComponent implements OnInit {
     });
   }
 
+  // ---------------- Helpers ----------------
   difficultyClass(d: string): string {
     switch (d) {
       case 'Très élevée':
-        return 'diff-very-high';
+        return 'Difficile';
       case 'Élevée':
-        return 'diff-high';
+        return 'Difficile';
       case 'Moyenne':
-        return 'diff-medium';
+        return 'Moyen';
       default:
-        return 'diff-low';
+        return 'Facile';
     }
   }
 

@@ -2,6 +2,7 @@ export interface Filiere {
   id?: number; // optionnel si serveur génère l'ID
   titre: string;
   categorie: string;
+  descriptionDetaillee: string;
   difficulte: 'Très élevée' | 'Élevée' | 'Moyenne' | 'Faible';
   tauxEmploi: number;
   satisfaction: number;

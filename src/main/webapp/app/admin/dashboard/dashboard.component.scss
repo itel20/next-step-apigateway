@@ -6,6 +6,9 @@
   box-sizing: border-box;
 }
 
+/* ==========================
+   HEADER
+========================== */
 .dashboard-header {
   h1 {
     margin: 0;
@@ -18,13 +21,16 @@
   }
 }
 
-/* Stat cards */
+/* ==========================
+   STAT CARDS
+========================== */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 16px;
-  margin-bottom: 18px;
+  margin-bottom: 20px;
 }
+
 .stat-card {
   background: linear-gradient(180deg, #f1fbf4 0%, #ffffff 100%);
   border: 1px solid rgba(46, 125, 50, 0.12);
@@ -40,27 +46,33 @@
     justify-content: space-between;
     align-items: center;
   }
+
   .stat-title {
     font-weight: 600;
     color: #3f7a5b;
     font-size: 13px;
   }
+
   .stat-icon {
-    font-size: 20px;
+    font-size: 22px;
   }
+
   .stat-value {
     font-size: 28px;
     font-weight: 700;
     margin-top: 8px;
+    color: #0f3d2e;
   }
 }
 
-/* charts row */
-.charts-row {
+/* ==========================
+   CHARTS GRID
+========================== */
+.charts {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
-  margin-bottom: 18px;
+  margin-bottom: 20px;
 
   .chart-card {
     background: #fff;
@@ -68,29 +80,42 @@
     padding: 16px;
     border: 1px solid #e9f4eb;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+
     h3 {
       margin-top: 0;
+      margin-bottom: 12px;
       color: #133a2a;
       font-size: 16px;
       font-weight: 700;
-      margin-bottom: 12px;
     }
-    ngx-charts-pie-chart,
-    ngx-charts-bar-vertical {
+
+    /* ApexCharts container */
+    apx-chart {
+      width: 100%;
       display: block;
     }
   }
 }
 
-/* full width chart */
+/* ==========================
+   FULL WIDTH CHART
+========================== */
 .full-width-chart {
-  margin-bottom: 18px;
+  margin-bottom: 20px;
+
   .chart-card {
     padding: 20px;
   }
+
+  apx-chart {
+    width: 100%;
+    display: block;
+  }
 }
 
-/* notifications */
+/* ==========================
+   NOTIFICATIONS
+========================== */
 .notifications {
   .notifications-list {
     background: #fff;
@@ -98,6 +123,7 @@
     border: 1px solid #eef6ef;
     padding: 12px;
   }
+
   .notification {
     display: flex;
     gap: 12px;
@@ -105,19 +131,24 @@
     align-items: center;
     border-bottom: 1px dashed #f0f6f0;
 
+    &:last-child {
+      border-bottom: none;
+    }
+
     .bullet {
       width: 10px;
       height: 10px;
       border-radius: 50%;
-    }
-    .bullet.info {
-      background: #2196f3;
-    }
-    .bullet.success {
-      background: #2e7d32;
-    }
-    .bullet.warning {
-      background: #f59e0b;
+
+      &.info {
+        background: #2196f3;
+      }
+      &.success {
+        background: #2e7d32;
+      }
+      &.warning {
+        background: #f59e0b;
+      }
     }
 
     .notif-body {
@@ -133,15 +164,19 @@
   }
 }
 
-/* Responsive */
+/* ==========================
+   RESPONSIVE
+========================== */
 @media (max-width: 1100px) {
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  .charts-row {
+
+  .charts {
     grid-template-columns: 1fr;
   }
-  .full-width-chart ngx-charts-line-chart {
+
+  .full-width-chart apx-chart {
     height: 280px;
   }
 }
@@ -150,6 +185,7 @@
   .stats-grid {
     grid-template-columns: 1fr;
   }
+
   :host {
     padding: 12px;
   }

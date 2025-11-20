@@ -1,74 +1,95 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
-// Note: if you don't use Angular Material, ignore Card imports above.
+import { StatistiquesService, Stats1, Stats2 } from './statistiques.service';
+
+import {
+  NgApexchartsModule,
+  ChartComponent,
+  ApexAxisChartSeries,
+  ApexChart,
+  ApexXAxis,
+  ApexStroke,
+  ApexNonAxisChartSeries,
+  ApexPlotOptions,
+} from 'ng-apexcharts';
 
 @Component({
-  selector: 'jhi-dashboard',
+  selector: 'jhi-dashbord',
   standalone: true,
-  imports: [CommonModule, NgxChartsModule],
+  imports: [CommonModule, NgApexchartsModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })
-export default class DashboardComponent {
-  // --- Stat cards ---
-  stats = [
-    { title: 'Bacheliers inscrits', value: '2,847', color: '#2E7D32', icon: 'users' },
-    { title: 'Établissements partenaires', value: '156', color: '#2E7D32', icon: 'school' },
-    { title: 'Orientations validées', value: '1,923', color: '#2E7D32', icon: 'graduation' },
-    { title: 'Interactions IA', value: '8,432', color: '#2E7D32', icon: 'chat' },
-  ];
+export default class DashboardComponent implements OnInit {
+  stats: any[] = [];
+  stats1!: Stats1;
+  stats2!: Stats2;
+  loading = true;
 
-  // --- Pie / series distribution (ngx-charts expects an array of { name, value }) ---
-  seriesData = [
-    { name: 'Série S', value: 1245 },
-    { name: 'Série L', value: 687 },
-    { name: 'Série G', value: 543 },
-    { name: 'Série T', value: 372 },
-  ];
-
-  // --- Regional bar chart ---
-  regionData = [
-    { name: 'Dakar', value: 1450 },
-    { name: 'Thiès', value: 430 },
-    { name: 'Saint-Louis', value: 280 },
-    { name: 'Kaolack', value: 245 },
-    { name: 'Ziguinchor', value: 190 },
-    { name: 'Louga', value: 252 },
-  ];
-
-  // --- Monthly line chart (ngx-charts line expects series format) ---
-  monthlyData = [
-    {
-      name: 'Inscriptions',
-      series: [
-        { name: 'Jan', value: 120 },
-        { name: 'Fév', value: 210 },
-        { name: 'Mar', value: 350 },
-        { name: 'Avr', value: 260 },
-        { name: 'Mai', value: 410 },
-        { name: 'Jun', value: 580 },
-        { name: 'Jul', value: 620 },
-        { name: 'Aoû', value: 230 },
-      ],
-    },
-  ];
-
-  // --- Notifications ---
+  // ---------- Notifications ----------
   notifications = [
     { type: 'info', message: '5 nouvelles bourses disponibles', time: 'Il y a 2h' },
     { type: 'warning', message: '12 demandes de validation en attente', time: 'Il y a 4h' },
     { type: 'success', message: '50 nouvelles inscriptions aujourd’hui', time: 'Il y a 6h' },
   ];
 
-  // ngx-charts options
-  view: any[] = [700, 320]; // default view for charts (will be responsive via CSS)
-  colorScheme = { domain: ['#2E7D32', '#43A047', '#66BB6A', '#81C784'] };
-  barColor = '#2E7D32';
-  gradient = false;
-  showLegend = false;
-  showLabels = true;
-  explodeSlices = false;
-  doughnut = false;
-  animations = true;
+  // ---------- PIE CHART ----------
+  pieSeries: ApexNonAxisChartSeries = [1245, 687, 543, 372];
+  pieChart: ApexChart = {
+    type: 'pie',
+    height: 260,
+  };
+
+  pieLabels = ['Série S', 'Série L', 'Série G', 'Série T'];
+
+  // ---------- BAR CHART ----------
+  barSeries: ApexAxisChartSeries = [{ name: 'Étudiants', data: [1450, 430, 280, 245, 190, 252] }];
+
+  barChart: ApexChart = {
+    type: 'bar',
+    height: 260,
+  };
+
+  barLabels = ['Dakar', 'Thiès', 'Saint-Louis', 'Kaolack', 'Ziguinchor', 'Louga'];
+
+  barPlotOptions: ApexPlotOptions = {
+    bar: { columnWidth: '45%', distributed: true },
+  };
+
+  // ---------- LINE CHART ----------
+  lineSeries: ApexAxisChartSeries = [{ name: 'Inscriptions', data: [120, 210, 350, 260, 410, 580, 620, 230] }];
+
+  lineChart: ApexChart = {
+    type: 'line',
+    height: 300,
+  };
+
+  lineStroke: ApexStroke = { curve: 'smooth' };
+
+  lineLabels = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû'];
+
+  constructor(private statsService: StatistiquesService) {}
+
+  ngOnInit(): void {
+    this.loadStats();
+  }
+
+  loadStats(): void {
+    this.statsService.getStats().subscribe(res1 => {
+      this.stats1 = res1;
+
+      this.statsService.getStatistics().subscribe(res2 => {
+        this.stats2 = res2;
+
+        this.stats = [
+          { title: 'Total Bource & Concours', value: res2.totalBourceConcours, color: '#2E7D32', icon: 'users' },
+          { title: 'Total Filiere', value: res2.totalFiliere, color: '#43A047', icon: 'school' },
+          { title: 'Total Etablissement', value: res2.totalEtablissement, color: '#66BB6A', icon: 'graduation' },
+          { title: 'Total Utilisateurs', value: res1.totalAll, color: '#81C784', icon: 'chat' },
+        ];
+
+        this.loading = false;
+      });
+    });
+  }
 }

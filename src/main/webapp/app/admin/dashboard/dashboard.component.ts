@@ -1,95 +1,89 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { StatistiquesService, Stats1, Stats2 } from './statistiques.service';
-
-import {
-  NgApexchartsModule,
-  ChartComponent,
-  ApexAxisChartSeries,
-  ApexChart,
-  ApexXAxis,
-  ApexStroke,
-  ApexNonAxisChartSeries,
-  ApexPlotOptions,
-} from 'ng-apexcharts';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { DashboardService, StatsReponse, StatsReponses } from './dashboard.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
-  selector: 'jhi-dashbord',
+  selector: 'jhi-dashboard',
   standalone: true,
-  imports: [CommonModule, NgApexchartsModule],
+  imports: [CommonModule, NgxChartsModule, HttpClientModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })
 export default class DashboardComponent implements OnInit {
-  stats: any[] = [];
-  stats1!: Stats1;
-  stats2!: Stats2;
-  loading = true;
+  // --- Déclaration explicite des types ---
+  stats: { title: string; value: number; color: string; icon: string }[] = [];
+  seriesData: { name: string; value: number }[] = [];
+  regionData: { name: string; value: number }[] = [];
+  monthlyData: { name: string; series: { name: string; value: number }[] }[] = [];
+  notifications: { type: string; message: string; time: string }[] = [];
 
-  // ---------- Notifications ----------
-  notifications = [
-    { type: 'info', message: '5 nouvelles bourses disponibles', time: 'Il y a 2h' },
-    { type: 'warning', message: '12 demandes de validation en attente', time: 'Il y a 4h' },
-    { type: 'success', message: '50 nouvelles inscriptions aujourd’hui', time: 'Il y a 6h' },
-  ];
+  animations = true;
+  gradient = false;
 
-  // ---------- PIE CHART ----------
-  pieSeries: ApexNonAxisChartSeries = [1245, 687, 543, 372];
-  pieChart: ApexChart = {
-    type: 'pie',
-    height: 260,
-  };
-
-  pieLabels = ['Série S', 'Série L', 'Série G', 'Série T'];
-
-  // ---------- BAR CHART ----------
-  barSeries: ApexAxisChartSeries = [{ name: 'Étudiants', data: [1450, 430, 280, 245, 190, 252] }];
-
-  barChart: ApexChart = {
-    type: 'bar',
-    height: 260,
-  };
-
-  barLabels = ['Dakar', 'Thiès', 'Saint-Louis', 'Kaolack', 'Ziguinchor', 'Louga'];
-
-  barPlotOptions: ApexPlotOptions = {
-    bar: { columnWidth: '45%', distributed: true },
-  };
-
-  // ---------- LINE CHART ----------
-  lineSeries: ApexAxisChartSeries = [{ name: 'Inscriptions', data: [120, 210, 350, 260, 410, 580, 620, 230] }];
-
-  lineChart: ApexChart = {
-    type: 'line',
-    height: 300,
-  };
-
-  lineStroke: ApexStroke = { curve: 'smooth' };
-
-  lineLabels = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû'];
-
-  constructor(private statsService: StatistiquesService) {}
+  constructor(private dashboardService: DashboardService) {}
 
   ngOnInit(): void {
     this.loadStats();
+    this.loadStatistics();
+    this.loadCharts();
+    this.loadNotifications();
   }
 
-  loadStats(): void {
-    this.statsService.getStats().subscribe(res1 => {
-      this.stats1 = res1;
-
-      this.statsService.getStatistics().subscribe(res2 => {
-        this.stats2 = res2;
-
-        this.stats = [
-          { title: 'Total Bource & Concours', value: res2.totalBourceConcours, color: '#2E7D32', icon: 'users' },
-          { title: 'Total Filiere', value: res2.totalFiliere, color: '#43A047', icon: 'school' },
-          { title: 'Total Etablissement', value: res2.totalEtablissement, color: '#66BB6A', icon: 'graduation' },
-          { title: 'Total Utilisateurs', value: res1.totalAll, color: '#81C784', icon: 'chat' },
-        ];
-
-        this.loading = false;
-      });
+  private loadStats(): void {
+    this.dashboardService.getStats().subscribe((data: StatsReponse) => {
+      this.stats = [
+        { title: 'Bacheliers inscrits', value: data.totalEtudiants, color: '#2E7D32', icon: 'bi-people' },
+        { title: 'Élèves inscrits', value: data.totalEleves, color: '#43A047', icon: 'bi-building' },
+        { title: 'Conseillers actifs', value: data.totalConseillers, color: '#66BB6A', icon: 'bi-person-check' },
+        { title: 'Total général', value: data.totalAll, color: '#81C784', icon: 'bi-bar-chart' },
+      ];
     });
+  }
+
+  private loadStatistics(): void {
+    this.dashboardService.getStatistics().subscribe((data: StatsReponses) => {
+      this.seriesData = [
+        { name: 'Bourses/Concours', value: data.totalBourceConcours },
+        { name: 'Filières', value: data.totalFiliere },
+        { name: 'Établissements', value: data.totalEtablissement },
+      ];
+    });
+  }
+
+  private loadCharts(): void {
+    this.regionData = [
+      { name: 'Dakar', value: 1450 },
+      { name: 'Thiès', value: 430 },
+      { name: 'Saint-Louis', value: 280 },
+      { name: 'Kaolack', value: 245 },
+      { name: 'Ziguinchor', value: 190 },
+      { name: 'Louga', value: 252 },
+    ];
+
+    this.monthlyData = [
+      {
+        name: 'Inscriptions',
+        series: [
+          { name: 'Jan', value: 120 },
+          { name: 'Fév', value: 210 },
+          { name: 'Mar', value: 350 },
+          { name: 'Avr', value: 260 },
+          { name: 'Mai', value: 410 },
+          { name: 'Jun', value: 580 },
+          { name: 'Jul', value: 620 },
+          { name: 'Aoû', value: 230 },
+        ],
+      },
+    ];
+  }
+
+  private loadNotifications(): void {
+    this.notifications = [
+      { type: 'info', message: '5 nouvelles bourses disponibles', time: 'Il y a 2h' },
+      { type: 'warning', message: '12 demandes de validation en attente', time: 'Il y a 4h' },
+      { type: 'success', message: '50 nouvelles inscriptions aujourd’hui', time: 'Il y a 6h' },
+    ];
   }
 }

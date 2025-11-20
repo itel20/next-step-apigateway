@@ -6,59 +6,89 @@
   box-sizing: border-box;
 }
 
-.dashboard-header h1 {
-  margin: 0;
-  font-size: 28px;
-  color: #0f3d2e;
+/* Header */
+.dashboard-header {
+  h1 {
+    margin: 0;
+    font-size: 28px;
+    color: #1e7d32;
+  }
+  .subtitle {
+    margin: 4px 0 18px;
+    color: #333; // texte noir
+  }
 }
 
-.dashboard-header .subtitle {
-  margin: 4px 0 18px;
-  color: #6b8f76;
-}
-
-/* Stat cards */
+/* ================= Stat cards ================= */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 16px;
   margin-bottom: 18px;
 }
 
 .stat-card {
-  background: linear-gradient(180deg, #f1fbf4 0%, #ffffff 100%);
-  border: 1px solid rgba(46, 125, 50, 0.12);
+  background: #fff; // fond blanc
   border-radius: 12px;
-  padding: 16px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  padding: 16px 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  .stat-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .stat-title {
+    font-weight: 600;
+    font-size: 14px;
+    color: inherit; // prendra colorText
+  }
+
+  .stat-icon i {
+    font-size: 24px;
+    color: inherit; // prendra colorText
+  }
+
+  .stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: inherit; // prendra colorText
+    margin-bottom: 12px;
+  }
+
+  .stat-footer {
+    font-size: 12px;
+    color: #1e7d32; // vert Next Step
+    font-weight: 500;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    i {
+      margin-left: 4px;
+    }
+
+    &:hover {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
 }
 
-.stat-card-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.stat-title {
-  font-weight: 600;
-  color: #3f7a5b;
-  font-size: 13px;
-}
-
-.stat-icon i {
-  font-size: 20px;
-}
-
-.stat-value {
-  font-size: 28px;
-  font-weight: 700;
-  margin-top: 8px;
-}
-
-/* Charts row */
+/* ================= Charts ================= */
 .charts-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -70,28 +100,27 @@
   background: #fff;
   border-radius: 12px;
   padding: 16px;
-  border: 1px solid #e9f4eb;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
-}
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
 
-.chart-card h3 {
-  margin-top: 0;
-  color: #133a2a;
-  font-size: 16px;
-  font-weight: 700;
-  margin-bottom: 12px;
+  h3 {
+    margin-top: 0;
+    color: #1e7d32;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
 }
 
 /* Full width chart */
 .full-width-chart {
   margin-bottom: 18px;
+
+  .chart-card {
+    padding: 20px;
+  }
 }
 
-.full-width-chart .chart-card {
-  padding: 20px;
-}
-
-/* Notifications */
+/* ================= Notifications ================= */
 .notifications .notifications-list {
   background: #fff;
   border-radius: 8px;
@@ -105,54 +134,48 @@
   padding: 10px;
   align-items: center;
   border-bottom: 1px dashed #f0f6f0;
-}
 
-.bullet {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-}
-
-.bullet.info {
-  background: #2196f3;
-}
-
-.bullet.success {
-  background: #2e7d32;
-}
-
-.bullet.warning {
-  background: #f59e0b;
-}
-
-.notif-body .msg {
-  color: #1f3d2b;
-  font-weight: 600;
-}
-
-.notif-body .time {
-  color: #6b8f76;
-  font-size: 12px;
-}
-
-/* Responsive */
-@media (max-width: 1100px) {
-  .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .bullet {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
   }
+
+  .bullet.info {
+    background: #1e7d32;
+  }
+
+  .bullet.success {
+    background: #c9a800;
+  }
+
+  .bullet.warning {
+    background: #ff9800;
+  }
+
+  .notif-body .msg {
+    color: #000;
+    font-weight: 600;
+  }
+
+  .notif-body .time {
+    color: #333;
+    font-size: 12px;
+  }
+}
+
+/* ================= Responsive ================= */
+@media (max-width: 1100px) {
   .charts-row {
     grid-template-columns: 1fr;
-  }
-  .full-width-chart ngx-charts-line-chart {
-    height: 280px;
   }
 }
 
 @media (max-width: 600px) {
-  .stats-grid {
-    grid-template-columns: 1fr;
-  }
   :host {
     padding: 12px;
+  }
+  .stats-grid {
+    grid-template-columns: 1fr;
   }
 }

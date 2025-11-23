@@ -1,8 +1,33 @@
-<div class="login-container">
-  <img src="content/images/image 11.png" class="logo" />
+<div class="login-hero">
+  <!-- SLIDER -->
+  <div class="slider">
+    <div
+      class="slide"
+      *ngFor="let img of images; let i = index"
+      [class.active]="i === currentIndex"
+      [style.backgroundImage]="'url(' + img + ')'"
+    ></div>
+  </div>
 
-  <h2>Bienvenue sur Next Step Sénégal</h2>
-  <p>Connectez-vous pour accéder à votre espace.</p>
+  <!-- OVERLAY DEGRADÉ -->
+  <div class="overlay"></div>
 
-  <button class="login-btn" (click)="login()">Se connecter</button>
+  <!-- CONTENU -->
+  <div class="content fade-in">
+    <img src="content/images/image 11.png" class="logo" alt="" />
+
+    <h1 class="title">NEXT STEP SÉNÉGAL</h1>
+
+    <p class="subtitle">
+      Rejoignez notre plateforme et accédez à des
+      <span class="highlight">opportunités d’avenir</span>.
+    </p>
+
+    <button class="login-btn neon-glass" (click)="login()">Se connecter</button>
+
+    <!-- FLÈCHE OPTION B -->
+    <div class="arrow-wrapper">
+      <div class="arrow"></div>
+    </div>
+  </div>
 </div>

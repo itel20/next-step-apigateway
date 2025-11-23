@@ -2,14 +2,19 @@ import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AccountService } from 'app/core/auth/account.service';
 import { Authority } from 'app/config/authority.constants';
+import { NgForOf } from '@angular/common';
 
 @Component({
   selector: 'jhi-custom-login',
   standalone: true,
   templateUrl: './custom-login.component.html',
   styleUrls: ['./custom-login.component.scss'],
+  imports: [NgForOf],
 })
 export class CustomLoginComponent implements OnInit {
+  images = ['assets/slide1.jpg', 'assets/slide2.jpg', 'assets/slide3.jpg'];
+  currentIndex = 0;
+
   private readonly accountService = inject(AccountService);
   private readonly router = inject(Router);
 
@@ -21,6 +26,9 @@ export class CustomLoginComponent implements OnInit {
         this.router.navigate([isAdmin ? '/admin/dashboard' : '/home']);
       }
     });
+    setInterval(() => {
+      this.currentIndex = (this.currentIndex + 1) % this.images.length;
+    }, 5500);
   }
 
   login(): void {

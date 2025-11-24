@@ -26,13 +26,15 @@ export class CustomLoginComponent implements OnInit {
         this.router.navigate([isAdmin ? '/admin/dashboard' : '/home']);
       }
     });
+
+    // Changement automatique des slides
     setInterval(() => {
       this.currentIndex = (this.currentIndex + 1) % this.images.length;
     }, 5500);
   }
 
   login(): void {
-    const redirectUri = `${location.origin}/login`; // on revient sur login après Keycloak
+    const redirectUri = `${location.origin}/login`;
     location.href = `${location.origin}/oauth2/authorization/oidc?redirect_uri=${redirectUri}`;
   }
 }

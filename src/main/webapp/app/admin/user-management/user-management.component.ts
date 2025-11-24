@@ -1,123 +1,88 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { NgClass, NgForOf, NgIf } from '@angular/common';
-
-interface User {
-  id: number;
-  nom: string;
-  prenom: string;
-  type: string;
-  email: string;
-  telephone: string;
-  statut: string;
-  dateInscription: string;
-  serie: string;
-  region: string;
-}
+import { EleveService } from './user-management.service';
+import { IEleve } from './user-management.model';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'jhi-user-management',
   standalone: true,
-  imports: [FormsModule, NgClass, NgIf, NgForOf],
+  imports: [FormsModule, CommonModule, NgClass, NgIf, NgForOf],
   templateUrl: './user-management.component.html',
   styleUrls: ['./user-management.component.scss'],
 })
 export default class UserManagementComponent {
+  users: IEleve[] = [];
+  filteredUsers: IEleve[] = [];
+  selectedUser: IEleve | null = null;
   searchTerm = '';
   filterType = 'all';
-  selectedUser: User | null = null;
+  loading = false;
 
-  mockUsers: User[] = [
-    {
-      id: 1,
-      nom: 'Diop',
-      prenom: 'Amadou',
-      type: 'Bachelier',
-      email: 'amadou.diop@email.sn',
-      telephone: '+221 77 123 4567',
-      statut: 'Actif',
-      dateInscription: '2024-09-15',
-      serie: 'S',
-      region: 'Dakar',
-    },
-    {
-      id: 2,
-      nom: 'Ndiaye',
-      prenom: 'Fatou',
-      type: 'Bachelier',
-      email: 'fatou.ndiaye@email.sn',
-      telephone: '+221 76 234 5678',
-      statut: 'Actif',
-      dateInscription: '2024-09-18',
-      serie: 'L',
-      region: 'Thiès',
-    },
-    {
-      id: 3,
-      nom: 'Sall',
-      prenom: 'Moussa',
-      type: 'École',
-      email: 'contact@ucad.sn',
-      telephone: '+221 33 824 5678',
-      statut: 'Actif',
-      dateInscription: '2024-06-10',
-      serie: '-',
-      region: 'Dakar',
-    },
-    {
-      id: 4,
-      nom: 'Fall',
-      prenom: 'Awa',
-      type: 'Bachelier',
-      email: 'awa.fall@email.sn',
-      telephone: '+221 70 345 6789',
-      statut: 'Suspendu',
-      dateInscription: '2024-10-02',
-      serie: 'G',
-      region: 'Saint-Louis',
-    },
-    {
-      id: 5,
-      nom: 'Sy',
-      prenom: 'Cheikh',
-      type: 'Parent',
-      email: 'cheikh.sy@email.sn',
-      telephone: '+221 77 456 7890',
-      statut: 'Actif',
-      dateInscription: '2024-09-25',
-      serie: '-',
-      region: 'Kaolack',
-    },
-    {
-      id: 6,
-      nom: 'Sarr',
-      prenom: 'Mame',
-      type: 'Bachelier',
-      email: 'mame.sarr@email.sn',
-      telephone: '+221 76 567 8901',
-      statut: 'Actif',
-      dateInscription: '2024-10-12',
-      serie: 'S',
-      region: 'Ziguinchor',
-    },
-  ];
+  constructor(private eleveService: EleveService) {}
 
-  get filteredUsers(): User[] {
-    return this.mockUsers.filter(u => {
+  ngOnInit(): void {
+    this.loadUsers();
+  }
+
+  loadUsers(): void {
+    this.loading = true;
+    this.eleveService
+      .getAll(true)
+      .pipe(finalize(() => (this.loading = false)))
+      .subscribe({
+        next: data => {
+          this.users = data;
+          this.applyFilters();
+        },
+        error: err => console.error('Erreur récupération utilisateurs', err),
+      });
+  }
+
+  applyFilters(): void {
+    this.filteredUsers = this.users.filter(u => {
       const matchesSearch =
         u.nom.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
         u.prenom.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
         u.email.toLowerCase().includes(this.searchTerm.toLowerCase());
-      const matchesType = this.filterType === 'all' || u.type === this.filterType;
+
+      const matchesType = this.filterType === 'all' || u.user?.type === this.filterType || u.niveauEtude === this.filterType;
       return matchesSearch && matchesType;
     });
   }
 
-  openDetails(user: User): void {
+  openDetails(user: IEleve): void {
     this.selectedUser = user;
   }
 
   closeDetails(): void {
     this.selectedUser = null;
+  }
+
+  toggleStatut(user: IEleve): void {
+    const newStatut = user.user?.statut === 'Actif' ? 'Suspendu' : 'Actif';
+    if (user.id != null) {
+      this.eleveService.updateStatut(user.id, newStatut).subscribe({
+        next: updatedUser => {
+          user.user = updatedUser.user;
+          this.applyFilters();
+        },
+        error: err => console.error('Erreur mise à jour statut', err),
+      });
+    }
+  }
+
+  deleteUser(user: IEleve): void {
+    if (user.id != null && confirm(`Voulez-vous vraiment supprimer ${user.prenom} ${user.nom} ?`)) {
+      this.eleveService.delete(user.id).subscribe({
+        next: () => {
+          this.users = this.users.filter(u => u.id !== user.id);
+          this.applyFilters();
+        },
+        error: err => console.error('Erreur suppression utilisateur', err),
+      });
+    }
   }
 }

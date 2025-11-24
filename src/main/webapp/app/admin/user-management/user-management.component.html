@@ -8,10 +8,10 @@
     <div class="filters">
       <div class="search-box">
         <i class="bi bi-search"></i>
-        <input type="text" placeholder="Rechercher par nom, prénom ou email..." [(ngModel)]="searchTerm" />
+        <input type="text" placeholder="Rechercher par nom, prénom ou email..." [(ngModel)]="searchTerm" (input)="applyFilters()" />
       </div>
 
-      <select [(ngModel)]="filterType">
+      <select [(ngModel)]="filterType" (change)="applyFilters()">
         <option value="all">Tous les types</option>
         <option value="Bachelier">Bachelier</option>
         <option value="École">École</option>
@@ -21,7 +21,7 @@
     </div>
   </div>
 
-  <table class="table">
+  <table class="table" *ngIf="!loading && filteredUsers.length > 0">
     <thead>
       <tr>
         <th>Nom / Prénom</th>
@@ -32,17 +32,16 @@
         <th class="actions">Actions</th>
       </tr>
     </thead>
-
     <tbody>
       <tr *ngFor="let user of filteredUsers">
         <td>
           <b>{{ user.prenom }} {{ user.nom }}</b
           ><br />
-          <small *ngIf="user.serie !== '-'">Série {{ user.serie }}</small>
+          <small *ngIf="user.serie && user.serie !== '-'">Série {{ user.serie }}</small>
         </td>
         <td>
-          <span class="badge" [class.bachelier]="user.type === 'Bachelier'">
-            {{ user.type }}
+          <span class="badge" [class.bachelier]="user.niveauEtude === 'Bachelier'">
+            {{ user.niveauEtude }}
           </span>
         </td>
         <td>
@@ -50,54 +49,46 @@
           <div class="sub">{{ user.telephone }}</div>
         </td>
         <td>
-          <span
-            class="status"
-            [ngClass]="{
-              actif: user.statut === 'Actif',
-              suspendu: user.statut === 'Suspendu',
-            }"
-          >
-            {{ user.statut }}
+          <span class="status" [ngClass]="{ actif: user.user?.statut === 'Actif', suspendu: user.user?.statut === 'Suspendu' }">
+            {{ user.user?.statut }}
           </span>
         </td>
-        <td>{{ user.dateInscription }}</td>
+        <td>{{ user.dateNaissance || '-' }}</td>
         <td class="actions">
-          <button (click)="openDetails(user)" title="Voir">
-            <i class="bi bi-eye-fill"></i>
-          </button>
-          <button title="Modifier">
-            <i class="bi bi-pencil-square"></i>
-          </button>
-          <button class="danger" title="Suspendre">
-            <i class="bi bi-slash-circle"></i>
-          </button>
+          <button (click)="openDetails(user)" title="Voir"><i class="bi bi-eye-fill"></i></button>
+          <button title="Modifier"><i class="bi bi-pencil-square"></i></button>
+
+          <label class="toggle-switch small">
+            <input type="checkbox" [checked]="user.user?.statut === 'Actif'" (change)="toggleStatut(user)" />
+            <span class="slider"></span>
+          </label>
+
+          <button title="Supprimer" (click)="deleteUser(user)"><i class="bi bi-trash-fill"></i></button>
         </td>
       </tr>
     </tbody>
   </table>
 
+  <p *ngIf="!loading && filteredUsers.length === 0">Aucun utilisateur trouvé</p>
+  <p *ngIf="loading">Chargement des utilisateurs...</p>
+
   <p class="footer">Affichage de {{ filteredUsers.length }} utilisateur(s)</p>
 
-  <!-- 🔹 Modal -->
+  <!-- Modal détails -->
   <div class="modal" *ngIf="selectedUser">
     <div class="modal-content">
       <div class="modal-header">
-        <h3>
-          <i class="bi bi-person-vcard"></i>
-          Détails de {{ selectedUser?.prenom }} {{ selectedUser?.nom }}
-        </h3>
-        <button class="close" (click)="closeDetails()">
-          <i class="bi bi-x-lg"></i>
-        </button>
+        <h3><i class="bi bi-person-vcard"></i> Détails de {{ selectedUser.prenom }} {{ selectedUser.nom }}</h3>
+        <button class="close" (click)="closeDetails()"><i class="bi bi-x-lg"></i></button>
       </div>
-
-      <div class="modal-body" *ngIf="selectedUser">
-        <p><i class="bi bi-person-fill"></i> <b>Type :</b> {{ selectedUser?.type }}</p>
-        <p><i class="bi bi-envelope-fill"></i> <b>Email :</b> {{ selectedUser?.email }}</p>
-        <p><i class="bi bi-telephone-fill"></i> <b>Téléphone :</b> {{ selectedUser?.telephone }}</p>
-        <p><i class="bi bi-geo-alt-fill"></i> <b>Région :</b> {{ selectedUser?.region }}</p>
-        <p><i class="bi bi-calendar-event-fill"></i> <b>Date d'inscription :</b> {{ selectedUser?.dateInscription }}</p>
-        <p><i class="bi bi-toggle-on"></i> <b>Statut :</b> {{ selectedUser?.statut }}</p>
+      <div class="modal-body">
+        <p><i class="bi bi-person-fill"></i> <b>Type :</b> {{ selectedUser.niveauEtude }}</p>
+        <p><i class="bi bi-envelope-fill"></i> <b>Email :</b> {{ selectedUser.email }}</p>
+        <p><i class="bi bi-telephone-fill"></i> <b>Téléphone :</b> {{ selectedUser.telephone }}</p>
+        <p><i class="bi bi-geo-alt-fill"></i> <b>Ville :</b> {{ selectedUser.ville || '-' }}</p>
+        <p><i class="bi bi-calendar-event-fill"></i> <b>Date de naissance :</b> {{ selectedUser.dateNaissance || '-' }}</p>
+        <p><i class="bi bi-toggle-on"></i> <b>Statut :</b> {{ selectedUser.user?.statut }}</p>
+        <p><i class="bi bi-journal-bookmark-fill"></i> <b>Série :</b> {{ selectedUser.serie }}</p>
       </div>
     </div>
   </div>

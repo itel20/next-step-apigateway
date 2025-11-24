@@ -34,4 +34,8 @@ export class DashboardService {
   getStatistics(): Observable<StatsReponses> {
     return this.http.get<StatsReponses>(`${this.apiUrl}/statistics`);
   }
+  /** Récupère le total par série (étudiant ou élève) */
+  getStatsBySerie(type: string, serie: string): Observable<number> {
+    return this.http.get<number>(`${this.apiUrl}/stats/serie?type=${type}&serie=${serie}`);
+  }
 }

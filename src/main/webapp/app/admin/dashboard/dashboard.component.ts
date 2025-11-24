@@ -16,7 +16,7 @@ export default class DashboardComponent implements OnInit {
   stats: { title: string; value: number; color: string; icon: string; colorText: string }[] = [];
 
   // --- Charts ---
-  seriesData: { name: string; value: number }[] = [];
+
   regionData: { name: string; value: number }[] = [];
   monthlyData: { name: string; series: { name: string; value: number }[] }[] = [];
 
@@ -32,6 +32,7 @@ export default class DashboardComponent implements OnInit {
   colorScheme = { domain: ['#2E7D32', '#43A047', '#66BB6A', '#81C784'] };
   gradient = false;
   animations = true;
+  seriesData: any[] = [];
 
   constructor(private dashboardService: DashboardService) {}
 
@@ -62,12 +63,18 @@ export default class DashboardComponent implements OnInit {
 
   private loadCharts(): void {
     // Exemple fixe pour charts
-    this.seriesData = [
-      { name: 'Série S', value: 1245 },
-      { name: 'Série L', value: 687 },
-      { name: 'Série G', value: 543 },
-      { name: 'Série T', value: 372 },
-    ];
+    const seriesList = ['S', 'L', 'G', 'T']; // Les séries à afficher
+    const type = 'etudiant'; // ou 'eleve' selon ton dashboard
+
+    const requests = seriesList.map(serie => this.dashboardService.getStatsBySerie(type, serie));
+
+    // On exécute toutes les requêtes en parallèle
+    Promise.all(requests).then(values => {
+      this.seriesData = seriesList.map((serie, index) => ({
+        name: `Série ${serie}`,
+        value: values[index],
+      }));
+    });
 
     this.regionData = [
       { name: 'Dakar', value: 1450 },

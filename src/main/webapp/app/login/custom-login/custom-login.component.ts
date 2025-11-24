@@ -12,7 +12,7 @@ import { NgForOf } from '@angular/common';
   imports: [NgForOf],
 })
 export class CustomLoginComponent implements OnInit {
-  images = ['content/images/slide1.jpg', 'content/images/slide2.jpg', 'content/images/slide3.jpg'];
+  images = ['content/images/slide1.jpg', 'content/images/slide4.jpg', 'content/images/slide3.jpg'];
   currentIndex = 0;
 
   private readonly accountService = inject(AccountService);

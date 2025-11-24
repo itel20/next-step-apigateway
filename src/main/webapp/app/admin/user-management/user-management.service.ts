@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { IEleve } from './user-management.model';
 
@@ -9,54 +9,66 @@ export class EleveService {
 
   constructor(private http: HttpClient) {}
 
-  // ✅ Récupérer tous les élèves (avec pagination si besoin)
-  getAll(eagerload: boolean = true, page?: number, size?: number): Observable<IEleve[]> {
+  // ==========================
+  // Public methods
+  // ==========================
+
+  getAll(eagerload = true, page?: number, size?: number): Observable<IEleve[]> {
     let params = new HttpParams().set('eagerload', eagerload.toString());
     if (page !== undefined) params = params.set('page', page.toString());
     if (size !== undefined) params = params.set('size', size.toString());
-    return this.http.get<IEleve[]>(this.apiUrl, { params });
+
+    return this.http.get<IEleve[]>(this.apiUrl, { params, headers: this.getAuthHeaders() });
   }
 
-  // ✅ Récupérer un élève par id
   getOne(id: number): Observable<IEleve> {
-    return this.http.get<IEleve>(`${this.apiUrl}/${id}`);
+    return this.http.get<IEleve>(`${this.apiUrl}/${id}`, { headers: this.getAuthHeaders() });
   }
 
-  // ✅ Créer un nouvel élève
   create(eleve: IEleve): Observable<IEleve> {
-    return this.http.post<IEleve>(this.apiUrl, eleve);
+    return this.http.post<IEleve>(this.apiUrl, eleve, { headers: this.getAuthHeaders() });
   }
 
-  // ✅ Mettre à jour un élève existant
   update(id: number, eleve: IEleve): Observable<IEleve> {
-    return this.http.put<IEleve>(`${this.apiUrl}/${id}`, eleve);
+    return this.http.put<IEleve>(`${this.apiUrl}/${id}`, eleve, { headers: this.getAuthHeaders() });
   }
 
-  // ✅ Mise à jour partielle d'un élève (PATCH)
   partialUpdate(id: number, eleve: Partial<IEleve>): Observable<IEleve> {
-    return this.http.patch<IEleve>(`${this.apiUrl}/${id}`, eleve);
+    return this.http.patch<IEleve>(`${this.apiUrl}/${id}`, eleve, { headers: this.getAuthHeaders() });
   }
 
-  // ✅ Supprimer un élève
-  delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  delete(id: number): Observable<null> {
+    return this.http.delete<null>(`${this.apiUrl}/${id}`, { headers: this.getAuthHeaders() });
   }
 
-  // ✅ Rechercher des élèves
   search(query: string, page?: number, size?: number): Observable<IEleve[]> {
     let params = new HttpParams().set('query', query);
     if (page !== undefined) params = params.set('page', page.toString());
     if (size !== undefined) params = params.set('size', size.toString());
-    return this.http.get<IEleve[]>(`${this.apiUrl}/_search`, { params });
+
+    return this.http.get<IEleve[]>(`${this.apiUrl}/_search`, { params, headers: this.getAuthHeaders() });
   }
 
-  // ✅ Compter les élèves par série
   countBySerie(serie: string): Observable<number> {
-    return this.http.get<number>(`${this.apiUrl}/count`, { params: new HttpParams().set('serie', serie) });
+    return this.http.get<number>(`${this.apiUrl}/count`, {
+      params: new HttpParams().set('serie', serie),
+      headers: this.getAuthHeaders(),
+    });
   }
 
-  // ✅ Mise à jour du statut (toggle actif/suspendu)
   updateStatut(id: number, statut: string): Observable<IEleve> {
     return this.partialUpdate(id, { user: { statut } });
+  }
+
+  // ==========================
+  // Private methods
+  // ==========================
+
+  private getAuthHeaders(): HttpHeaders {
+    const token = localStorage.getItem('id_token') ?? ''; // nullish coalescing
+    return new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
   }
 }

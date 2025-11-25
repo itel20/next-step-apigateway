@@ -1,7 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { FiliereService, FiliereDTO, BourseConcoursDTO } from './parcours.service';
+import { BourseConcours } from '../admin/bourses/bourse.model';
 
 import {
   faBriefcase,
@@ -40,25 +42,6 @@ import {
   faUsersLine,
 } from '@fortawesome/free-solid-svg-icons';
 
-interface Parcours {
-  id: number;
-  titre: string;
-  categorie: string;
-  difficulte: string;
-  emploi: number;
-  satisfaction: number;
-  tauxEmploi: number;
-  salaire: string;
-  duree: string;
-  formationUniversitaire?: { nom: string; note: number }[];
-  debouches?: string[];
-  competences?: string[];
-  temoignage?: {
-    nom: string;
-    specialite: string;
-    citation: string;
-  };
-}
 interface Ecole {
   nom: string;
   pays: string;
@@ -136,7 +119,7 @@ interface Bourse {
   templateUrl: './parcours.component.html',
   styleUrls: ['./parcours.component.scss'],
 })
-export default class ParcoursComponent {
+export default class ParcoursComponent implements OnInit {
   faBriefcase = faBriefcase;
   faUniversity = faUniversity;
   faGraduationCap = faGraduationCap;
@@ -183,78 +166,10 @@ export default class ParcoursComponent {
   villes = ['Dakar', 'Thiès', 'Saint-Louis', 'Ziguinchor'];
   selectedEcole: any = null;
   showFiche = false;
-  selectedParcours: Parcours | null = null;
-
-  parcoursList: Parcours[] = [
-    {
-      id: 1,
-      titre: 'Médecine',
-      categorie: 'Santé',
-      difficulte: '9/10',
-      emploi: 96,
-      satisfaction: 88,
-      tauxEmploi: 96,
-      salaire: '1 200 000 - 2 000 000',
-      duree: '6-12 ans',
-      formationUniversitaire: [
-        { nom: 'Université Cheikh Anta Diop', note: 4 },
-        { nom: 'Université Gaston Berger', note: 4 },
-        { nom: 'Université Assane Seck', note: 4 },
-      ],
-      debouches: ['Médecin généraliste', 'Chirurgien', 'Chercheur médical'],
-      competences: ['Relation patient', 'Chirurgie', 'Recherche', 'Diagnostic'],
-      temoignage: {
-        nom: 'Dr. Marie Anne Diop',
-        specialite: 'Cardiologue',
-        citation: 'Une formation exigeante mais passionnante',
-      },
-    },
-    {
-      id: 2,
-      titre: 'Informatique',
-      categorie: 'Technologie',
-      difficulte: '8/10',
-      emploi: 94,
-      satisfaction: 91,
-      tauxEmploi: 94,
-      salaire: '800 000 - 1 800 000',
-      duree: '3-5 ans',
-      formationUniversitaire: [
-        { nom: 'Université Iba Der Thiam', note: 4 },
-        { nom: 'Université Virtuelle du Sénégal', note: 4 },
-      ],
-      debouches: ['Développeur', 'Administrateur système', 'Data scientist'],
-      competences: ['Programmation', 'Réseaux', 'Sécurité', 'Analyse de données'],
-      temoignage: {
-        nom: 'M. Samba Ndiaye',
-        specialite: 'Ingénieur logiciel',
-        citation: 'Une formation d’avenir au cœur du numérique',
-      },
-    },
-    {
-      id: 3,
-      titre: 'Gestion',
-      categorie: 'Gestion',
-      difficulte: '9/10',
-      emploi: 96,
-      satisfaction: 88,
-      tauxEmploi: 96,
-      salaire: '1 200 000 - 2 000 000',
-      duree: '3-5 ans',
-      formationUniversitaire: [
-        { nom: 'Université Cheikh Anta Diop', note: 4 },
-        { nom: 'Université Gaston Berger', note: 4 },
-        { nom: 'Université Assane Seck', note: 4 },
-      ],
-      debouches: ['Médecin généraliste', 'Chirurgien', 'Chercheur médical'],
-      competences: ['Relation patient', 'Chirurgie', 'Recherche', 'Diagnostic'],
-      temoignage: {
-        nom: 'Dr. Marie Anne Diop',
-        specialite: 'Cardiologue',
-        citation: 'Une formation exigeante mais passionnante',
-      },
-    },
-  ];
+  filieres: FiliereDTO[] = [];
+  selectedFiliere: FiliereDTO | null = null;
+  boursesList: BourseConcoursDTO[] = [];
+  boursesListFiltrees: BourseConcoursDTO[] = [];
 
   ecolesList: Ecole[] = [
     {
@@ -397,51 +312,15 @@ export default class ParcoursComponent {
     },
   ];
 
-  boursesList: Bourse[] = [
-    {
-      id: 1,
-      titre: 'Bourse Erasmus +',
-      tags: ['Internationale', 'Urgent'],
-      montant: '30000cfa - 50000cfa',
-      periodicite: 'Par Mois',
-      beneficiaries: '45 000',
-      acceptance: '76%',
-      deadline: '2025-02-15',
-      criteres: ['Mobilité européenne', 'Niveau BAC minimum'],
-      type: 'Bourse',
-    },
-    {
-      id: 2,
-      titre: 'Bourse ESP',
-      tags: ['Internationale', 'Urgent'],
-      montant: '30000cfa - 50000cfa',
-      periodicite: 'Par Mois',
-      beneficiaries: '45 000',
-      acceptance: '76%',
-      deadline: '2025-02-15',
-      criteres: ['Mobilité européenne', 'Niveau BAC minimum'],
-      type: 'Bourse',
-    },
-    {
-      id: 3,
-      titre: 'Bourse Recherche',
-      tags: ['National', 'Important'],
-      montant: '50000cfa - 90000cfa',
-      periodicite: 'Par Mois',
-      beneficiaries: '10 000',
-      acceptance: '40%',
-      deadline: '2025-06-30',
-      criteres: ['Projet de recherche', 'Lettre de motivation'],
-      type: 'Concours',
-    },
-  ];
-  boursesListFiltrees = [...this.boursesList];
   bourseSearchQuery = '';
   bourseSelectedType = '';
   ecolesListFiltrees = [...this.ecolesList];
-  parcoursListFiltrees = [...this.parcoursList];
 
-  constructor(library: FaIconLibrary) {
+  constructor(
+    private filiereService: FiliereService,
+    private bcService: FiliereService,
+    library: FaIconLibrary,
+  ) {
     library.addIcons(
       faBriefcase,
       faUniversity,
@@ -487,11 +366,58 @@ export default class ParcoursComponent {
       faUsersLine,
     );
   }
+  ngOnInit(): void {
+    this.loadFilieres();
+    this.loadBourses();
+  }
+  loadFilieres(): void {
+    this.filiereService.getAll().subscribe({
+      next: (data: FiliereDTO[]) => {
+        this.filieres = data;
+      },
+      error: (err: any) => console.error(err),
+    });
+  }
+  loadBourses(): void {
+    this.filiereService.getAllBourses().subscribe({
+      next: (data: BourseConcoursDTO[]) => {
+        this.boursesList = data;
+        this.boursesListFiltrees = [...this.boursesList];
+      },
+      error: err => console.error('Erreur chargement bourses :', err),
+    });
+  }
+  onSearchBourse(): void {
+    const q = this.bourseSearchQuery.toLowerCase();
+    this.boursesListFiltrees = this.boursesList.filter(
+      b =>
+        b.titre.toLowerCase().includes(q) ||
+        (b.tags ?? []).some(t => t.toLowerCase().includes(q)) ||
+        (b.type || '').toLowerCase().includes(q),
+    );
+  }
+
+  // Filtre par type (Bourse / Concours)
+  filterBourses(): void {
+    this.boursesListFiltrees = this.boursesList.filter(b => !this.bourseSelectedType || b.type === this.bourseSelectedType);
+  }
+
+  // Affichage date format FR
+  formatDateIso(d?: string): string {
+    if (!d) return '';
+    return new Date(d).toLocaleDateString('fr-FR');
+  }
+
+  // Voir détails d'une bourse (placeholder)
+  voirDetailsBourse(b: BourseConcoursDTO): void {
+    // TODO: ouvrir modal ou naviguer vers le détail
+  }
 
   onSearch(): void {
     const query = this.searchQuery.toLowerCase();
-    this.parcoursListFiltrees = this.parcoursList.filter(ec => ec.titre.toLowerCase().includes(query));
+    this.filieres = this.filieres.filter(f => f.titre.toLowerCase().includes(query) || f.domaine.toLowerCase().includes(query));
   }
+
   onSearchEcole(): void {
     const q = this.searchQueryEcole.toLowerCase();
     this.ecolesListFiltrees = this.ecolesList.filter(
@@ -501,22 +427,12 @@ export default class ParcoursComponent {
         e.filieresDisponibles.some(f => f.toLowerCase().includes(q)),
     );
   }
-  onSearchBourse(): void {
-    const q = this.bourseSearchQuery.toLowerCase();
-    this.boursesListFiltrees = this.boursesList.filter(
-      b => b.titre.toLowerCase().includes(q) || (b.tags ?? []).some(t => t.toLowerCase().includes(q)) || b.type?.toLowerCase().includes(q),
-    );
-  }
+
   filterEcoles(): void {
     this.ecolesListFiltrees = this.ecolesList.filter(ec => {
       const passesType = !this.selectedType || ec.type === this.selectedType;
       const passesVille = !this.selectedVille || ec.ville === this.selectedVille;
       return passesType && passesVille;
-    });
-  }
-  filterBourses(): void {
-    this.boursesListFiltrees = this.boursesList.filter(b => {
-      return !this.bourseSelectedType || b.type === this.bourseSelectedType;
     });
   }
 
@@ -529,14 +445,21 @@ export default class ParcoursComponent {
     this.ecole = null;
   }
 
-  voirDetailsBourse(b: Bourse): void {
-    // placeholder: open modal or navigate
-  }
   toggleFavori(e: Ecole): void {
     e.favori = !e.favori;
   }
   formatPrice(n: number): string {
     return n ? n.toLocaleString('fr-FR') : '';
+  }
+  formatSalaire(min?: number, max?: number): string {
+    if (min && max) {
+      return `${min.toLocaleString('fr-FR')} - ${max.toLocaleString('fr-FR')}`;
+    } else if (min) {
+      return min.toLocaleString('fr-FR');
+    } else if (max) {
+      return max.toLocaleString('fr-FR');
+    }
+    return '';
   }
 
   onFilter(): void {
@@ -548,17 +471,12 @@ export default class ParcoursComponent {
       window.open(url, '_blank');
     }
   }
-  formatDateIso(d?: string): string {
-    if (!d) return '';
-    const dt = new Date(d);
-    return dt.toLocaleDateString('fr-FR');
-  }
-  openDetail(item: Parcours): void {
-    this.selectedParcours = item;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  openDetail(f: FiliereDTO): void {
+    this.selectedFiliere = f;
   }
 
   closeDetail(): void {
-    this.selectedParcours = null;
+    this.selectedFiliere = null;
   }
 }

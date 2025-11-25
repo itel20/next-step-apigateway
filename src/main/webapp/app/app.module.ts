@@ -6,7 +6,13 @@ import { LoginComponent } from './login/login.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 
+// Nouveau import pour HttpClient moderne
+import { provideHttpClient } from '@angular/common/http';
+
 @NgModule({
-  imports: [BrowserModule, FontAwesomeModule, BrowserAnimationsModule, ReactiveFormsModule, LoginComponent, NgxChartsModule],
+  imports: [BrowserModule, BrowserAnimationsModule, ReactiveFormsModule, LoginComponent, FontAwesomeModule, NgxChartsModule],
+  providers: [
+    provideHttpClient(), // <-- remplace HttpClientModule
+  ],
 })
 export class AppModule {}

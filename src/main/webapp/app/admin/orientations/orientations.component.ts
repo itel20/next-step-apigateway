@@ -19,14 +19,15 @@ export default class OrientationsComponent implements OnInit {
   editingFiliere: Filiere | null = null;
   formData: any = {
     titre: '',
-    categorie: '',
-    descriptionDetaillee: '',
+    domaine: '',
+    descriptionFormation: '',
     difficulte: 1,
     tauxEmploi: 0,
-    satisfaction: 0,
-    salaireMoyen: 0,
-    dureeFormation: '',
-    universitesStr: '',
+    tauxSatisfaction: 0,
+    salaireMin: 0,
+    salaireMax: 0,
+    dureeFormation: 0,
+    ecolesStr: '',
     debouchesStr: '',
     competencesStr: '',
     temoignages: '',
@@ -51,35 +52,41 @@ export default class OrientationsComponent implements OnInit {
   get filteredOrientations(): Filiere[] {
     const q = this.searchTerm.trim().toLowerCase();
     if (!q) return this.filieres;
-    return this.filieres.filter((f: Filiere) => f.titre.toLowerCase().includes(q) || f.categorie.toLowerCase().includes(q));
+
+    return this.filieres.filter(f => f.titre.toLowerCase().includes(q) || f.domaine.toLowerCase().includes(q));
   }
 
   // ---------------- Formulaire ----------------
   openForm(f?: Filiere): void {
     if (f) {
       this.editingFiliere = f;
+
       this.formData = {
         ...f,
-        universitesStr: f.universites?.join(', ') ?? '',
-        debouchesStr: f.debouches?.join(', ') ?? '',
+        ecolesStr: Array.isArray(f.ecoles) ? f.ecoles.join(', ') : '',
+        debouchesStr: Array.isArray(f.debouches) ? f.debouches.join(', ') : '',
+        competencesStr: Array.isArray(f.competences) ? f.competences.join(', ') : '',
+        temoignages: f.temoignages ?? '',
       };
     } else {
       this.editingFiliere = null;
       this.formData = {
         titre: '',
-        categorie: '',
-        descriptionDetaillee: '',
+        domaine: '',
+        descriptionFormation: '',
         difficulte: 1,
         tauxEmploi: 0,
-        satisfaction: 0,
-        salaireMoyen: 0,
-        dureeFormation: '',
-        universitesStr: '',
+        tauxSatisfaction: 0,
+        salaireMin: 0,
+        salaireMax: 0,
+        dureeFormation: 0,
+        ecolesStr: '',
         debouchesStr: '',
         competencesStr: '',
         temoignages: '',
       };
     }
+
     this.showFormModal = true;
   }
 
@@ -90,22 +97,26 @@ export default class OrientationsComponent implements OnInit {
   submitForm(): void {
     const newFiliere: Filiere = {
       id: this.editingFiliere?.id,
+
       titre: this.formData.titre,
-      categorie: this.formData.categorie,
-      descriptionDetaillee: this.formData.descriptionDetaillee,
-      difficulte: this.formData.difficulte,
+      domaine: this.formData.domaine,
+      descriptionFormation: this.formData.descriptionFormation,
+
+      difficulte: Number(this.formData.difficulte),
+
       tauxEmploi: Number(this.formData.tauxEmploi),
-      satisfaction: Number(this.formData.satisfaction),
-      salaireMoyen: Number(this.formData.salaireMoyen),
-      dureeFormation: this.formData.dureeFormation,
+      tauxSatisfaction: Number(this.formData.tauxSatisfaction),
 
-      universites: this.formData.universitesStr ? this.formData.universitesStr.split(',').map((u: string) => u.trim()) : [],
+      salaireMin: Number(this.formData.salaireMin),
+      salaireMax: Number(this.formData.salaireMax),
 
-      debouches: this.formData.debouchesStr ? this.formData.debouchesStr.split(',').map((d: string) => d.trim()) : [],
+      dureeFormation: Number(this.formData.dureeFormation),
 
-      competences: this.formData.competencesStr ? this.formData.competencesStr.split(',').map((c: string) => c.trim()) : [],
+      ecoles: this.formData.ecolesStr ? this.formData.ecolesStr.split(',').map((x: string) => x.trim()) : [],
+      debouches: this.formData.debouchesStr ? this.formData.debouchesStr.split(',').map((x: string) => x.trim()) : [],
+      competences: this.formData.competencesStr ? this.formData.competencesStr.split(',').map((x: string) => x.trim()) : [],
 
-      temoignages: this.formData.temoignages, // backend attend STRING
+      temoignages: this.formData.temoignages,
     };
 
     if (this.editingFiliere) {
@@ -154,13 +165,13 @@ export default class OrientationsComponent implements OnInit {
   }
 
   // ---------------- Helpers ----------------
-  difficultyClass(d: string): string {
+  difficultyClass(d: number): string {
     switch (d) {
-      case 'Très élevée':
+      case 4:
         return 'Difficile';
-      case 'Élevée':
+      case 3:
         return 'Difficile';
-      case 'Moyenne':
+      case 2:
         return 'Moyen';
       default:
         return 'Facile';

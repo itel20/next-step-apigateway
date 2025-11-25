@@ -268,32 +268,32 @@
 }
 /* ===================== MODAL (amélioré) ===================== */
 
+/* ===================== MODAL GLOBAL ===================== */
 .modal {
   position: fixed;
   inset: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 11000;
   padding: 20px;
+  z-index: 11000;
 }
 
-/* Fond sombre propre (sans blur) */
 .modal-backdrop {
   position: absolute;
   inset: 0;
   background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(3px);
   z-index: 1;
 }
 
-/* ---------------------- Contenu du popup ---------------------- */
 .modal-dialog {
   position: relative;
   z-index: 2;
   width: 600px;
   max-width: 95%;
   max-height: 90vh;
-  background: #ffffff;
+  background: #fff;
   border-radius: 16px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
   overflow: hidden;
@@ -302,7 +302,6 @@
   animation: modalFadeUp 0.25s ease-out;
 }
 
-/* Animation d'apparition propre */
 @keyframes modalFadeUp {
   from {
     opacity: 0;
@@ -712,22 +711,33 @@ body.modal-open {
 }
 
 /* ===================== Responsive ===================== */
+/* 900px */
 @media (max-width: 900px) {
   .metrics-grid {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
+/* 768px */
+@media (max-width: 768px) {
+  .modal-dialog {
+    width: 95%;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+}
+
+/* 640px */
 @media (max-width: 640px) {
   .metrics-grid {
     grid-template-columns: 1fr;
   }
   .header {
     flex-direction: column;
-    gap: 10px;
-    align-items: flex-start;
   }
-  .table-wrapper table.orient-table {
+  .orient-table {
     font-size: 13px;
   }
 }

@@ -14,7 +14,7 @@
         <i class="bi bi-search"></i>
         <input type="text" [(ngModel)]="searchTerm" placeholder="Rechercher une filière ou un métier..." />
       </div>
-      <button class="btn-filter" (click)="alert('Filtre avancé (à implémenter)')">Filtre avancé</button>
+      <button class="btn-filter">Filtre avancé</button>
     </div>
   </div>
 
@@ -26,32 +26,38 @@
       <thead>
         <tr>
           <th>Titre</th>
-          <th>Catégorie</th>
+          <th>Domaine</th>
           <th>Difficulté</th>
           <th>Taux d'emploi</th>
           <th>Satisfaction</th>
-          <th>Salaire moyen</th>
+          <th>Salaire</th>
           <th>Durée</th>
           <th class="actions-col">Actions</th>
         </tr>
       </thead>
+
       <tbody>
         <tr *ngFor="let o of filteredOrientations">
           <td class="title-cell" (click)="openDetails(o)">{{ o.titre }}</td>
+
           <td>
-            <span class="badge-cat">{{ o.categorie }}</span>
+            <span class="badge-cat">{{ o.domaine }}</span>
           </td>
+
           <td>
             <span class="badge-diff" [ngClass]="difficultyClass(o.difficulte)">
               {{ o.difficulte }}
             </span>
           </td>
-          <td>
-            <i class="bi bi-graph-up"></i> <span class="muted">{{ o.tauxEmploi }}%</span>
-          </td>
-          <td><i class="bi bi-star-fill star-icon"></i> {{ o.satisfaction }}/5</td>
-          <td class="text-primary">{{ o.salaireMoyen | number: '1.0-0' }} FCFA</td>
-          <td><i class="bi bi-clock"></i> {{ o.dureeFormation }}</td>
+
+          <td><i class="bi bi-graph-up"></i> {{ o.tauxEmploi }}%</td>
+
+          <td><i class="bi bi-star-fill"></i> {{ o.tauxSatisfaction }}/5</td>
+
+          <td class="text-primary">{{ o.salaireMin | number: '1.0-0' }} - {{ o.salaireMax | number: '1.0-0' }} FCFA</td>
+
+          <td><i class="bi bi-clock"></i> {{ o.dureeFormation }} ans</td>
+
           <td class="actions-col">
             <button class="icon-btn view" title="Voir" (click)="openDetails(o)">
               <i class="bi bi-eye"></i>
@@ -68,10 +74,9 @@
     </table>
   </div>
 
-  <!-- Résultat count -->
   <p class="result-count">Affichage de {{ filteredOrientations.length }} orientation(s)</p>
 
-  <!-- Modal création / édition -->
+  <!-- Modal Form -->
   <div class="modal" *ngIf="showFormModal">
     <div class="modal-backdrop" (click)="closeForm()"></div>
 
@@ -88,27 +93,27 @@
             <input type="text" [(ngModel)]="formData.titre" name="titre" required />
           </div>
 
-          <!-- CATEGORIE -->
+          <!-- DOMAINE -->
           <div class="form-group">
-            <label><i class="bi bi-tags"></i> Catégorie</label>
-            <input type="text" [(ngModel)]="formData.categorie" name="categorie" required />
+            <label><i class="bi bi-tags"></i> Domaine</label>
+            <input type="text" [(ngModel)]="formData.domaine" name="domaine" required />
           </div>
 
-          <!-- DESCRIPTION DETAILLEE -->
+          <!-- DESCRIPTION -->
           <div class="form-group">
-            <label><i class="bi bi-text-paragraph"></i> Description détaillée</label>
+            <label><i class="bi bi-text-paragraph"></i> Description Formation</label>
             <textarea
-              name="descriptionDetaillee"
-              [(ngModel)]="formData.descriptionDetaillee"
+              name="descriptionFormation"
+              [(ngModel)]="formData.descriptionFormation"
               rows="4"
-              placeholder="Décrire la filière en détails..."
+              placeholder="Décrire la formation..."
             ></textarea>
           </div>
 
-          <!-- DIFFICULTÉ NUMERIQUE -->
+          <!-- DIFFICULTÉ -->
           <div class="form-group">
             <label><i class="bi bi-speedometer2"></i> Difficulté</label>
-            <select [(ngModel)]="formData.difficulte" name="difficulte" required>
+            <select [(ngModel)]="formData.difficulte" name="difficulte">
               <option [value]="1">Faible</option>
               <option [value]="2">Moyenne</option>
               <option [value]="3">Élevée</option>
@@ -118,53 +123,57 @@
 
           <!-- TAUX EMPLOI -->
           <div class="form-group">
-            <label><i class="bi bi-graph-up"></i> Taux d'emploi (%)</label>
+            <label>Taux d'emploi (%)</label>
             <input type="number" [(ngModel)]="formData.tauxEmploi" name="tauxEmploi" min="0" max="100" />
           </div>
 
-          <!-- SATISFACTION -->
+          <!-- TAUX SATISFACTION -->
           <div class="form-group">
-            <label><i class="bi bi-star-fill"></i> Satisfaction (/5)</label>
-            <input type="number" [(ngModel)]="formData.satisfaction" name="satisfaction" min="0" max="5" step="0.1" />
+            <label>Satisfaction (/5)</label>
+            <input type="number" [(ngModel)]="formData.tauxSatisfaction" name="tauxSatisfaction" min="0" max="5" step="0.1" />
           </div>
 
-          <!-- SALAIRE -->
+          <!-- SALAIRES -->
           <div class="form-group">
-            <label><i class="bi bi-currency-dollar"></i> Salaire moyen</label>
-            <input type="number" [(ngModel)]="formData.salaireMoyen" name="salaireMoyen" />
+            <label>Salaire minimum</label>
+            <input type="number" [(ngModel)]="formData.salaireMin" name="salaireMin" />
+          </div>
+
+          <div class="form-group">
+            <label>Salaire maximum</label>
+            <input type="number" [(ngModel)]="formData.salaireMax" name="salaireMax" />
           </div>
 
           <!-- DUREE -->
           <div class="form-group">
-            <label><i class="bi bi-clock"></i> Durée formation</label>
-            <input type="text" [(ngModel)]="formData.dureeFormation" name="dureeFormation" />
+            <label>Durée (en années)</label>
+            <input type="number" [(ngModel)]="formData.dureeFormation" name="dureeFormation" />
           </div>
 
-          <!-- UNIVERSITES -->
+          <!-- ECOLES -->
           <div class="form-group">
-            <label><i class="bi bi-mortarboard-fill"></i> Universités / Formations</label>
-            <input type="text" [(ngModel)]="formData.universitesStr" name="universitesStr" placeholder="Séparez par une virgule" />
+            <label>Écoles / Formations</label>
+            <input type="text" [(ngModel)]="formData.ecolesStr" name="ecolesStr" placeholder="Séparez par des virgules" />
           </div>
 
           <!-- DEBOUCHES -->
           <div class="form-group">
-            <label><i class="bi bi-briefcase-fill"></i> Débouchés</label>
-            <input type="text" [(ngModel)]="formData.debouchesStr" name="debouchesStr" placeholder="Séparez par une virgule" />
+            <label>Débouchés</label>
+            <input type="text" [(ngModel)]="formData.debouchesStr" name="debouchesStr" placeholder="Séparez par des virgules" />
           </div>
 
           <!-- COMPETENCES -->
           <div class="form-group">
-            <label><i class="bi bi-tools"></i> Compétences</label>
-            <input type="text" [(ngModel)]="formData.competencesStr" name="competencesStr" placeholder="Séparez par une virgule" />
+            <label>Compétences</label>
+            <input type="text" [(ngModel)]="formData.competencesStr" name="competencesStr" placeholder="Séparez par des virgules" />
           </div>
 
-          <!-- TEMOIGNAGES -->
+          <!-- TEMOIGNAGE -->
           <div class="form-group">
-            <label><i class="bi bi-chat-left-quote"></i> Témoignage</label>
-            <textarea [(ngModel)]="formData.temoignages" name="temoignages" rows="3" placeholder="Ajouter un témoignage..."></textarea>
+            <label>Témoignage</label>
+            <textarea [(ngModel)]="formData.temoignages" name="temoignages" rows="3"></textarea>
           </div>
 
-          <!-- ACTIONS  -->
           <div class="form-actions">
             <button type="submit" class="btn-submit"><i class="bi bi-check-lg"></i> {{ editingFiliere ? 'Enregistrer' : 'Créer' }}</button>
 
@@ -175,17 +184,19 @@
     </div>
   </div>
 
-  <!-- Modal détails -->
+  <!-- Modal DETAILS -->
   <div class="modal" *ngIf="selectedOrientation">
     <div class="modal-backdrop" (click)="closeDetails()"></div>
+
     <div class="modal-dialog">
       <div class="modal-content">
         <button class="modal-close" (click)="closeDetails()">&times;</button>
 
         <div class="modal-header">
           <h3>{{ selectedOrientation.titre }}</h3>
+
           <div class="meta">
-            <span class="badge-cat">{{ selectedOrientation.categorie }}</span>
+            <span class="badge-cat">{{ selectedOrientation.domaine }}</span>
             <span class="badge-diff" [ngClass]="difficultyClass(selectedOrientation.difficulte)">
               {{ selectedOrientation.difficulte }}
             </span>
@@ -199,58 +210,61 @@
             <div class="metric-value">{{ selectedOrientation.tauxEmploi }}%</div>
             <div class="metric-label">Taux d'emploi</div>
           </div>
+
           <div class="metric">
             <i class="bi bi-star-fill metric-icon"></i>
-            <div class="metric-value">{{ selectedOrientation.satisfaction }}/5</div>
+            <div class="metric-value">{{ selectedOrientation.tauxSatisfaction }}/5</div>
             <div class="metric-label">Satisfaction</div>
           </div>
+
           <div class="metric">
             <i class="bi bi-currency-dollar metric-icon"></i>
-            <div class="metric-value">{{ selectedOrientation.salaireMoyen | number: '1.0-0' }} FCFA</div>
-            <div class="metric-label">Salaire moyen</div>
+            <div class="metric-value">
+              {{ selectedOrientation.salaireMin | number: '1.0-0' }} - {{ selectedOrientation.salaireMax | number: '1.0-0' }} FCFA
+            </div>
+            <div class="metric-label">Salaire</div>
           </div>
+
           <div class="metric">
             <i class="bi bi-clock metric-icon"></i>
-            <div class="metric-value">{{ selectedOrientation.dureeFormation }}</div>
+            <div class="metric-value">{{ selectedOrientation.dureeFormation }} ans</div>
             <div class="metric-label">Durée</div>
           </div>
         </div>
 
-        <!-- Formations / Universités -->
+        <!-- Ecoles -->
         <section class="section">
-          <h4><i class="bi bi-mortarboard-fill"></i> Formations universitaires</h4>
+          <h4><i class="bi bi-mortarboard-fill"></i> Écoles recommandées</h4>
           <div class="list-formation">
-            <div class="formation" *ngFor="let f of selectedOrientation.universites">
-              <div>{{ f }}</div>
+            <div class="formation" *ngFor="let e of selectedOrientation.ecoles">
+              {{ e }}
             </div>
           </div>
         </section>
 
-        <!-- Débouchés -->
+        <!-- Debouches -->
         <section class="section">
-          <h4><i class="bi bi-briefcase-fill"></i> Débouchés principaux</h4>
+          <h4><i class="bi bi-briefcase-fill"></i> Débouchés</h4>
           <div class="chips">
-            <button class="chip" *ngFor="let d of selectedOrientation.debouches">{{ d }}</button>
+            <button class="chip" *ngFor="let d of selectedOrientation.debouches">
+              {{ d }}
+            </button>
           </div>
         </section>
 
-        <!-- Compétences -->
+        <!-- Competences -->
         <section class="section">
-          <h4><i class="bi bi-tools"></i> Compétences développées</h4>
+          <h4><i class="bi bi-tools"></i> Compétences</h4>
           <div class="chips">
-            <span class="skill" *ngFor="let c of selectedOrientation.competences">{{ c }}</span>
+            <span class="skill" *ngFor="let c of selectedOrientation.competences">
+              {{ c }}
+            </span>
           </div>
         </section>
 
         <!-- Témoignage -->
         <section class="section testimonial" *ngIf="selectedOrientation.temoignages">
-          <div class="avatar">{{ getInitials(selectedOrientation.temoignages.nom) }}</div>
-          <div>
-            <p class="quote">"{{ selectedOrientation.temoignages.texte }}"</p>
-            <p class="author">
-              <strong>{{ selectedOrientation.temoignages.nom }}</strong> • {{ selectedOrientation.temoignages.role }}
-            </p>
-          </div>
+          <p class="quote">"{{ selectedOrientation.temoignages }}"</p>
         </section>
       </div>
     </div>

@@ -1,19 +1,16 @@
 export interface Filiere {
-  id?: number; // optionnel si serveur génère l'ID
+  id?: number;
   titre: string;
-  categorie: string;
-  descriptionDetaillee: string;
-  difficulte: 'Très élevée' | 'Élevée' | 'Moyenne' | 'Faible';
+  domaine: string;
+  descriptionFormation: string;
+  difficulte: number;
   tauxEmploi: number;
-  satisfaction: number;
-  salaireMoyen: number;
-  dureeFormation: string;
-  universites?: string[];
-  debouches?: string[];
-  competences?: string[];
-  temoignages?: {
-    nom: string;
-    role: string;
-    texte: string;
-  };
+  tauxSatisfaction: number;
+  salaireMin: number;
+  salaireMax: number;
+  dureeFormation: number;
+  ecoles: string[];
+  debouches: string[];
+  competences: string[];
+  temoignages: string | null;
 }

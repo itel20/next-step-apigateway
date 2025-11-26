@@ -1,131 +1,150 @@
-<div class="orientation-page">
-  <div class="orientation-header">
-    <div class="orientation-badge">
-      <fa-icon [icon]="faBullseye" class="icon"></fa-icon>
+<!-- HEADER AVEC DÉGRADÉ ET ICÔNE SETTINGS -->
+<div class="top-bar d-flex justify-content-between align-items-center">
+  <h2 class="title m-0 d-flex align-items-center">
+    <i class="{{ stepTitles[step - 1].icon }} me-2 icon-title"></i>
+    {{ stepTitles[step - 1].title }}
+  </h2>
 
-      <div class="hero">
-        <div class="hero-header">
-          <h2 class="titre">Trouve la filière qui te correspond</h2>
-        </div>
+  <i class="bi bi-gear-fill settings-icon" (click)="goToSettings()"></i>
+</div>
 
-        <p class="para">Réponds à quelques questions pour découvrir les orientations adaptées à ton profil.</p>
-        <p class="etape">Étape {{ step }} / {{ maxStep }}</p>
-      </div>
-    </div>
-  </div>
-  <div class="progress-container">
-    <div class="progress-bar" [style.width.%]="((step - 1) / maxStep) * 100">
-      <span class="progress-text">{{ ((step - 1) / maxStep) * 100 | number: '1.0-0' }}%</span>
-    </div>
-  </div>
-
-  <div class="orientation-card">
-    <!-- Étape 1 : Parcours scolaire -->
+<!-- CONTENU PRINCIPAL -->
+<div class="container py-4">
+  <!-- 🟡 ÉTAPES DU FORMULAIRE -->
+  <div *ngIf="!isAnalyzing && !showResults">
+    <!-- Step 1: Parcours scolaire -->
     <div *ngIf="step === 1">
-      <h4 class="soustitre">Parcours scolaire</h4>
-      <div *ngFor="let q of parcoursQuestions" class="question">
-        <label>{{ q.label }}</label>
-        <div class="options">
-          <div
+      <div *ngFor="let q of parcoursQuestions" class="question-block">
+        <h4>{{ q.label }}</h4>
+        <div class="options-grid">
+          <button
             *ngFor="let option of q.options"
-            class="option"
+            class="option-btn"
             [class.active]="answers[q.model] === option"
             (click)="selectOption(q.model, option)"
           >
             {{ option }}
-          </div>
-          <!-- Option "Autre" si nécessaire -->
-          <div *ngIf="q.options.includes('Autre')">
-            <input type="text" placeholder="Précisez..." [(ngModel)]="otherClass" />
-          </div>
+          </button>
         </div>
       </div>
     </div>
 
-    <!-- Étape 2 : Passions -->
+    <!-- Step 2: Passions -->
     <div *ngIf="step === 2">
-      <h4 class="soustitre">Passions</h4>
-      <div *ngFor="let q of passionsQuestions" class="question">
-        <label>{{ q.label }}</label>
-        <div class="options">
-          <div
+      <div *ngFor="let q of passionsQuestions" class="question-block">
+        <h4>{{ q.label }}</h4>
+        <div class="options-grid">
+          <button
             *ngFor="let option of q.options"
-            class="option"
-            [class.active]="answers[q.model]?.includes(option)"
+            class="option-btn"
+            [class.active]="isOptionSelected(q.model, option)"
             (click)="toggleOption(q.model, option)"
           >
             {{ option }}
-          </div>
+          </button>
         </div>
       </div>
     </div>
 
-    <!-- Étape 3 : Comportements et attitude -->
+    <!-- Step 3: Comportement -->
     <div *ngIf="step === 3">
-      <h4 class="soustitre">Comportements et attitude</h4>
-      <div *ngFor="let q of comportementQuestions" class="question">
-        <label>{{ q.label }}</label>
-        <div class="options">
-          <div
+      <div *ngFor="let q of comportementQuestions" class="question-block">
+        <h4>{{ q.label }}</h4>
+        <div class="options-grid">
+          <button
             *ngFor="let option of q.options"
-            class="option"
+            class="option-btn"
             [class.active]="answers[q.model] === option"
             (click)="selectOption(q.model, option)"
           >
             {{ option }}
-          </div>
+          </button>
         </div>
       </div>
     </div>
 
-    <!-- Étape 4 : Aspirations et valeurs -->
+    <!-- Step 4: Aspirations -->
     <div *ngIf="step === 4">
-      <h4 class="soustitre">Aspirations et valeurs</h4>
-      <div *ngFor="let q of aspirationsQuestions" class="question">
-        <label>{{ q.label }}</label>
-        <div class="options">
-          <div
+      <div *ngFor="let q of aspirationsQuestions" class="question-block">
+        <h4>{{ q.label }}</h4>
+        <div class="options-grid">
+          <button
             *ngFor="let option of q.options"
-            class="option"
+            class="option-btn"
             [class.active]="answers[q.model] === option"
             (click)="selectOption(q.model, option)"
           >
             {{ option }}
-          </div>
+          </button>
         </div>
       </div>
     </div>
 
-    <!-- Étape 5 : Aptitudes / compétences -->
+    <!-- Step 5: Compétences (échelle 1 à 5) -->
     <div *ngIf="step === 5">
-      <h4 class="soustitre">Aptitudes et compétences</h4>
-      <div *ngFor="let q of aptitudesQuestions" class="question">
-        <label>{{ q.label }}</label>
-        <div class="options sub-question" *ngFor="let sq of q.subQuestions">
-          <span>{{ sq.skill }}</span>
+      <div *ngFor="let q of aptitudesQuestions" class="question-block">
+        <h4>{{ q.label }}</h4>
+
+        <div *ngFor="let sub of q.subQuestions" class="sub-question">
+          <label class="skill-label">{{ sub.skill }}</label>
           <div class="scale">
-            <div *ngFor="let s of sq.scale" class="scale-item" [class.active]="answers[sq.model] === s" (click)="selectOption(sq.model, s)">
-              {{ s }}
-            </div>
+            <button
+              *ngFor="let n of sub.scale"
+              class="scale-btn"
+              [class.active]="answers[sub.model] === n"
+              (click)="selectOption(sub.model, n)"
+            >
+              {{ n }}
+            </button>
           </div>
         </div>
       </div>
-
-      <!-- Étape 6 : Résumé -->
-      <div *ngIf="+step === 6">
-        <h4 class="soustitre">Résumé</h4>
-        <pre>{{ answers | json }}</pre>
-      </div>
     </div>
 
-    <div class="btn-group">
-      <!-- Bouton précédent (affiché uniquement si on n’est pas à la dernière étape) -->
-      <button class="next-btn prev" (click)="prevStep()" *ngIf="step > 1 && step < maxStep">Précédent</button>
+    <!-- Step 6: Résumé avant analyse -->
+    <div *ngIf="step === 6">
+      <h4 class="mb-3">Résumé de tes réponses</h4>
+      <ul class="summary-list">
+        <li><i class="bi bi-check-circle-fill me-2"></i> Niveau : {{ getAnswerString('niveau') }}</li>
+        <li><i class="bi bi-check-circle-fill me-2"></i> Spécialité : {{ getAnswerString('specialite') }}</li>
+        <li><i class="bi bi-check-circle-fill me-2"></i> Passions : {{ getAnswerString('passions') }}</li>
+        <li><i class="bi bi-check-circle-fill me-2"></i> Travail : {{ getAnswerString('travailGroupe') }}</li>
+        <li><i class="bi bi-check-circle-fill me-2"></i> Type d’activité : {{ getAnswerString('typeActivite') }}</li>
+        <li><i class="bi bi-check-circle-fill me-2"></i> Valeurs : {{ getAnswerString('valeurs') }}</li>
+        <li><i class="bi bi-check-circle-fill me-2"></i> Environnement : {{ getAnswerString('environnement') }}</li>
+      </ul>
+    </div>
 
-      <!-- Bouton suivant / terminer -->
-      <button class="next-btn" (click)="nextStep()" [disabled]="!isStepValid()">
-        {{ step === maxStep ? 'Terminer' : 'Suivant' }}
+    <!-- 🟢 Boutons navigation -->
+    <div class="d-flex justify-content-between mt-4">
+      <button class="btn-back" *ngIf="step > 1" (click)="prevStep()"><i class="bi bi-arrow-left-circle me-1"></i> Retour</button>
+
+      <button class="btn-next" [disabled]="!isStepValid()" (click)="nextStep()">
+        Suivant <i class="bi bi-arrow-right-circle ms-1"></i>
       </button>
+    </div>
+  </div>
+
+  <!-- 🔄 PHASE ANALYSE -->
+  <div *ngIf="isAnalyzing" class="analysis-box text-center">
+    <i class="bi bi-cpu-fill analysis-icon mb-3"></i>
+    <h4>{{ analysisSteps[analysisStep] }}</h4>
+    <p class="loading-text">Analyse en cours...</p>
+  </div>
+
+  <!-- 🟢 RÉSULTATS -->
+  <div *ngIf="showResults" class="results-box">
+    <h3 class="results-title">
+      <i class="bi bi-trophy-fill me-2"></i>
+      Tes Recommandations
+    </h3>
+
+    <div *ngFor="let rec of getRecommendations()" class="result-card">
+      <h4 class="result-title"><i class="bi bi-star-fill me-2"></i> {{ rec.title }}</h4>
+      <p class="match">Compatibilité : {{ rec.match }}%</p>
+      <ul>
+        <li *ngFor="let path of rec.paths"><i class="bi bi-check-lg me-2"></i> {{ path }}</li>
+      </ul>
     </div>
   </div>
 </div>

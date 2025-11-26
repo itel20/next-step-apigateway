@@ -1,148 +1,141 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faBullseye } from '@fortawesome/free-solid-svg-icons';
-import Swal from 'sweetalert2';
+import { NgClass, NgForOf, NgIf } from '@angular/common';
+
+interface Question {
+  model: string;
+  label: string;
+  options: string[];
+  subQuestions?: { skill: string; model: string; scale: number[] }[];
+}
+
+type Answers = Record<string, string | string[] | number | undefined>;
 
 @Component({
-  selector: 'jhi-test-orientation',
   standalone: true,
-  imports: [CommonModule, FormsModule, FontAwesomeModule],
+  selector: 'jhi-test-orientation',
+  imports: [NgForOf, NgIf],
   templateUrl: './test-orientation.component.html',
   styleUrls: ['./test-orientation.component.scss'],
 })
 export class TestOrientationComponent {
-  selectedClass = '';
-  otherClass = '';
-  searchQuery = '';
-  faBullseye = faBullseye;
-
   step = 1;
   maxStep = 6;
+  answers: Answers = {};
+  isAnalyzing = false;
+  showResults = false;
+  analysisStep = 0;
 
-  // ✅ Étape 1 — Parcours scolaire
-  parcoursQuestions = [
+  parcoursQuestions: Question[] = [
     {
-      label: 'Dans quelle classe es-tu actuellement ?',
-      options: ['Seconde', 'Première', 'Terminale', 'Bac +1 ou plus'],
-      model: 'class',
+      model: 'niveau',
+      label: 'Quel est ton niveau actuel ?',
+      options: ['Seconde', 'Première', 'Terminale', 'Bac+1', 'Bac+2', 'Autre'],
     },
     {
-      label: 'Quelle est ta filière actuelle ?',
-      options: ['S (Scientifique)', 'L (Littéraire)', 'ES (Économique et Social)', 'STMG', 'Bac Pro'],
-      model: 'filiere',
+      model: 'specialite',
+      label: 'Quelle spécialité te plaît le plus ?',
+      options: ['Sciences', 'Littérature', 'Économie', 'Arts', 'Technologies', 'Langues'],
     },
   ];
 
-  // ✅ Étape 2 — Passions
-  passionsQuestions = [
+  passionsQuestions: Question[] = [
     {
-      label: 'Quelles activités fais-tu par plaisir pendant ton temps libre ?',
-      options: [
-        'Coder / Créer sur ordinateur',
-        'Lire / Écrire',
-        'Dessin / Musique',
-        'Sport / Danse',
-        'Aider les autres',
-        'Entreprendre des projets',
-      ],
-      model: 'activites',
-    },
-    {
-      label: 'Quel type de projet t’attire le plus ?',
-      options: [
-        'Créer une entreprise',
-        'Faire des recherches',
-        'Travailler dans l’art',
-        'Transmettre et enseigner',
-        'Résoudre des problèmes concrets',
-      ],
-      model: 'typeProjet',
+      model: 'passions',
+      label: 'Quelles sont tes passions ? (plusieurs choix possibles)',
+      options: ['Sport', 'Art', 'Technologie', 'Nature', 'Lecture', 'Musique', 'Voyage', 'Sciences'],
     },
   ];
 
-  // ✅ Étape 3 — Comportements et attitude
-  comportementQuestions = [
+  comportementQuestions: Question[] = [
     {
-      label: 'En groupe, tu es plutôt celui/celle qui...',
-      options: [
-        'Prend les décisions',
-        'Apporte des idées créatives',
-        'Organise et planifie',
-        'Aide les autres à comprendre',
-        'Observe et analyse',
-      ],
-      model: 'roleGroupe',
+      model: 'travailGroupe',
+      label: 'Préfères-tu travailler seul ou en groupe ?',
+      options: ['Seul', 'En groupe', 'Les deux'],
     },
     {
-      label: 'Face à un problème difficile, tu...',
-      options: [
-        'Persévères jusqu’à trouver une solution',
-        'Cherches de l’aide',
-        'Cherches une approche originale',
-        'Analyses calmement toutes les options',
-      ],
-      model: 'attitudeProbleme',
+      model: 'typeActivite',
+      label: "Quel type d'activité préfères-tu ?",
+      options: ['Activités pratiques', 'Activités intellectuelles', 'Activités créatives', 'Activités relationnelles'],
     },
   ];
 
-  // ✅ Étape 4 — Aspirations et valeurs
-  aspirationsQuestions = [
+  aspirationsQuestions: Question[] = [
     {
-      label: 'Qu’est-ce qui compte le plus pour toi dans ton futur métier ?',
-      options: [
-        'Gagner bien ma vie',
-        'Aider les autres',
-        'Être libre et créatif(ve)',
-        'Voyager / Découvrir',
-        'Avoir un poste de responsabilité',
-      ],
-      model: 'valeurMetier',
+      model: 'valeurs',
+      label: 'Quelle valeur est la plus importante pour toi ?',
+      options: ['Créativité', 'Stabilité', 'Innovation', 'Aider les autres', 'Indépendance', 'Prestige'],
     },
     {
-      label: 'Comment imagines-tu ton futur environnement de travail ?',
-      options: [
-        'Un bureau calme',
-        'Un laboratoire / atelier',
-        'En extérieur',
-        'Avec du contact humain',
-        'À mon compte (freelance / entrepreneur)',
-      ],
       model: 'environnement',
+      label: 'Dans quel environnement aimerais-tu travailler ?',
+      options: ['Bureau', 'Extérieur', 'Laboratoire', 'À domicile', 'En déplacement'],
     },
   ];
 
-  // ✅ Étape 5 — Aptitudes / compétences
-  aptitudesQuestions = [
+  aptitudesQuestions: Question[] = [
     {
-      label: 'Dans quelle mesure te sens-tu à l’aise avec ces domaines ?',
+      model: 'competences',
+      label: 'Évalue tes compétences (1 = Faible, 5 = Excellent)',
+      options: [],
       subQuestions: [
-        { skill: 'Raisonnement logique et mathématique', model: 'math', scale: [1, 2, 3, 4] },
-        { skill: 'Expression écrite et orale', model: 'langue', scale: [1, 2, 3, 4] },
-        { skill: 'Créativité et imagination', model: 'creativite', scale: [1, 2, 3, 4] },
-        { skill: 'Leadership et communication', model: 'leadership', scale: [1, 2, 3, 4] },
-        { skill: 'Sens de l’observation et rigueur', model: 'rigueur', scale: [1, 2, 3, 4] },
+        { skill: 'Communication', model: 'comm', scale: [1, 2, 3, 4, 5] },
+        { skill: 'Analyse', model: 'analyse', scale: [1, 2, 3, 4, 5] },
+        { skill: 'Créativité', model: 'creativite', scale: [1, 2, 3, 4, 5] },
+        { skill: 'Organisation', model: 'organisation', scale: [1, 2, 3, 4, 5] },
       ],
     },
   ];
 
-  // ✅ Étape 6 — Résumé
-  answers: any = {};
+  stepTitles = [
+    { title: 'Parcours scolaire', icon: 'bi bi-book' },
+    { title: 'Passions', icon: 'bi bi-heart-fill' },
+    { title: 'Comportements', icon: 'bi bi-bullseye' },
+    { title: 'Aspirations', icon: 'bi bi-stars' },
+    { title: 'Compétences', icon: 'bi bi-lightning-charge-fill' },
+    { title: 'Résumé', icon: 'bi bi-bar-chart-line-fill' },
+  ];
 
-  async nextStep(): Promise<void> {
-    if (this.isStepValid()) {
-      if (this.step < this.maxStep) {
-        this.step++;
-      } else {
-        const SwalModule = await import('sweetalert2');
-        SwalModule.default.fire({
-          title: 'Merci !',
-          text: 'Ton profil sera généré prochainement.',
-          icon: 'success',
-          confirmButtonText: 'OK',
-        });
-      }
+  analysisSteps = [
+    'Analyse de ton parcours scolaire...',
+    'Évaluation de tes passions...',
+    'Analyse de tes aspirations...',
+    'Calcul de compatibilité...',
+    'Génération des recommandations...',
+  ];
+
+  selectOption(model: string, option: string | number): void {
+    this.answers[model] = option;
+  }
+
+  toggleOption(model: string, option: string): void {
+    if (!Array.isArray(this.answers[model])) {
+      this.answers[model] = [];
+    }
+
+    const list = this.answers[model]; // plus besoin de 'as string[]'
+
+    if (list.includes(option)) {
+      this.answers[model] = list.filter(o => o !== option);
+    } else {
+      this.answers[model] = [...list, option];
+    }
+  }
+
+  isStepValid(): boolean {
+    const ans = this.answers;
+    if (this.step === 1) return !!ans.niveau && !!ans.specialite;
+    if (this.step === 2) return Array.isArray(ans.passions) && ans.passions.length > 0;
+    if (this.step === 3) return !!ans.travailGroupe && !!ans.typeActivite;
+    if (this.step === 4) return !!ans.valeurs && !!ans.environnement;
+    if (this.step === 5) return !!ans.comm && !!ans.analyse && !!ans.creativite && !!ans.organisation;
+    return true;
+  }
+
+  nextStep(): void {
+    if (this.step < this.maxStep) {
+      this.step++;
+    } else if (this.step === this.maxStep) {
+      this.launchAnalysis();
     }
   }
 
@@ -150,72 +143,67 @@ export class TestOrientationComponent {
     if (this.step > 1) this.step--;
   }
 
-  /** Vérifie si toutes les questions de l’étape courante ont été remplies */
-  isStepValid(): boolean {
-    let questions: any[] = [];
-    switch (this.step) {
-      case 1:
-        questions = this.parcoursQuestions;
-        break;
-      case 2:
-        questions = this.passionsQuestions;
-        break;
-      case 3:
-        questions = this.comportementQuestions;
-        break;
-      case 4:
-        questions = this.aspirationsQuestions;
-        break;
-      case 5:
-        questions = this.aptitudesQuestions[0].subQuestions;
-        break;
-    }
-
-    return questions.every(q => {
-      const answer = this.answers[q.model];
-      // Si c’est un tableau (multi-sélection)
-      if (Array.isArray(answer)) return answer.length > 0;
-      // Si c’est une valeur simple (note, choix unique)
-      return answer !== undefined && answer !== null && answer !== '';
-    });
+  launchAnalysis(): void {
+    this.isAnalyzing = true;
+    let index = 0;
+    const interval = setInterval(() => {
+      this.analysisStep = index;
+      index++;
+      if (index === this.analysisSteps.length) {
+        clearInterval(interval);
+        setTimeout(() => {
+          this.isAnalyzing = false;
+          this.showResults = true;
+        }, 500);
+      }
+    }, 1000);
   }
 
-  onSubmit(): void {
-    const selected = this.selectedClass === 'Autre' ? this.otherClass : this.selectedClass;
-    alert(`Classe sélectionnée : ${selected}`); // option simple pour tester
-  }
-  onSearch(): void {
-    // TODO: implémentation future
-  }
-  // Ajoute cette méthode dans ton composant
-  onCheckboxChange(event: any, model: string): void {
-    if (!this.answers[model]) {
-      this.answers[model] = [];
-    }
-    const value = event.target.value;
-    if (event.target.checked) {
-      // Ajouter la valeur si cochée
-      this.answers[model].push(value);
-    } else {
-      // Retirer la valeur si décochée
-      this.answers[model] = this.answers[model].filter((v: string) => v !== value);
-    }
-  }
-  // Sélection unique
-  selectOption(model: string, value: any): void {
-    this.answers[model] = value;
+  getAnswerString(key: string): string {
+    const val = this.answers[key];
+    if (Array.isArray(val)) return val.join(', ');
+    if (val != null) return val.toString();
+    return '-';
   }
 
-  // Sélection multiple (cases à cocher stylisées)
-  toggleOption(model: string, value: any): void {
-    if (!this.answers[model]) {
-      this.answers[model] = [];
+  getRecommendations(): { title: string; match: number; paths: string[] }[] {
+    const ans = this.answers as any;
+    const rec: { title: string; match: number; paths: string[] }[] = [];
+
+    if (ans.specialite === 'Sciences' || ans.specialite === 'Technologies') {
+      rec.push({
+        title: 'Ingénierie & Technologies',
+        match: 95,
+        paths: ['École d’ingénieurs', 'Informatique', 'Robotique'],
+      });
     }
-    const index = this.answers[model].indexOf(value);
-    if (index > -1) {
-      this.answers[model].splice(index, 1);
-    } else {
-      this.answers[model].push(value);
+
+    if (Array.isArray(ans.passions) && ans.passions.includes('Art')) {
+      rec.push({
+        title: 'Arts & Création',
+        match: 88,
+        paths: ['Design', 'Architecture', 'Audiovisuel'],
+      });
     }
+
+    if (ans.specialite === 'Économie' || ans.valeurs === 'Prestige') {
+      rec.push({
+        title: 'Commerce & Management',
+        match: 92,
+        paths: ['Marketing', 'Finance', 'Entrepreneuriat'],
+      });
+    }
+
+    return rec.sort((a, b) => b.match - a.match).slice(0, 3);
+  }
+
+  goToSettings(): void {
+    // console.log('Redirection vers settings_screen');
+    // this.router.navigate(['/settings_screen']);
+  }
+
+  isOptionSelected(model: string, option: string): boolean {
+    const value = this.answers[model];
+    return Array.isArray(value) ? value.includes(option) : false;
   }
 }

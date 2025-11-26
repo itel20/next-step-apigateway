@@ -46,18 +46,18 @@ import org.springframework.security.oauth2.jwt.*;
 import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtAuthenticationConverter;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.WebFilterChainProxy;
-import org.springframework.security.web.server.csrf.CookieServerCsrfTokenRepository;
-import org.springframework.security.web.server.csrf.ServerCsrfTokenRequestAttributeHandler;
 import org.springframework.security.web.server.firewall.ServerWebExchangeFirewall;
 import org.springframework.security.web.server.header.ReferrerPolicyServerHttpHeadersWriter;
 import org.springframework.security.web.server.header.XFrameOptionsServerHttpHeadersWriter.Mode;
 import org.springframework.security.web.server.util.matcher.NegatedServerWebExchangeMatcher;
 import org.springframework.security.web.server.util.matcher.OrServerWebExchangeMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.reactive.CorsWebFilter;
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import tech.jhipster.config.JHipsterProperties;
-import tech.jhipster.web.filter.reactive.CookieCsrfFilter;
 
 @Configuration
 @EnableReactiveMethodSecurity
@@ -70,8 +70,6 @@ public class SecurityConfiguration {
 
     private final ReactiveClientRegistrationRepository clientRegistrationRepository;
 
-    // See https://github.com/jhipster/generator-jhipster/issues/18868
-    // We don't use a distributed cache or the user selected cache implementation here on purpose
     private final Cache<String, Mono<Jwt>> users = Caffeine.newBuilder()
         .maximumSize(10_000)
         .expireAfterWrite(Duration.ofHours(1))
@@ -92,14 +90,8 @@ public class SecurityConfiguration {
                 )
             )
             .cors(withDefaults())
-            .csrf(csrf ->
-                csrf
-                    .csrfTokenRepository(CookieServerCsrfTokenRepository.withHttpOnlyFalse())
-                    // See https://stackoverflow.com/q/74447118/65681
-                    .csrfTokenRequestHandler(new ServerCsrfTokenRequestAttributeHandler())
-            )
-            // See https://github.com/spring-projects/spring-security/issues/5766
-            .addFilterAt(new CookieCsrfFilter(), SecurityWebFiltersOrder.REACTOR_CONTEXT)
+            // Désactiver complètement CSRF pour JWT
+            .csrf(ServerHttpSecurity.CsrfSpec::disable)
             .addFilterAfter(new SpaWebFilter(), SecurityWebFiltersOrder.HTTPS_REDIRECT)
             .headers(headers ->
                 headers
@@ -115,45 +107,53 @@ public class SecurityConfiguration {
                     )
             )
             .authorizeExchange(authz ->
-                // prettier-ignore
                 authz
-                    .pathMatchers("/").permitAll()
-                    .pathMatchers("/*.*").permitAll()
-                    .pathMatchers("/api/authenticate").permitAll()
-                    .pathMatchers("/api/auth-info").permitAll()
-                    .pathMatchers("/api/admin/**").hasAuthority(AuthoritiesConstants.ADMIN)
-                    .pathMatchers("/api/**").authenticated()
-                    // microfrontend resources are loaded by webpack without authentication, they need to be public
-                    .pathMatchers("/services/*/*.js").permitAll()
-                    .pathMatchers("/services/*/*.txt").permitAll()
-                    .pathMatchers("/services/*/*.json").permitAll()
-                    .pathMatchers("/services/*/*.js.map").permitAll()
-                    .pathMatchers("/services/*/management/health/readiness").permitAll()
-                    .pathMatchers("/services/*/v3/api-docs").hasAuthority(AuthoritiesConstants.ADMIN)
-                    .pathMatchers("/services/**").authenticated()
-                    .pathMatchers("/v3/api-docs/**").hasAuthority(AuthoritiesConstants.ADMIN)
-                    .pathMatchers("/management/health").permitAll()
-                    .pathMatchers("/management/health/**").permitAll()
-                    .pathMatchers("/management/info").permitAll()
-                    .pathMatchers("/management/prometheus").permitAll()
-                    .pathMatchers("/management/**").hasAuthority(AuthoritiesConstants.ADMIN)
+                    .pathMatchers("/", "/*.*")
+                    .permitAll()
+                    .pathMatchers("/api/authenticate", "/api/auth-info")
+                    .permitAll()
+                    .pathMatchers("/api/admin/**")
+                    .hasAuthority(AuthoritiesConstants.ADMIN)
+                    .pathMatchers("/api/**")
+                    .authenticated()
+                    .pathMatchers("/services/**")
+                    .authenticated()
+                    .pathMatchers("/v3/api-docs/**")
+                    .hasAuthority(AuthoritiesConstants.ADMIN)
+                    .pathMatchers("/management/**")
+                    .hasAuthority(AuthoritiesConstants.ADMIN)
             )
             .oauth2Login(oauth2 -> oauth2.authorizationRequestResolver(authorizationRequestResolver(this.clientRegistrationRepository)))
             .oauth2Client(withDefaults())
             .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())));
+
         return http.build();
+    }
+
+    @Bean
+    public CorsWebFilter corsWebFilter() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(Arrays.asList("*"));
+        config.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return new CorsWebFilter(source);
     }
 
     private ServerOAuth2AuthorizationRequestResolver authorizationRequestResolver(
         ReactiveClientRegistrationRepository clientRegistrationRepository
     ) {
-        DefaultServerOAuth2AuthorizationRequestResolver authorizationRequestResolver = new DefaultServerOAuth2AuthorizationRequestResolver(
+        DefaultServerOAuth2AuthorizationRequestResolver resolver = new DefaultServerOAuth2AuthorizationRequestResolver(
             clientRegistrationRepository
         );
+
         if (this.issuerUri.contains("auth0.com")) {
-            authorizationRequestResolver.setAuthorizationRequestCustomizer(authorizationRequestCustomizer());
+            resolver.setAuthorizationRequestCustomizer(authorizationRequestCustomizer());
         }
-        return authorizationRequestResolver;
+        return resolver;
     }
 
     private Consumer<OAuth2AuthorizationRequest.Builder> authorizationRequestCustomizer() {
@@ -164,49 +164,30 @@ public class SecurityConfiguration {
     }
 
     Converter<Jwt, Mono<AbstractAuthenticationToken>> jwtAuthenticationConverter() {
-        ReactiveJwtAuthenticationConverter jwtAuthenticationConverter = new ReactiveJwtAuthenticationConverter();
-        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(
-            new Converter<Jwt, Flux<GrantedAuthority>>() {
-                @Override
-                public Flux<GrantedAuthority> convert(Jwt jwt) {
-                    return Flux.fromIterable(SecurityUtils.extractAuthorityFromClaims(jwt.getClaims()));
-                }
-            }
-        );
-        jwtAuthenticationConverter.setPrincipalClaimName(PREFERRED_USERNAME);
-        return jwtAuthenticationConverter;
+        ReactiveJwtAuthenticationConverter converter = new ReactiveJwtAuthenticationConverter();
+        converter.setJwtGrantedAuthoritiesConverter(jwt -> Flux.fromIterable(SecurityUtils.extractAuthorityFromClaims(jwt.getClaims())));
+        converter.setPrincipalClaimName(PREFERRED_USERNAME);
+        return converter;
     }
 
-    /**
-     * Map authorities from "groups" or "roles" claim in ID Token.
-     *
-     * @return a {@link ReactiveOAuth2UserService} that has the groups from the IdP.
-     */
     @Bean
     public ReactiveOAuth2UserService<OidcUserRequest, OidcUser> oidcUserService() {
         final OidcReactiveOAuth2UserService delegate = new OidcReactiveOAuth2UserService();
 
-        return userRequest -> {
-            // Delegate to the default implementation for loading a user
-            return delegate
+        return userRequest ->
+            delegate
                 .loadUser(userRequest)
                 .map(user -> {
                     Set<GrantedAuthority> mappedAuthorities = new HashSet<>();
-
                     user
                         .getAuthorities()
                         .forEach(authority -> {
-                            if (authority instanceof OidcUserAuthority) {
-                                OidcUserAuthority oidcUserAuthority = (OidcUserAuthority) authority;
-                                mappedAuthorities.addAll(
-                                    SecurityUtils.extractAuthorityFromClaims(oidcUserAuthority.getUserInfo().getClaims())
-                                );
+                            if (authority instanceof OidcUserAuthority oidcAuthority) {
+                                mappedAuthorities.addAll(SecurityUtils.extractAuthorityFromClaims(oidcAuthority.getUserInfo().getClaims()));
                             }
                         });
-
                     return new DefaultOidcUser(mappedAuthorities, user.getIdToken(), user.getUserInfo(), PREFERRED_USERNAME);
                 });
-        };
     }
 
     @Bean
@@ -232,57 +213,46 @@ public class SecurityConfiguration {
 
         jwtDecoder.setJwtValidator(withAudience);
 
-        return new ReactiveJwtDecoder() {
-            @Override
-            public Mono<Jwt> decode(String token) throws JwtException {
-                return jwtDecoder.decode(token).flatMap(jwt -> enrich(token, jwt));
-            }
-
-            private Mono<Jwt> enrich(String token, Jwt jwt) {
-                // Only look up user information if identity claims are missing
-                if (jwt.hasClaim("given_name") && jwt.hasClaim("family_name")) {
-                    return Mono.just(jwt);
-                }
-                // Get user info from `users` cache if present
-                return Optional.ofNullable(users.getIfPresent(jwt.getSubject())).orElseGet(() -> // Retrieve user info from OAuth provider if not already loaded
-                    WebClient.create()
-                        .get()
-                        .uri(userInfoUri)
-                        .headers(headers -> headers.setBearerAuth(token))
-                        .retrieve()
-                        .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
-                        .map(userInfo ->
-                            Jwt.withTokenValue(jwt.getTokenValue())
-                                .subject(jwt.getSubject())
-                                .audience(jwt.getAudience())
-                                .headers(headers -> headers.putAll(jwt.getHeaders()))
-                                .claims(claims -> {
-                                    String username = userInfo.get("preferred_username").toString();
-                                    // special handling for Auth0
-                                    if (userInfo.get("sub").toString().contains("|") && username.contains("@")) {
-                                        userInfo.put("email", username);
-                                    }
-                                    // Allow full name in a name claim - happens with Auth0
-                                    if (userInfo.get("name") != null) {
-                                        String[] name = userInfo.get("name").toString().split("\\s+");
-                                        if (name.length > 0) {
-                                            userInfo.put("given_name", name[0]);
-                                            userInfo.put("family_name", String.join(" ", Arrays.copyOfRange(name, 1, name.length)));
-                                        }
-                                    }
-                                    claims.putAll(userInfo);
-                                })
-                                .claims(claims -> claims.putAll(jwt.getClaims()))
-                                .build()
-                        )
-                        // Put user info into the `users` cache
-                        .doOnNext(newJwt -> users.put(jwt.getSubject(), Mono.just(newJwt)))
-                );
-            }
-        };
+        return token -> jwtDecoder.decode(token).flatMap(jwt -> enrichJwt(token, jwt, userInfoUri));
     }
 
-    // Fix for Spring Boot 3.3.5: https://github.com/spring-cloud/spring-cloud-gateway/issues/3568
+    private Mono<Jwt> enrichJwt(String token, Jwt jwt, String userInfoUri) {
+        if (jwt.hasClaim("given_name") && jwt.hasClaim("family_name")) {
+            return Mono.just(jwt);
+        }
+        return Optional.ofNullable(users.getIfPresent(jwt.getSubject())).orElseGet(() ->
+            WebClient.create()
+                .get()
+                .uri(userInfoUri)
+                .headers(headers -> headers.setBearerAuth(token))
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
+                .map(userInfo -> {
+                    Jwt.Builder builder = Jwt.withTokenValue(jwt.getTokenValue())
+                        .subject(jwt.getSubject())
+                        .audience(jwt.getAudience())
+                        .headers(headers -> headers.putAll(jwt.getHeaders()))
+                        .claims(claims -> {
+                            String username = userInfo.get("preferred_username").toString();
+                            if (userInfo.get("sub").toString().contains("|") && username.contains("@")) {
+                                userInfo.put("email", username);
+                            }
+                            if (userInfo.get("name") != null) {
+                                String[] name = userInfo.get("name").toString().split("\\s+");
+                                if (name.length > 0) {
+                                    userInfo.put("given_name", name[0]);
+                                    userInfo.put("family_name", String.join(" ", Arrays.copyOfRange(name, 1, name.length)));
+                                }
+                            }
+                            claims.putAll(userInfo);
+                        })
+                        .claims(claims -> claims.putAll(jwt.getClaims()));
+                    return builder.build();
+                })
+                .doOnNext(newJwt -> users.put(jwt.getSubject(), Mono.just(newJwt)))
+        );
+    }
+
     @Bean
     BeanPostProcessor beanPostProcessor() {
         return new BeanPostProcessor() {

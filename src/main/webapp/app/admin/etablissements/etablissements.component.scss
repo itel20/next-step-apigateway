@@ -1,3 +1,8 @@
+$green-dark: #1e7d32;
+$green-darker: #1d4830;
+$yellow-gold: #c9a800;
+$gray-dark: #555;
+
 :host {
   display: block;
   margin: 0;
@@ -123,6 +128,38 @@
       opacity: 0.85;
     }
   }
+}
+.btn-success {
+  background: linear-gradient(90deg, $green-dark, $yellow-gold);
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  &:hover {
+    background: $green-darker;
+    color: $yellow-gold;
+  }
+  i {
+    margin-right: 0.25rem;
+  }
+}
+.table {
+  td,
+  th {
+    color: $gray-dark;
+  }
+  .badge.bg-success {
+    background-color: $green-dark;
+  }
+  .badge.bg-warning {
+    background-color: $yellow-gold;
+    color: $green-darker;
+  }
+}
+
+.modal-content {
+  border-radius: 0.75rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
 }
 
 /* ===================== Table ===================== */

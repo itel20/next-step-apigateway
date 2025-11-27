@@ -5,7 +5,7 @@ import { BourseConcours } from './bourse.model';
 
 @Injectable({ providedIn: 'root' })
 export class BourseConcoursService {
-  private resourceUrl = 'http://localhost:8081/api/bourses-concours';
+  private resourceUrl = 'http://localhost:8081/api/bourses';
 
   constructor(private http: HttpClient) {}
 

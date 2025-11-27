@@ -1,85 +1,105 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-
-interface Conseiller {
-  nom: string;
-  specialite: string;
-  langues: string;
-  ville: string;
-  disponibilite: string;
-}
+import { trigger, state, style, transition, animate } from '@angular/animations';
+import { RouterLink } from '@angular/router';
 
 interface Media {
-  type: 'video' | 'guide';
+  type: 'video' | 'book';
   titre: string;
+  duree: string;
   action: string;
-  bouton: string;
 }
 
-interface Faq {
-  question: string;
-  reponse: string;
+interface Testimonial {
+  name: string;
+  role: string;
+  text: string;
+  stars: number;
 }
+
 @Component({
   selector: 'jhi-conseils',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, RouterLink],
   templateUrl: './conseils.component.html',
-  styleUrl: './conseils.component.scss',
+  styleUrls: ['./conseils.component.scss'],
+  animations: [
+    trigger('fadeInUp', [
+      state('void', style({ opacity: 0, transform: 'translateY(20px)' })),
+      transition(':enter', [animate('600ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))]),
+    ]),
+    trigger('rotateChevron', [
+      state('open', style({ transform: 'rotate(90deg)' })),
+      state('closed', style({ transform: 'rotate(0deg)' })),
+      transition('open <=> closed', [animate('200ms ease-in-out')]),
+    ]),
+  ],
 })
 export class ConseilsComponent {
-  conseiller: Conseiller = {
-    nom: 'Christ John',
-    specialite: 'Orientation post-bac',
+  // === Variables ===
+  showQuestionnaire = false;
+
+  conseiller = {
+    nom: 'Itelvina Sane',
+    specialite: 'Orientation Étudiante',
     langues: 'Français, Anglais',
     ville: 'Dakar',
-    disponibilite: 'Affichées sur clic bouton',
+    disponibilite: 'Lun-Ven, 9h-17h',
   };
 
   medias: Media[] = [
+    { type: 'video', titre: 'Comment choisir sa filière ?', duree: '5 min', action: 'Regarder' },
+    { type: 'book', titre: 'Guide de l’étudiant', duree: '12 min', action: 'Lire' },
+  ];
+
+  faqs = [
+    { question: 'Comment ça marche ?', reponse: 'Notre IA analyse ton profil et recommande des filières adaptées.' },
+    { question: 'Est-ce gratuit ?', reponse: 'Oui, l’utilisation de la plateforme est entièrement gratuite.' },
+  ];
+  openFaqIndex: number | null = null;
+
+  questionInput = '';
+
+  testimonials: Testimonial[] = [
     {
-      type: 'video',
-      titre: 'Vidéo : Comment choisir sa filière',
-      action: 'Regarder',
-      bouton: 'watch-btn',
+      name: 'Agathe Mack Sene',
+      role: 'Étudiante en Ingénierie',
+      text: "Grâce à cette plateforme, j'ai trouvé ma voie en ingénierie.",
+      stars: 5,
     },
+    { name: 'Samba Wade Ba', role: 'Étudiant en Commerce', text: 'Le test d’orientation m’a aidé à choisir la bonne filière.', stars: 5 },
     {
-      type: 'guide',
-      titre: 'Guide réussir ta réorientation',
-      action: 'Lire',
-      bouton: 'read-btn',
+      name: 'Kadidiatou Sima',
+      role: 'Étudiante en Arts',
+      text: 'Interface moderne et conseils pertinents. Je recommande à tous les jeunes !',
+      stars: 5,
     },
   ];
 
-  faqs: Faq[] = [
-    {
-      question: 'Quelle est la différence entre une licence et un BTS ?',
-      reponse: 'Licence : 3 ans à l’université, plus théorique. BTS : 2 ans, plus professionnalisant.',
-    },
-    {
-      question: 'Peut-on changer de filière après un semestre ?',
-      reponse: 'Oui, sous certaines conditions (places disponibles, accord de l’administration). Parlez-en avec un conseiller.',
-    },
-    {
-      question: 'Que faire après un bac pro ?',
-      reponse: 'Plusieurs options : BTS, écoles spécialisées, concours ou vie active.',
-    },
-    {
-      question: 'Existe-t-il des aides pour étudier à l’étranger ?',
-      reponse: 'Oui, plusieurs institutions (Campus France, DAAD, etc.) proposent des bourses selon les profils.',
-    },
-    {
-      question: 'Les logements universitaires sont-ils accessibles à tous ?',
-      reponse: 'Non, il faut généralement faire une demande et les places sont limitées.',
-    },
+  stats = [
+    { value: '15K+', label: 'Étudiants orientés' },
+    { value: '95%', label: 'Taux de satisfaction' },
+    { value: '200+', label: 'Filières analysées' },
   ];
 
-  // Optionnel : interactivité FAQ (afficher/masquer la réponse)
+  // === Méthodes ===
   toggleFaq(index: number): void {
-    const el = document.getElementById(`faq-${index}`);
-    if (el) {
-      el.classList.toggle('open');
+    this.openFaqIndex = this.openFaqIndex === index ? null : index;
+  }
+
+  handleSendQuestion(): void {
+    if (this.questionInput.trim()) {
+      // Ici tu peux envoyer la question à ton backend
+      // ou afficher un toast / snackbar
+      this.questionInput = '';
     }
+  }
+
+  // === Générer les initiales pour les avatars ===
+  getInitials(name: string): string {
+    const parts = name.split(' ');
+    if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
+    return (parts[0].charAt(0) + parts[1].charAt(0)).toUpperCase();
   }
 }

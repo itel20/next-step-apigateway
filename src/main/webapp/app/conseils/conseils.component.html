@@ -1,93 +1,180 @@
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+<div class="conseils-page min-vh-100 bg-soft">
+  <!-- Hero Section -->
+  <div class="hero-section position-relative overflow-hidden text-white">
+    <div class="absolute-bg"></div>
 
-<div class="actus-container">
-  <!-- Section gauche -->
-  <div class="left-section">
-    <!-- Nos conseillers -->
-    <div class="card conseiller-card">
-      <div class="card-header">
-        <i class="fas fa-user-graduate icon-header"></i>
-        <h3>Nos conseillers</h3>
+    <div class="container py-5 text-center">
+      <div class="hero-badge mb-4 d-inline-flex align-items-center px-3 py-2 rounded-pill bg-white-20">
+        <i class="bi bi-mortarboard-fill me-2"></i>
+        Plateforme d'orientation #1 en Afrique
       </div>
 
-      <div class="conseiller-info">
-        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Avatar conseiller" class="avatar" />
+      <h1 class="hero-title mb-3">Trouve la filière parfaite pour ton avenir</h1>
+      <p class="hero-subtitle mb-4">
+        Notre intelligence artificielle analyse ton profil pour te recommander les meilleures orientations adaptées à tes passions et
+        compétences
+      </p>
 
-        <div class="details">
-          <h4>{{ conseiller.nom }}</h4>
-          <p><i class="fas fa-compass"></i> {{ conseiller.specialite }}</p>
-          <p><i class="fas fa-language"></i> {{ conseiller.langues }}</p>
-          <p><i class="fas fa-map-marker-alt"></i> {{ conseiller.ville }}</p>
-          <p><i class="fas fa-calendar-check"></i> {{ conseiller.disponibilite }}</p>
+      <div class="d-flex flex-column flex-sm-row justify-content-center gap-3 mb-5">
+        <button class="btn btn-light text-primary d-flex align-items-center gap-2" (click)="showQuestionnaire = true">
+          <i class="bi bi-bullseye"></i>
+          Commencer le test
+        </button>
+        <button class="btn btn-outline-light d-flex align-items-center gap-2">
+          <i class="bi bi-play-fill"></i>
+          Voir la démo
+        </button>
+      </div>
 
-          <button class="btn btn-green"><i class="fas fa-calendar-plus"></i> Prendre RDV</button>
+      <!-- Stats -->
+      <div class="row justify-content-center text-center mt-5">
+        <div class="col-4" *ngFor="let stat of stats">
+          <h2 class="stat-value">{{ stat.value }}</h2>
+          <p class="stat-label">{{ stat.label }}</p>
         </div>
       </div>
-
-      <button class="btn btn-outline">+ Voir plus</button>
     </div>
+  </div>
 
-    <!-- À la une -->
-    <div class="card a-la-une">
-      <div class="card-header">
-        <i class="fas fa-newspaper icon-header"></i>
-        <h3>À la une</h3>
-      </div>
-
-      <div class="media-items">
-        <div *ngFor="let media of medias" class="media">
-          <div class="media-icon" [ngClass]="{ youtube: media.type === 'video', guide: media.type === 'guide' }">
-            <i
-              [ngClass]="{
-                'fab fa-youtube': media.type === 'video',
-                'fas fa-book-open': media.type === 'guide',
-              }"
-            ></i>
+  <!-- Main Content -->
+  <div class="container py-5">
+    <div class="row g-4">
+      <!-- Conseiller -->
+      <div class="col-lg-4">
+        <div class="card shadow rounded-3xl sticky-top p-0">
+          <div class="card-header bg-gradient p-3 text-white d-flex align-items-center gap-2">
+            <i class="bi bi-person-circle"></i>
+            <h5 class="mb-0">Ton conseiller</h5>
           </div>
+          <div class="card-body text-center">
+            <div
+              class="conseiller-avatar rounded-circle bg-primary-green text-white d-flex align-items-center justify-content-center shadow mb-3"
+            >
+              {{ getInitials(conseiller.nom) }}
+            </div>
+            <h6>{{ conseiller.nom }}</h6>
+            <p class="text-muted">{{ conseiller.specialite }}</p>
 
-          <div class="media-text">
-            <p>{{ media.titre }}</p>
-            <button [class]="'btn ' + media.bouton">
-              <i
-                [ngClass]="{
-                  'fas fa-play': media.type === 'video',
-                  'fas fa-book-reader': media.type === 'guide',
-                }"
-              ></i>
-              {{ media.action }}
+            <ul class="list-unstyled mb-3">
+              <li class="d-flex align-items-center gap-2 p-2 rounded bg-light mb-1">
+                <i class="bi bi-translate text-success"></i>
+                {{ conseiller.langues }}
+              </li>
+              <li class="d-flex align-items-center gap-2 p-2 rounded bg-light mb-1">
+                <i class="bi bi-geo-alt-fill text-success"></i>
+                {{ conseiller.ville }}
+              </li>
+              <li class="d-flex align-items-center gap-2 p-2 rounded bg-light">
+                <i class="bi bi-calendar-check-fill text-success"></i>
+                {{ conseiller.disponibilite }}
+              </li>
+            </ul>
+
+            <button class="btn btn-gradient w-100 d-flex align-items-center justify-content-center gap-2">
+              <i class="bi bi-calendar-plus-fill"></i>
+              Prendre rendez-vous
             </button>
           </div>
         </div>
       </div>
 
-      <button class="btn btn-outline">+ Voir plus</button>
-    </div>
-  </div>
-
-  <!-- Section droite (FAQ dynamique) -->
-  <div class="right-section">
-    <div class="card-header">
-      <i class="fas fa-question-circle icon-header"></i>
-      <h3>Questions fréquentes</h3>
-    </div>
-
-    <div class="faq">
-      <div class="faq-item" *ngFor="let item of faqs; let i = index" (click)="toggleFaq(i)" id="faq-{{ i }}">
-        <div class="faq-question">
-          <i class="fas fa-chevron-right"></i>
-          <span>{{ item.question }}</span>
-        </div>
-        <div class="faq-answer">
-          <p>{{ item.reponse }}</p>
+      <!-- Ressources -->
+      <div class="col-lg-4">
+        <div class="card shadow rounded-3xl p-0">
+          <div class="card-header bg-gradient-orange p-3 text-white d-flex align-items-center gap-2">
+            <i class="bi bi-newspaper"></i>
+            <h5 class="mb-0">Ressources</h5>
+          </div>
+          <div class="card-body">
+            <div *ngFor="let media of medias" class="media-card d-flex align-items-center gap-3 p-3 mb-2 rounded border">
+              <div class="media-icon d-flex align-items-center justify-content-center rounded shadow">
+                <i [ngClass]="media.type === 'video' ? 'bi bi-youtube' : 'bi bi-book'"></i>
+              </div>
+              <div class="flex-grow-1">
+                <h6 class="mb-1">{{ media.titre }}</h6>
+                <small>{{ media.duree }}</small>
+              </div>
+              <button class="btn btn-sm" [ngClass]="media.type === 'video' ? 'btn-video' : 'btn-book'">
+                <i [ngClass]="media.type === 'video' ? 'bi bi-play-fill' : 'bi bi-book'"></i>
+                {{ media.action }}
+              </button>
+            </div>
+            <button class="btn btn-outline-primary w-100 mt-3">Voir tout</button>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="faq-input-container">
-      <input type="text" class="faq-input" placeholder="Posez votre question..." />
-      <button class="btn-send">
-        <i class="fas fa-paper-plane"></i>
-      </button>
+      <!-- FAQ -->
+      <div class="col-lg-4">
+        <div class="card shadow rounded-3xl p-0 sticky-top">
+          <div class="card-header bg-gradient-teal p-3 text-white d-flex align-items-center gap-2">
+            <i class="bi bi-question-circle"></i>
+            <h5 class="mb-0">FAQ</h5>
+          </div>
+          <div class="card-body">
+            <div *ngFor="let faq of faqs; let i = index" class="mb-2">
+              <button class="faq-question w-100 text-start p-2 rounded" (click)="toggleFaq(i)">
+                {{ faq.question }}
+              </button>
+              <div *ngIf="openFaqIndex === i" class="faq-answer p-2 mt-1 rounded bg-light">
+                {{ faq.reponse }}
+              </div>
+            </div>
+            <div class="mt-3">
+              <input
+                type="text"
+                class="form-control mb-2"
+                placeholder="Pose ta question..."
+                [(ngModel)]="questionInput"
+                (keydown.enter)="handleSendQuestion()"
+              />
+              <button class="btn btn-gradient w-100" (click)="handleSendQuestion()">Envoyer</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Témoignages Section -->
+      <div class="testimonials-section py-5">
+        <div class="text-center mb-4">
+          <h2 class="text-primary-green">Ce qu'ils disent de nous</h2>
+          <p class="text-gray">Des milliers d'étudiants nous font confiance</p>
+        </div>
+
+        <div class="row g-4">
+          <div class="col-md-4" *ngFor="let testimonial of testimonials">
+            <div class="card shadow-sm p-3 rounded-3xl h-100 hover-shadow">
+              <div class="d-flex align-items-center gap-3 mb-3">
+                <div class="rounded-circle avatar-sm bg-primary-yellow text-white d-flex align-items-center justify-content-center">
+                  {{ getInitials(testimonial.name) }}
+                </div>
+                <div>
+                  <h6 class="mb-0">{{ testimonial.name }}</h6>
+                  <small class="text-muted">{{ testimonial.role }}</small>
+                </div>
+              </div>
+              <div class="mb-2">
+                <ng-container *ngFor="let star of [].constructor(testimonial.stars)">
+                  <i class="bi bi-star-fill text-warning"></i>
+                </ng-container>
+              </div>
+              <p class="text-gray small">{{ testimonial.text }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- CTA Final -->
+      <div class="cta-final text-center text-white py-5 position-relative overflow-hidden rounded-3xl">
+        <div class="cta-bg position-absolute top-0 start-0 w-100 h-100"></div>
+
+        <div class="position-relative z-1">
+          <h2 class="mb-3">Prêt à découvrir ta voie ?</h2>
+          <p class="mb-4">Rejoins des milliers d'étudiants qui ont trouvé leur orientation grâce à notre IA</p>
+          <button class="btn btn-light btn-lg text-primary-green fw-bold" [routerLink]="['/test-orientation']">
+            <i class="bi bi-rocket-fill me-2"></i> Commencer maintenant
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>

@@ -37,7 +37,7 @@ export interface BourseConcoursDTO {
 })
 export class FiliereService {
   private apiUrl = 'http://localhost:8081/api/filieres'; // ton URL back
-  private baseUrl = 'http://localhost:8081/api/bourses-concours';
+  private baseUrl = 'http://localhost:8081/api/bourses';
 
   constructor(private http: HttpClient) {}
 

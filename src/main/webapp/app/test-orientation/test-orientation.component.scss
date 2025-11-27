@@ -1,153 +1,198 @@
-/* ======== VARIABLES ======== */
-$primary-yellow: #f4c01e;
+/* =======================================
+   🎨 VARIABLES OFFICIELLES NEXTSTEP
+======================================= */
 $primary-green: #15803d;
+$primary-yellow: #f4c01e;
 $gradient-bg: linear-gradient(90deg, #1e7d32, #c9a800);
 
-/* ======== HEADER ======== */
+$bg-soft: #ffffff;
+$border-soft: #e5e7eb;
+$text-gray: #4b5563;
+$radius: 14px;
+$transition: 0.25s ease;
+
+/* =======================================
+   🔝 HEADER AVEC DÉGRADÉ (comme screenshot)
+======================================= */
 .top-bar {
   background: $gradient-bg;
+  padding: 1.2rem 1.6rem;
   color: white;
-  padding: 1rem 1.5rem;
-  border-radius: 0.5rem;
+  border-radius: $radius;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.08);
 
   .title {
+    display: flex;
+    align-items: center;
+    font-size: 1.35rem;
     font-weight: 600;
-    font-size: 1.5rem;
 
     .icon-title {
       font-size: 1.8rem;
+      margin-right: 0.6rem;
+      color: white;
     }
   }
 
   .settings-icon {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
     cursor: pointer;
-    transition: transform 0.2s;
+    transition: $transition;
+
     &:hover {
-      transform: rotate(20deg);
+      transform: rotate(20deg) scale(1.1);
     }
   }
 }
 
-/* ======== QUESTIONS & OPTIONS ======== */
+/* =======================================
+   📦 BLOCS QUESTION (cards blanches)
+======================================= */
 .question-block {
-  margin-bottom: 2rem;
+  padding: 1.6rem;
+  background: $bg-soft;
+  border-radius: $radius;
+  border: 1px solid $border-soft;
+  margin-bottom: 1.5rem;
+  box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.05);
 
   h4 {
-    font-weight: 500;
-    margin-bottom: 0.75rem;
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: $text-gray;
   }
 
+  /* ===== OPTIONS STYLE CARDS ===== */
   .options-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
+    gap: 0.9rem;
   }
 
   .option-btn {
-    padding: 0.5rem 1rem;
+    padding: 0.9rem 1rem;
+    border-radius: $radius;
     border: 2px solid $primary-green;
-    border-radius: 0.5rem;
     background: white;
     color: $primary-green;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
+    font-weight: 600;
+    transition: $transition;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.05);
 
     &:hover {
       background: $primary-green;
       color: white;
+      transform: translateY(-2px);
     }
 
     &.active {
       background: $primary-yellow;
-      color: white;
       border-color: $primary-yellow;
+      color: white;
+      box-shadow: 0px 4px 12px rgba(244, 192, 30, 0.35);
     }
   }
 }
 
-/* ======== COMPETENCES / ÉCHELLE ======== */
+/* =======================================
+   🟢 COMPÉTENCES (échelle)
+======================================= */
 .sub-question {
-  margin-bottom: 1rem;
+  padding: 1.2rem;
+  background: #fafafa;
+  border: 1px solid $border-soft;
+  border-radius: $radius;
+  margin-bottom: 1.2rem;
 
   .skill-label {
-    font-weight: 500;
-    margin-bottom: 0.3rem;
-    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: $text-gray;
   }
 
   .scale {
     display: flex;
-    gap: 0.5rem;
+    gap: 0.6rem;
 
     .scale-btn {
-      width: 2.5rem;
-      height: 2.5rem;
+      width: 2.7rem;
+      height: 2.7rem;
       border-radius: 50%;
       border: 2px solid $primary-green;
       background: white;
       color: $primary-green;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s;
+      font-weight: 600;
+      transition: $transition;
 
       &:hover {
         background: $primary-green;
         color: white;
+        transform: translateY(-2px);
       }
 
       &.active {
         background: $primary-yellow;
-        color: white;
         border-color: $primary-yellow;
+        color: white;
+        box-shadow: 0px 4px 12px rgba(244, 192, 30, 0.35);
       }
     }
   }
 }
 
-/* ======== RÉSUMÉ ======== */
+/* =======================================
+   📋 RÉSUMÉ ÉTAPE 6
+======================================= */
 .summary-list {
+  background: white;
+  border: 1px solid $border-soft;
+  padding: 1.5rem;
+  border-radius: $radius;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.05);
   list-style: none;
-  padding: 0;
 
   li {
-    margin-bottom: 0.5rem;
     font-size: 1rem;
+    padding: 0.45rem 0;
     display: flex;
     align-items: center;
+    color: $text-gray;
 
     i {
       color: $primary-green;
+      font-size: 1.25rem;
+      margin-right: 0.5rem;
     }
   }
 }
 
-/* ======== BOUTONS NAVIGATION ======== */
+/* =======================================
+   ⬅️➡️ NAVIGATION
+======================================= */
 .btn-back,
 .btn-next {
-  padding: 0.5rem 1.2rem;
-  font-weight: 500;
-  border-radius: 0.5rem;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s;
+  padding: 0.75rem 1.4rem;
+  border-radius: $radius;
+  font-weight: 600;
+  transition: $transition;
   display: flex;
   align-items: center;
-
-  i {
-    font-size: 1.2rem;
-  }
+  gap: 0.4rem;
 }
 
 .btn-back {
   background: white;
-  color: $primary-green;
   border: 2px solid $primary-green;
+  color: $primary-green;
 
   &:hover {
     background: $primary-green;
     color: white;
+    transform: translateY(-2px);
   }
 }
 
@@ -156,22 +201,25 @@ $gradient-bg: linear-gradient(90deg, #1e7d32, #c9a800);
   color: white;
 
   &:disabled {
-    opacity: 0.5;
+    opacity: 0.4;
     cursor: not-allowed;
   }
 
   &:not(:disabled):hover {
     background: $primary-yellow;
-    color: white;
+    transform: translateY(-2px);
   }
 }
 
-/* ======== ANALYSE ======== */
+/* =======================================
+   🔄 ANALYSE
+======================================= */
 .analysis-box {
   padding: 2rem;
+  text-align: center;
+  background: rgba(21, 128, 61, 0.08);
   border: 2px dashed $primary-green;
-  border-radius: 0.5rem;
-  background: rgba(31, 120, 32, 0.1);
+  border-radius: $radius;
 
   .analysis-icon {
     font-size: 3rem;
@@ -185,50 +233,219 @@ $gradient-bg: linear-gradient(90deg, #1e7d32, #c9a800);
   }
 }
 
-/* ======== RÉSULTATS ======== */
+/* =======================================
+   🏆 RÉSULTATS
+======================================= */
 .results-box {
   margin-top: 1.5rem;
 
   .results-title {
+    font-size: 1.45rem;
     color: $primary-green;
-    font-weight: 600;
+    font-weight: 700;
     margin-bottom: 1rem;
   }
 
   .result-card {
+    padding: 1.3rem;
+    background: white;
     border: 2px solid $primary-green;
-    border-radius: 0.5rem;
-    padding: 1rem;
+    border-radius: $radius;
     margin-bottom: 1rem;
-    transition: transform 0.2s;
+    transition: $transition;
 
     &:hover {
-      transform: translateY(-2px);
+      transform: translateY(-3px);
+      box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.08);
     }
 
     .result-title {
       font-weight: 600;
+
       i {
         color: $primary-yellow;
       }
     }
 
     .match {
-      font-weight: 500;
       color: $primary-green;
+      font-weight: 600;
       margin-bottom: 0.5rem;
     }
 
     ul {
       list-style: none;
       padding-left: 0;
+
       li {
         display: flex;
         align-items: center;
+
         i {
           color: $primary-green;
+          margin-right: 4px;
         }
       }
     }
+  }
+}
+.steps-cards {
+  display: flex;
+  gap: 0.7rem;
+
+  .step-card {
+    flex: 1;
+    background: #ffffff;
+    border: 2px solid $border-soft;
+    padding: 0.9rem 0;
+    border-radius: $radius;
+    text-align: center;
+    cursor: pointer;
+    transition: $transition;
+    color: $text-gray;
+    font-weight: 600;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.04);
+
+    i {
+      display: block;
+      font-size: 1.4rem;
+      margin-bottom: 0.3rem;
+      color: $primary-green;
+    }
+
+    &:hover {
+      transform: translateY(-3px);
+      border-color: $primary-green;
+    }
+
+    &.active {
+      background: $primary-green;
+      color: white;
+      border-color: $primary-green;
+      box-shadow: 0px 4px 14px rgba(21, 128, 61, 0.25);
+
+      i {
+        color: white;
+      }
+    }
+  }
+}
+.progress-container {
+  .progress-header {
+    font-weight: 600;
+    color: $text-gray;
+    margin-bottom: 0.3rem;
+  }
+
+  .progress-bar-wrapper {
+    width: 100%;
+    height: 10px;
+    background: #e5e7eb;
+    border-radius: 20px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: $primary-green;
+    transition: width 0.3s ease;
+  }
+}
+.steps-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.step-item {
+  padding: 12px 18px;
+  border-radius: 12px;
+  background: #ffffff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+  border: 1px solid #e5e7eb;
+  transition: 0.3s ease;
+
+  i {
+    font-size: 20px;
+  }
+
+  &.active {
+    background: linear-gradient(90deg, #1e7d32, #c9a800);
+    color: white;
+    border: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    transform: translateX(4px);
+  }
+
+  &.locked {
+    opacity: 0.35;
+    filter: blur(1px);
+    cursor: not-allowed;
+    pointer-events: none; // rend impossible le clic
+  }
+
+  &:hover:not(.locked):not(.active) {
+    background: rgba(21, 128, 61, 0.1);
+    border-color: #15803d;
+  }
+}
+.steps-horizontal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 0;
+  width: 100%;
+}
+
+.step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 10px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  width: 160px; // Ajustable
+  transition: 0.3s ease;
+
+  i {
+    font-size: 20px;
+    color: #555;
+  }
+
+  /* ÉTAPE ACTIVE */
+  &.active {
+    background: $gradient-bg;
+    color: white;
+    border: none;
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+    i {
+      color: white;
+    }
+  }
+
+  /* ÉTAPES VERROUILLÉES */
+  &.locked {
+    opacity: 0.35;
+    filter: blur(1px);
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  /* Hover pour étapes débloquées */
+  &:hover:not(.active):not(.locked) {
+    background: rgba(21, 128, 61, 0.07);
+    border-color: $primary-green;
   }
 }

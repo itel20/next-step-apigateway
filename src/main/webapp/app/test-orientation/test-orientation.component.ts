@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NgClass, NgForOf, NgIf } from '@angular/common';
+import { NgForOf, NgIf } from '@angular/common';
 
 interface Question {
   model: string;
@@ -20,11 +20,19 @@ type Answers = Record<string, string | string[] | number | undefined>;
 export class TestOrientationComponent {
   step = 1;
   maxStep = 6;
+
+  /** PROGRESS BAR **/
+  progress = 0; // ⬅️ Ajout
+  analysisProgress = 0;
+
   answers: Answers = {};
   isAnalyzing = false;
   showResults = false;
   analysisStep = 0;
 
+  /* ----------------------
+      QUESTIONS
+  -----------------------*/
   parcoursQuestions: Question[] = [
     {
       model: 'niveau',
@@ -86,6 +94,9 @@ export class TestOrientationComponent {
     },
   ];
 
+  /* ----------------------
+      TITRES DES ÉTAPES
+  -----------------------*/
   stepTitles = [
     { title: 'Parcours scolaire', icon: 'bi bi-book' },
     { title: 'Passions', icon: 'bi bi-heart-fill' },
@@ -95,6 +106,9 @@ export class TestOrientationComponent {
     { title: 'Résumé', icon: 'bi bi-bar-chart-line-fill' },
   ];
 
+  /* ----------------------
+      TEXTE ANALYSE
+  -----------------------*/
   analysisSteps = [
     'Analyse de ton parcours scolaire...',
     'Évaluation de tes passions...',
@@ -103,6 +117,9 @@ export class TestOrientationComponent {
     'Génération des recommandations...',
   ];
 
+  /* ----------------------
+      MÉTHODES SÉLECTION
+  -----------------------*/
   selectOption(model: string, option: string | number): void {
     this.answers[model] = option;
   }
@@ -112,42 +129,81 @@ export class TestOrientationComponent {
       this.answers[model] = [];
     }
 
-    const list = this.answers[model]; // plus besoin de 'as string[]'
-
-    if (list.includes(option)) {
-      this.answers[model] = list.filter(o => o !== option);
-    } else {
-      this.answers[model] = [...list, option];
-    }
+    const list = this.answers[model];
+    this.answers[model] = list.includes(option) ? list.filter(o => o !== option) : [...list, option];
   }
 
+  isOptionSelected(model: string, option: string): boolean {
+    const value = this.answers[model];
+    return Array.isArray(value) ? value.includes(option) : false;
+  }
+
+  /* ----------------------
+      VALIDATION ÉTAPES
+  -----------------------*/
   isStepValid(): boolean {
-    const ans = this.answers;
-    if (this.step === 1) return !!ans.niveau && !!ans.specialite;
-    if (this.step === 2) return Array.isArray(ans.passions) && ans.passions.length > 0;
-    if (this.step === 3) return !!ans.travailGroupe && !!ans.typeActivite;
-    if (this.step === 4) return !!ans.valeurs && !!ans.environnement;
-    if (this.step === 5) return !!ans.comm && !!ans.analyse && !!ans.creativite && !!ans.organisation;
+    const a = this.answers;
+
+    if (this.step === 1) return !!a.niveau && !!a.specialite;
+    if (this.step === 2) return Array.isArray(a.passions) && a.passions.length > 0;
+    if (this.step === 3) return !!a.travailGroupe && !!a.typeActivite;
+    if (this.step === 4) return !!a.valeurs && !!a.environnement;
+    if (this.step === 5) return !!a.comm && !!a.analyse && !!a.creativite && !!a.organisation;
+
     return true;
   }
 
+  /* ----------------------
+      NAVIGATION
+  -----------------------*/
   nextStep(): void {
+    if (!this.isStepValid()) return;
+
     if (this.step < this.maxStep) {
       this.step++;
-    } else if (this.step === this.maxStep) {
+      this.updateProgress();
+    } else {
       this.launchAnalysis();
     }
   }
 
   prevStep(): void {
-    if (this.step > 1) this.step--;
+    if (this.step > 1) {
+      this.step--;
+      this.updateProgress();
+    }
   }
 
+  /** ⬅️ AJOUT : Aller directement à une étape (pour clic sur le panneau latéral) */
+  goTo(step: number): void {
+    // Autoriser uniquement si l'étape demandée est <= étape actuelle
+    if (step <= this.step) {
+      this.step = step;
+      this.updateProgress();
+    }
+  }
+  isStepLocked(step: number): boolean {
+    return step > this.step; // toutes les étapes après l’étape actuelle sont verrouillées
+  }
+
+  /** ⬅️ AJOUT : Progression en fonction de l'étape */
+  updateProgress(): void {
+    this.progress = ((this.step - 1) / (this.maxStep - 1)) * 100;
+  }
+
+  /* ----------------------
+      PHASE ANALYSE
+  -----------------------*/
   launchAnalysis(): void {
     this.isAnalyzing = true;
+    this.analysisProgress = 0;
+
     let index = 0;
+
     const interval = setInterval(() => {
       this.analysisStep = index;
+      this.analysisProgress = ((index + 1) / this.analysisSteps.length) * 100;
+
       index++;
       if (index === this.analysisSteps.length) {
         clearInterval(interval);
@@ -156,21 +212,26 @@ export class TestOrientationComponent {
           this.showResults = true;
         }, 500);
       }
-    }, 1000);
+    }, 900);
   }
 
+  /* ----------------------
+      UTILITAIRES
+  -----------------------*/
   getAnswerString(key: string): string {
     const val = this.answers[key];
     if (Array.isArray(val)) return val.join(', ');
-    if (val != null) return val.toString();
-    return '-';
+    return val !== undefined ? String(val) : '-';
   }
 
+  /* ----------------------
+      RECOMMANDATIONS
+  -----------------------*/
   getRecommendations(): { title: string; match: number; paths: string[] }[] {
     const ans = this.answers as any;
-    const rec: { title: string; match: number; paths: string[] }[] = [];
+    const rec = [];
 
-    if (ans.specialite === 'Sciences' || ans.specialite === 'Technologies') {
+    if (['Sciences', 'Technologies'].includes(ans.specialite)) {
       rec.push({
         title: 'Ingénierie & Technologies',
         match: 95,
@@ -198,12 +259,6 @@ export class TestOrientationComponent {
   }
 
   goToSettings(): void {
-    // console.log('Redirection vers settings_screen');
-    // this.router.navigate(['/settings_screen']);
-  }
-
-  isOptionSelected(model: string, option: string): boolean {
-    const value = this.answers[model];
-    return Array.isArray(value) ? value.includes(option) : false;
+    // TODO redirect
   }
 }

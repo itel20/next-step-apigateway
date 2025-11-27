@@ -1,4 +1,4 @@
-<!-- HEADER AVEC DÉGRADÉ ET ICÔNE SETTINGS -->
+<!-- HEADER AVEC DÉGRADÉ ET ICON SETTINGS -->
 <div class="top-bar d-flex justify-content-between align-items-center">
   <h2 class="title m-0 d-flex align-items-center">
     <i class="{{ stepTitles[step - 1].icon }} me-2 icon-title"></i>
@@ -8,11 +8,36 @@
   <i class="bi bi-gear-fill settings-icon" (click)="goToSettings()"></i>
 </div>
 
+<!-- PROGRESS BAR -->
+<div class="progress-container mt-3 mb-4">
+  <div class="progress-header d-flex justify-content-between">
+    <span>Étape {{ step }} / 6</span>
+    <span>{{ progress }}%</span>
+  </div>
+  <div class="progress-bar-wrapper">
+    <div class="progress-bar-fill" [style.width]="progress + '%'"></div>
+  </div>
+</div>
+
+<!-- 6 CARDS ÉTAPES (comme screenshot) -->
+<div class="steps-horizontal">
+  <div
+    class="step-item"
+    *ngFor="let s of stepTitles; let i = index"
+    [class.active]="step === i + 1"
+    [class.locked]="isStepLocked(i + 1)"
+    (click)="goTo(i + 1)"
+  >
+    <i [class]="s.icon"></i>
+    <span>{{ s.title }}</span>
+  </div>
+</div>
+
 <!-- CONTENU PRINCIPAL -->
 <div class="container py-4">
   <!-- 🟡 ÉTAPES DU FORMULAIRE -->
   <div *ngIf="!isAnalyzing && !showResults">
-    <!-- Step 1: Parcours scolaire -->
+    <!-- STEP 1 -->
     <div *ngIf="step === 1">
       <div *ngFor="let q of parcoursQuestions" class="question-block">
         <h4>{{ q.label }}</h4>
@@ -29,7 +54,7 @@
       </div>
     </div>
 
-    <!-- Step 2: Passions -->
+    <!-- STEP 2 -->
     <div *ngIf="step === 2">
       <div *ngFor="let q of passionsQuestions" class="question-block">
         <h4>{{ q.label }}</h4>
@@ -46,7 +71,7 @@
       </div>
     </div>
 
-    <!-- Step 3: Comportement -->
+    <!-- STEP 3 -->
     <div *ngIf="step === 3">
       <div *ngFor="let q of comportementQuestions" class="question-block">
         <h4>{{ q.label }}</h4>
@@ -63,7 +88,7 @@
       </div>
     </div>
 
-    <!-- Step 4: Aspirations -->
+    <!-- STEP 4 -->
     <div *ngIf="step === 4">
       <div *ngFor="let q of aspirationsQuestions" class="question-block">
         <h4>{{ q.label }}</h4>
@@ -80,13 +105,14 @@
       </div>
     </div>
 
-    <!-- Step 5: Compétences (échelle 1 à 5) -->
+    <!-- STEP 5 -->
     <div *ngIf="step === 5">
       <div *ngFor="let q of aptitudesQuestions" class="question-block">
         <h4>{{ q.label }}</h4>
 
         <div *ngFor="let sub of q.subQuestions" class="sub-question">
           <label class="skill-label">{{ sub.skill }}</label>
+
           <div class="scale">
             <button
               *ngFor="let n of sub.scale"
@@ -101,7 +127,7 @@
       </div>
     </div>
 
-    <!-- Step 6: Résumé avant analyse -->
+    <!-- STEP 6 -->
     <div *ngIf="step === 6">
       <h4 class="mb-3">Résumé de tes réponses</h4>
       <ul class="summary-list">
@@ -115,7 +141,7 @@
       </ul>
     </div>
 
-    <!-- 🟢 Boutons navigation -->
+    <!-- NAVIGATION -->
     <div class="d-flex justify-content-between mt-4">
       <button class="btn-back" *ngIf="step > 1" (click)="prevStep()"><i class="bi bi-arrow-left-circle me-1"></i> Retour</button>
 
@@ -132,7 +158,7 @@
     <p class="loading-text">Analyse en cours...</p>
   </div>
 
-  <!-- 🟢 RÉSULTATS -->
+  <!-- 🏆 RÉSULTATS -->
   <div *ngIf="showResults" class="results-box">
     <h3 class="results-title">
       <i class="bi bi-trophy-fill me-2"></i>
@@ -141,7 +167,9 @@
 
     <div *ngFor="let rec of getRecommendations()" class="result-card">
       <h4 class="result-title"><i class="bi bi-star-fill me-2"></i> {{ rec.title }}</h4>
+
       <p class="match">Compatibilité : {{ rec.match }}%</p>
+
       <ul>
         <li *ngFor="let path of rec.paths"><i class="bi bi-check-lg me-2"></i> {{ path }}</li>
       </ul>

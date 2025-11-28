@@ -1,100 +1,194 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-export interface Actu {
+import { FormsModule } from '@angular/forms';
+
+interface Actu {
+  id: number;
   title: string;
   description: string;
+  date: string;
+  category: string;
+  image: string;
 }
 
-export interface Topic {
+interface Topic {
+  id: number;
   subject: string;
   user: string;
   comment: string;
   likes: number;
   responses: number;
-  certified?: boolean;
+  certified: boolean;
+  avatar: string;
+  time: string;
 }
 
-export interface Testimonial {
+interface Testimonial {
+  id: number;
   quote: string;
   name: string;
   age: number;
   school: string;
-  publishedDate: string;
   likes: number;
   comments: number;
+  avatar: string;
 }
+
 @Component({
   selector: 'jhi-actus',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './actus.component.html',
-  styleUrl: './actus.component.scss',
+  styleUrls: ['./actus.component.scss'],
 })
 export class ActusComponent {
+  visibleTestimonials = 3;
+  newQuestion = '';
+
+  likedTopics = new Set<number>();
+  likedTestimonials = new Set<number>();
+
   actusEvents: Actu[] = [
     {
-      title: 'Journées Portes Ouvertes',
-      description: 'Objectif : permettre aux bacheliers de découvrir notre institut et nos formations.',
+      id: 1,
+      title: 'Journée Portes Ouvertes',
+      description: 'Explorez nos programmes et échangez avec nos étudiants. Inscriptions gratuites.',
+      date: '15 Décembre 2024',
+      category: 'Événement',
+      image: 'content/images/3I9A7895-scaled.jpg',
     },
     {
-      title: 'Orientations et Métiers d’Avenir',
-      description: 'Actualités pour guider les jeunes vers les secteurs d’avenir et les filières prometteuses.',
+      id: 2,
+      title: 'Nouvelle filière IA',
+      description: 'L’École Supérieure Polytechnique ouvre un programme d’Intelligence Artificielle dès la rentrée 2025.',
+      date: '10 Décembre 2024',
+      category: 'Actualité',
+      image: 'content/images/20240126_65b31ebfcd4c8.jpg',
     },
     {
-      title: 'Conférence Alumni',
-      description: 'Rencontres avec nos anciens élèves pour partager expériences et conseils.',
+      id: 3,
+      title: "Salon de l'Étudiant Africain",
+      description: 'Rencontrez plus de 100 établissements pour définir votre orientation. Entrée gratuite.',
+      date: '20 Décembre 2024',
+      category: 'Événement',
+      image: 'content/images/11238218-18690235.jpg',
+    },
+    {
+      id: 4,
+      title: "Bourses d'excellence",
+      description: '500 bourses supplémentaires pour les bacheliers 2024. Déposez votre candidature.',
+      date: '5 Décembre 2024',
+      category: 'Actualité',
+      image: 'content/images/Bourses-dExcellence-UEMOA-a-la-Formation-et-a-la-Recherche.jpg',
     },
   ];
 
   topics: Topic[] = [
     {
-      subject: 'Comment choisir sa filière après le bac ?',
-      user: 'Moussa S.',
-      comment: 'Je suis perdu entre sciences et lettres, des conseils ?',
-      likes: 12,
-      responses: 5,
-      certified: true,
+      id: 1,
+      subject: 'Choix de filière après Bac S',
+      user: 'Aminata D.',
+      comment: 'Je souhaite comparer médecine et ingénierie pour mon avenir.',
+      likes: 24,
+      responses: 12,
+      certified: false,
+      // Remplacer par une vraie photo
+      avatar: 'https://randomuser.me/api/portraits/women/68.jpg',
+      time: 'Il y a 2h',
     },
     {
-      subject: 'Stages d’été disponibles',
-      user: 'Awa D.',
-      comment: 'Quels stages sont ouverts pour les bacheliers 2025 ?',
-      likes: 8,
-      responses: 2,
+      id: 2,
+      subject: 'Réorientation L2',
+      user: 'M. Diop',
+      comment: 'La réorientation est possible. Contactez le service pédagogique.',
+      likes: 45,
+      responses: 8,
+      certified: true,
+      avatar: 'https://randomuser.me/api/portraits/men/75.jpg',
+      time: 'Il y a 5h',
+    },
+    {
+      id: 3,
+      subject: "Études à l'étranger",
+      user: 'Ibrahima S.',
+      comment: 'Je souhaite étudier au Canada. Quelles démarches suivre ?',
+      likes: 67,
+      responses: 23,
+      certified: false,
+      avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
+      time: 'Il y a 1j',
     },
   ];
 
-  testimonials: Testimonial[] = [
+  allTestimonials: Testimonial[] = [
     {
-      quote: 'Grâce à ce programme, j’ai pu choisir ma filière sereinement.',
-      name: 'Fatou B.',
-      age: 19,
-      school: 'Lycée Blaise Diagne',
-      publishedDate: '2025-10-10',
-      likes: 25,
-      comments: 3,
+      id: 1,
+      quote: "Cette plateforme m'a aidé à découvrir ma passion pour l'informatique. Aujourd'hui, je suis en L3 et épanouie.",
+      name: 'Fatou Sall',
+      age: 20,
+      school: 'ESP Dakar',
+      likes: 89,
+      comments: 15,
+      avatar: 'https://randomuser.me/api/portraits/women/65.jpg',
     },
     {
-      quote: 'Les journées portes ouvertes m’ont vraiment aidé à comprendre les métiers disponibles.',
-      name: 'Mamadou T.',
+      id: 2,
+      quote: "Le test d'orientation a été décisif. J'ai compris que le design graphique pouvait être un vrai métier.",
+      name: 'Ousmane Diaw',
+      age: 19,
+      school: 'ESEA Dakar',
+      likes: 102,
+      comments: 22,
+      avatar: 'https://randomuser.me/api/portraits/men/41.jpg',
+    },
+    {
+      id: 3,
+      quote: "Les conseillers ont été très attentifs et m'ont guidée vers la filière qui correspondait à mes compétences.",
+      name: 'Aïssatou Ndiaye',
+      age: 21,
+      school: 'UCAD',
+      likes: 76,
+      comments: 11,
+      avatar: 'https://randomuser.me/api/portraits/women/44.jpg',
+    },
+    {
+      id: 4,
+      quote: "Après mon bac, j'étais perdu. Cette plateforme m'a offert une orientation claire. Merci !",
+      name: 'Mamadou Ba',
       age: 20,
-      school: 'Lycée A. Diop',
-      publishedDate: '2025-10-12',
-      likes: 18,
-      comments: 4,
+      school: 'ISM',
+      likes: 54,
+      comments: 8,
+      avatar: 'https://randomuser.me/api/portraits/men/29.jpg',
     },
   ];
+
+  toggleLikeTopic(id: number): void {
+    if (this.likedTopics.has(id)) {
+      this.likedTopics.delete(id);
+    } else {
+      this.likedTopics.add(id);
+    }
+  }
+
+  toggleLikeTestimonial(id: number): void {
+    if (this.likedTestimonials.has(id)) {
+      this.likedTestimonials.delete(id);
+    } else {
+      this.likedTestimonials.add(id);
+    }
+  }
 
   loadMoreTestimonials(): void {
-    // Exemple pour charger plus de témoignages
-    this.testimonials.push({
-      quote: 'Super expérience, je recommande à tous les futurs bacheliers !',
-      name: 'Aissatou N.',
-      age: 18,
-      school: 'Lycée K. Mbaye',
-      publishedDate: '2025-10-14',
-      likes: 10,
-      comments: 1,
-    });
+    this.visibleTestimonials = Math.min(this.visibleTestimonials + 3, this.allTestimonials.length);
+  }
+
+  sendQuestion(): void {
+    if (this.newQuestion.trim()) this.newQuestion = '';
+  }
+  getInitials(name: string): string {
+    const parts = name.split(' ');
+    if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
+    return (parts[0].charAt(0) + parts[1].charAt(0)).toUpperCase();
   }
 }

@@ -1,8 +1,13 @@
+export interface IUser {
+  type?: string;
+  statut?: 'Actif' | 'Suspendu';
+}
+
 export interface IEleve {
   id?: number;
   nom: string;
   prenom: string;
-  dateNaissance?: string; // LocalDate → string Format YYYY-MM-DD
+  dateNaissance?: string;
   telephone?: string;
   adresse?: string;
   email: string;
@@ -10,13 +15,30 @@ export interface IEleve {
   niveauEtude: string;
   lycee?: string;
   ville?: string;
-  password?: string;
-  passwordHash?: string;
   keycloakId?: string;
-  user?: any; // ou IUser si tu as le modèle UserDTO
+  user?: IUser | null;
+}
+
+export interface IEleve {
+  id?: number;
+  nom: string;
+  prenom: string;
+  dateNaissance?: string;
+  telephone?: string;
+  adresse?: string;
+  email: string;
+  serie: string;
+  niveauEtude: string;
+  lycee?: string;
+  ville?: string;
+  keycloakId?: string;
+  user?: IUser | null;
+  password?: string;
+  // ⚠️ on ne met pas password ici pour éviter de l’exposer côté back
 }
 
 export class Eleve implements IEleve {
+  password?: string; // uniquement pour le formulaire
   constructor(
     public id?: number,
     public nom = '',
@@ -29,9 +51,7 @@ export class Eleve implements IEleve {
     public niveauEtude = '',
     public lycee?: string,
     public ville?: string,
-    public password?: string,
-    public passwordHash?: string,
     public keycloakId?: string,
-    public user?: any,
+    public user: IUser | null = { type: '', statut: 'Actif' },
   ) {}
 }

@@ -56,7 +56,7 @@ export class EleveService {
   }
 
   // ✅ Mise à jour du statut (toggle actif/suspendu)
-  updateStatut(id: number, statut: string): Observable<IEleve> {
+  updateStatut(id: number, statut: 'Actif' | 'Suspendu'): Observable<IEleve> {
     return this.partialUpdate(id, { user: { statut } });
   }
 }

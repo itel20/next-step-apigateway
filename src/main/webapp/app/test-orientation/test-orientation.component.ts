@@ -176,14 +176,10 @@ export class TestOrientationComponent {
 
   /** ⬅️ AJOUT : Aller directement à une étape (pour clic sur le panneau latéral) */
   goTo(step: number): void {
-    // Autoriser uniquement si l'étape demandée est <= étape actuelle
-    if (step <= this.step) {
+    if (step >= 1 && step <= this.maxStep) {
       this.step = step;
       this.updateProgress();
     }
-  }
-  isStepLocked(step: number): boolean {
-    return step > this.step; // toutes les étapes après l’étape actuelle sont verrouillées
   }
 
   /** ⬅️ AJOUT : Progression en fonction de l'étape */
@@ -225,40 +221,120 @@ export class TestOrientationComponent {
   }
 
   /* ----------------------
-      RECOMMANDATIONS
-  -----------------------*/
+   RECOMMANDATIONS
+-----------------------*/
   getRecommendations(): { title: string; match: number; paths: string[] }[] {
     const ans = this.answers as any;
-    const rec = [];
+    const rec: { title: string; match: number; paths: string[] }[] = [];
 
+    /* -------------------------------------------------
+       SCIENCES / TECHNOLOGIES
+    --------------------------------------------------*/
     if (['Sciences', 'Technologies'].includes(ans.specialite)) {
       rec.push({
         title: 'Ingénierie & Technologies',
         match: 95,
-        paths: ['École d’ingénieurs', 'Informatique', 'Robotique'],
+        paths: ['École d’ingénieurs', 'Informatique', 'Robotique', 'IA & Data', 'Cybersécurité'],
       });
     }
 
+    if (Array.isArray(ans.passions) && ans.passions.includes('Technologie')) {
+      rec.push({
+        title: 'Numérique & Développement',
+        match: 88,
+        paths: ['Développement Web', 'Applications mobiles', 'Jeux vidéo', 'Cloud & DevOps'],
+      });
+    }
+
+    /* -------------------------------------------------
+       ARTS / CRÉATION
+    --------------------------------------------------*/
     if (Array.isArray(ans.passions) && ans.passions.includes('Art')) {
       rec.push({
         title: 'Arts & Création',
-        match: 88,
-        paths: ['Design', 'Architecture', 'Audiovisuel'],
+        match: 92,
+        paths: ['Design graphique', 'Architecture', 'Audiovisuel', 'Animation 3D', 'Photographie'],
       });
     }
 
+    if (ans.creativite >= 4) {
+      rec.push({
+        title: 'Création Digitale',
+        match: 89,
+        paths: ['UI/UX Design', 'Motion Design', 'Illustration', 'Montage vidéo'],
+      });
+    }
+
+    /* -------------------------------------------------
+       ÉCONOMIE / BUSINESS
+    --------------------------------------------------*/
     if (ans.specialite === 'Économie' || ans.valeurs === 'Prestige') {
       rec.push({
         title: 'Commerce & Management',
-        match: 92,
-        paths: ['Marketing', 'Finance', 'Entrepreneuriat'],
+        match: 93,
+        paths: ['Marketing', 'Finance', 'Entrepreneuriat', 'Management', 'Logistique'],
       });
     }
 
+    if (ans.travailGroupe === 'En groupe' && ans.comm >= 4) {
+      rec.push({
+        title: 'Relations & Communication',
+        match: 87,
+        paths: ['Communication', 'Ressources humaines', 'Événementiel', 'Relations internationales'],
+      });
+    }
+
+    /* -------------------------------------------------
+       SCIENCES HUMAINES / SOCIAL
+    --------------------------------------------------*/
+    if (ans.valeurs === 'Aider les autres') {
+      rec.push({
+        title: 'Social & Humanitaire',
+        match: 90,
+        paths: ['Psychologie', 'Éducation', 'Travail social', 'Métiers du paramédical'],
+      });
+    }
+
+    /* -------------------------------------------------
+       NATURE & ENVIRONNEMENT
+    --------------------------------------------------*/
+    if (Array.isArray(ans.passions) && ans.passions.includes('Nature')) {
+      rec.push({
+        title: 'Nature & Environnement',
+        match: 85,
+        paths: ['Écologie', 'Sciences environnementales', 'Géologie', 'Agronomie'],
+      });
+    }
+
+    if (ans.environnement === 'Extérieur') {
+      rec.push({
+        title: 'Métiers en plein air',
+        match: 82,
+        paths: ['Architecture paysage', 'Environnement', 'Sport & coaching', 'Topographie'],
+      });
+    }
+
+    /* -------------------------------------------------
+       MÉTIERS PRATIQUES
+    --------------------------------------------------*/
+    if (ans.typeActivite === 'Activités pratiques') {
+      rec.push({
+        title: 'Métiers Techniques & Manuels',
+        match: 80,
+        paths: ['Cuisine', 'BTP', 'Automobile', 'Menuiserie', 'Maintenance industrielle'],
+      });
+    }
+
+    /* -------------------------------------------------
+       TRI + TOP 3
+    --------------------------------------------------*/
     return rec.sort((a, b) => b.match - a.match).slice(0, 3);
   }
 
   goToSettings(): void {
     // TODO redirect
+  }
+  isStepLocked(step: number): boolean {
+    return step > this.step; // toutes les étapes après l’étape actuelle sont verrouillées
   }
 }

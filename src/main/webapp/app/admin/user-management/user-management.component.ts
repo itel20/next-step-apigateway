@@ -37,7 +37,11 @@ export default class UserManagementComponent implements OnInit {
       .pipe(finalize(() => (this.loading = false)))
       .subscribe({
         next: data => {
-          this.users = data;
+          // Mapper user null vers objet par défaut
+          this.users = data.map((u: IEleve) => ({
+            ...u,
+            user: u.user ?? { type: '', statut: 'Actif' }, // Sécuriser user
+          }));
           this.applyFilters();
         },
         error: err => console.error('Erreur récupération utilisateurs', err),
@@ -46,7 +50,6 @@ export default class UserManagementComponent implements OnInit {
 
   applyFilters(): void {
     const term = this.searchTerm.toLowerCase();
-
     this.filteredUsers = this.users.filter(user => {
       const matchesSearch =
         user.nom.toLowerCase().includes(term) || user.prenom.toLowerCase().includes(term) || user.email.toLowerCase().includes(term);
@@ -62,9 +65,14 @@ export default class UserManagementComponent implements OnInit {
   // ===========================
   openCreate(): void {
     this.isEditing = false;
-    this.formData = new Eleve(); // Reset form
-    this.formData.user = { type: '', statut: 'Actif' };
-    this.formData.password = ''; // ⚠️ NE PAS OUBLIER LE PASSWORD
+
+    // Crée une instance d'Eleve avec user initialisé
+    this.formData = new Eleve();
+    this.formData.user = { type: 'Eleve', statut: 'Actif' };
+
+    // ⚠️ Définir password uniquement si la classe Eleve contient bien le champ password
+    (this.formData as Eleve).password = '';
+
     this.showModal = true;
   }
 
@@ -89,10 +97,13 @@ export default class UserManagementComponent implements OnInit {
   // ===========================
   save(): void {
     if (!this.isEditing) {
-      // ⚠️ Important pour Keycloak ou backend
-      this.formData.user.password = this.formData.password;
+      // ⚠️ caster formData en Eleve pour accéder au password
+      const payload = {
+        ...(this.formData as Eleve),
+        password: (this.formData as Eleve).password, // pour la création uniquement
+      };
 
-      this.eleveService.create(this.formData).subscribe({
+      this.eleveService.create(payload).subscribe({
         next: created => {
           this.users.push(created);
           this.applyFilters();
@@ -103,7 +114,11 @@ export default class UserManagementComponent implements OnInit {
     } else {
       // UPDATE
       if (this.formData.id != null) {
-        this.eleveService.update(this.formData.id, this.formData).subscribe({
+        // Pour la mise à jour, on n'envoie pas le password si non modifié
+        const payload = { ...this.formData };
+        delete (payload as any).password; // supprime le password pour update
+
+        this.eleveService.update(this.formData.id, payload).subscribe({
           next: updated => {
             this.users = this.users.map(u => (u.id === updated.id ? updated : u));
             this.applyFilters();

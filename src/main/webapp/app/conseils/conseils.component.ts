@@ -81,7 +81,12 @@ export class ConseilsComponent {
       text: "Grâce à cette plateforme, j'ai trouvé ma voie en ingénierie.",
       stars: 5,
     },
-    { name: 'Samba Wade Ba', role: 'Étudiant en Commerce', text: 'Le test d’orientation m’a aidé à choisir la bonne filière.', stars: 5 },
+    {
+      name: 'elhadj ibrahima Lo',
+      role: 'Étudiant en Commerce',
+      text: 'Le test d’orientation m’a aidé à choisir la bonne filière.',
+      stars: 5,
+    },
     {
       name: 'Kadidiatou Sima',
       role: 'Étudiante en Arts',

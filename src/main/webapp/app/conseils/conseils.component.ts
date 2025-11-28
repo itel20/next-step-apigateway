@@ -9,6 +9,7 @@ interface Media {
   titre: string;
   duree: string;
   action: string;
+  url: string;
 }
 
 interface Testimonial {
@@ -49,8 +50,20 @@ export class ConseilsComponent {
   };
 
   medias: Media[] = [
-    { type: 'video', titre: 'Comment choisir sa filière ?', duree: '5 min', action: 'Regarder' },
-    { type: 'book', titre: 'Guide de l’étudiant', duree: '12 min', action: 'Lire' },
+    {
+      type: 'video',
+      titre: 'Comment choisir sa filière ?',
+      duree: '5 min',
+      action: 'Regarder',
+      url: 'https://youtu.be/Sn7bOck9f1A?si=FpfnsidOmz5IaedM', // lien YouTube
+    },
+    {
+      type: 'book',
+      titre: 'Guide de l’étudiant',
+      duree: '12 min',
+      action: 'Lire',
+      url: 'https://orientation.campusen.sn/guide', // lien PDF
+    },
   ];
 
   faqs = [

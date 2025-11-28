@@ -1,13 +1,25 @@
-/* Couleurs principales */
+/* ===================================================================
+   PALETTE NEXTSTEP (Pro & Premium)
+=================================================================== */
 $primary-green: #15803d;
 $primary-yellow: #f4c01e;
-$gradient-bg: linear-gradient(90deg, #1e7d32, #c9a800);
+$blue-dark: #1e3a8a;
+
+$gradient-bg: linear-gradient(135deg, #15803d, #c9a800);
+$gradient-green: linear-gradient(135deg, #15803d, #0d8c3e);
+$gradient-orange: linear-gradient(135deg, #f4c01e, #f59e0b);
+$gradient-teal: linear-gradient(135deg, #15803d, #34d399);
 
 $bg-soft: #ffffff;
 $border-soft: #e5e7eb;
 $text-gray: #4b5563;
 
-/* ============= PAGE CONSEILS ============= */
+$radius: 1.2rem;
+$shadow-soft: 0 6px 20px rgba(0, 0, 0, 0.06);
+
+/* ===================================================================
+   PAGE CONSEILS
+=================================================================== */
 .conseils-page {
   background: $bg-soft;
 
@@ -15,8 +27,9 @@ $text-gray: #4b5563;
   .hero-section {
     background: $gradient-bg;
     position: relative;
-    overflow: hidden;
     padding: 4rem 0;
+    overflow: hidden;
+    border-radius: 0 0 2rem 2rem;
 
     .absolute-bg {
       position: absolute;
@@ -26,264 +39,367 @@ $text-gray: #4b5563;
       &::after {
         content: '';
         position: absolute;
-        background: rgba(255, 255, 255, 0.12);
-        filter: blur(7rem);
-        opacity: 0.9;
-      }
-
-      /* === Blob supérieur gauche === */
-      &::before {
-        width: 28rem;
-        height: 22rem;
-        top: -6rem;
-        left: -6rem;
-
-        /* Forme organique premium */
-        border-radius: 60% 40% 55% 45% / 50% 60% 40% 50%;
-      }
-
-      /* === Blob inférieur droit === */
-      &::after {
-        width: 24rem;
+        width: 20rem;
         height: 20rem;
-        bottom: -6rem;
-        right: -6rem;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 50%;
+        filter: blur(6rem);
+      }
 
-        /* Forme différente pour un rendu plus moderne */
-        border-radius: 40% 60% 70% 30% / 55% 45% 65% 35%;
+      &::before {
+        top: -5rem;
+        left: -5rem;
+      }
+      &::after {
+        bottom: -5rem;
+        right: -5rem;
       }
     }
 
     .hero-title {
-      font-size: 3rem;
-      font-weight: 700;
-      color: white;
+      font-size: 2.8rem;
+      font-weight: 800;
+      color: #fff;
     }
 
     .hero-subtitle {
-      font-size: 1.25rem;
-      color: rgba(255, 255, 255, 0.85);
+      font-size: 1.3rem;
+      opacity: 0.9;
+      color: #fff;
     }
 
     .hero-badge {
       background: rgba(255, 255, 255, 0.25);
       backdrop-filter: blur(5px);
-      color: white;
+      padding: 0.6rem 1rem;
+      border-radius: 2rem;
       font-weight: 600;
+      color: #fff;
     }
 
     .stat-value {
       font-size: 2rem;
-      font-weight: 700;
-      color: white;
+      font-weight: 800;
+      color: #fff;
     }
 
     .stat-label {
-      opacity: 0.85;
-      color: rgba(255, 255, 255, 0.8);
+      color: rgba(255, 255, 255, 0.9);
     }
   }
 
-  /* ============= GRADIENTS NEXT STEP ============= */
-  .bg-gradient {
-    background: $gradient-bg !important;
-  }
-
-  .btn-gradient {
-    background: $gradient-bg;
-    color: #fff;
+  /* ===================================================================
+     CARDS PREMIUM (Conseiller / Ressources / FAQ)
+  =================================================================== */
+  .pro-card {
+    background: $bg-soft;
+    border-radius: $radius;
+    box-shadow: $shadow-soft;
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: 0.25s;
 
     &:hover {
-      box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 26px rgba(0, 0, 0, 0.1);
     }
   }
 
-  /* ============= TEMOIGNAGES ============= */
-  .testimonials-section {
-    h2 {
-      color: $primary-green;
-      font-weight: 700;
+  .pro-card-header {
+    padding: 1rem 1.2rem;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+
+    h5 {
+      margin: 0;
+      font-weight: 600;
+    }
+    i {
+      font-size: 1.4rem;
+    }
+  }
+
+  .gradient-green {
+    background: $gradient-green;
+  }
+  .gradient-orange {
+    background: $gradient-orange;
+  }
+  .gradient-teal {
+    background: $gradient-teal;
+  }
+
+  .pro-card-body {
+    padding: 1.3rem;
+  }
+
+  /* ===================================================================
+     CONSEILLER (avatar + infos)
+  =================================================================== */
+  .conseiller-avatar {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: $blue-dark;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+    font-weight: 700;
+    margin: auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  }
+
+  .info-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 1rem;
+
+    li {
+      background: #f9fafb;
+      padding: 0.75rem;
+      border-radius: 0.9rem;
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.95rem;
+    }
+  }
+
+  .btn-gradient,
+  .btn-pro {
+    background: $gradient-bg;
+    color: #fff;
+    border-radius: 1rem;
+    padding: 0.7rem 1rem;
+
+    &:hover {
+      opacity: 0.92;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  /* ===================================================================
+     RESSOURCES (video + book)
+  =================================================================== */
+  .media-card {
+    background: #f9fafb;
+    border-radius: 1rem;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.7rem;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: 0.25s;
+
+    &:hover {
+      background: #eef2ff;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
     }
 
-    p {
-      color: $text-gray;
-    }
+    .media-icon {
+      width: 3.3rem;
+      height: 3.3rem;
+      border-radius: 0.85rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: rgba(21, 128, 61, 0.12);
 
-    .avatar-sm {
-      width: 3rem;
-      height: 3rem;
-      object-fit: cover;
-    }
-
-    .hover-shadow {
-      transition: box-shadow 0.3s;
-
-      &:hover {
-        box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.15);
+      i {
+        font-size: 1.3rem;
       }
     }
   }
 
-  /* ============= GRADIENTS SECONDAIRES (version NEXTSTEP) ============= */
-
-  /* Orange → Jaune NextStep */
-  .bg-gradient-orange {
-    background: linear-gradient(90deg, #f4c01e, #f59e0b);
-  }
-
-  /* Green Blue NextStep */
-  .bg-gradient-teal {
-    background: linear-gradient(90deg, #15803d, #34d399);
-  }
-
-  /* ============= CONSEILLER ============= */
-  .conseiller-avatar {
-    width: 6rem;
-    height: 6rem;
-    margin: 0 auto;
-    border-radius: 1rem;
-    overflow: hidden;
-  }
-
-  .online-badge {
-    width: 2rem;
-    height: 2rem;
-    bottom: -0.5rem;
-    right: -0.5rem;
-    background: $primary-green;
-    border-radius: 0.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  /* ============= RESSOURCES ============= */
-  .media-card {
-    .media-icon {
-      width: 3rem;
-      height: 3rem;
-      background: rgba(21, 128, 61, 0.1);
-      border-radius: 0.75rem;
-    }
-  }
-
   .btn-video {
-    background: linear-gradient(90deg, #d32f2f, #ff5252);
+    background: linear-gradient(135deg, #d32f2f, #ff5252);
     color: #fff;
+    border-radius: 0.8rem;
+    padding: 0.4rem 0.8rem;
   }
 
   .btn-book {
-    background: linear-gradient(90deg, #15803d, #34d399);
+    background: linear-gradient(135deg, #15803d, #34d399);
     color: #fff;
+    border-radius: 0.8rem;
+    padding: 0.4rem 0.8rem;
   }
 
-  /* ============= FAQ ============= */
+  /* ===================================================================
+     FAQ (modernisée — round, clean)
+  =================================================================== */
   .faq-question {
-    background: $bg-soft;
-    border: 1px solid $border-soft;
-    width: 100%;
-    text-align: left;
-    border-radius: 0.5rem;
-    padding: 0.75rem;
+    background: #f9fafb;
+    border-radius: 1rem;
+    padding: 0.9rem 1rem;
+    border: none;
     font-weight: 600;
     color: $text-gray;
+    width: 100%;
+    text-align: left;
+    transition: 0.2s;
+
+    &:hover {
+      background: #eef2ff;
+    }
   }
 
   .faq-answer {
-    background: lighten($primary-green, 40%);
+    background: #eef9f0;
+    border-radius: 1rem;
+    padding: 0.8rem 1rem;
+    margin-top: 0.4rem;
+  }
+
+  .modern-input {
+    border-radius: 1rem;
     padding: 0.75rem;
-    border-radius: 0.5rem;
-    margin-top: 0.25rem;
   }
 }
 
-/* ============= CTA FINAL ============= */
+/* ===================================================================
+   CTA FINAL
+=================================================================== */
 .cta-final {
   background: $gradient-bg;
-  color: $bg-soft;
   padding: 3rem 1rem;
-  border-radius: 2rem;
-  overflow: hidden;
   text-align: center;
+  color: white;
+  border-radius: 1.8rem;
   position: relative;
+  overflow: hidden;
 
   .cta-bg {
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.12);
+    filter: blur(7rem);
+    width: 18rem;
+    height: 18rem;
     border-radius: 50%;
-    width: 20rem;
-    height: 20rem;
-    top: -5rem;
-    left: -5rem;
-    filter: blur(8rem);
     position: absolute;
+    top: -5rem;
+    left: -4rem;
   }
 
   h2 {
-    font-weight: 700;
-    font-size: 2rem;
+    font-size: 2.1rem;
+    font-weight: 800;
   }
-
   p {
-    color: rgba(255, 255, 255, 0.9);
+    opacity: 0.9;
     font-size: 1.1rem;
   }
 
   .btn {
-    border-radius: 2rem;
-    padding: 0.75rem 2rem;
+    border-radius: 1.5rem;
+    padding: 0.8rem 2rem;
     font-size: 1.1rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
 
     &:hover {
-      box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.15);
+      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2);
     }
   }
 }
 
-/* ============= AVATARS ============= */
-.conseiller-avatar,
+/* ===================================================================
+   AVATARS GÉNÉRIQUES
+=================================================================== */
 .avatar-sm {
-  width: 56px;
-  height: 56px;
-  font-weight: bold;
-  font-size: 1.2rem;
-  text-transform: uppercase;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  font-weight: 600;
+  background: $blue-dark;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.pro-card {
+  background: $bg-soft;
+  border: 1px solid $border-soft;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+
+  .pro-card-header {
+    padding: 12px 16px;
+    color: white;
+    background: $gradient-bg;
+  }
+
+  .pro-card-body {
+    padding: 18px;
+  }
 }
 
-.avatar-sm {
+.resource-item {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid $border-soft;
+  border-radius: 14px;
+  margin-bottom: 10px;
+  transition: 0.25s;
+
+  &:hover {
+    border-color: $primary-yellow;
+    background: rgba(244, 192, 30, 0.06);
+  }
+}
+
+.resource-icon {
   width: 40px;
   height: 40px;
-  font-size: 1rem;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &.youtube-icon {
+    background: rgba(255, 0, 0, 0.08);
+    color: red;
+  }
+
+  &.book-icon {
+    background: rgba(21, 128, 61, 0.08);
+    color: $primary-green;
+  }
 }
 
-/* ============= UTILITIES ============= */
-.bg-primary-green {
-  background-color: #15803d;
+.btn-resource {
+  border-radius: 10px;
+  padding: 5px 12px;
+
+  &.video {
+    background: $primary-yellow;
+    color: #000;
+  }
+
+  &.book {
+    background: $primary-green;
+    color: white;
+  }
+
+  &:hover {
+    opacity: 0.85;
+  }
 }
-.bg-primary-yellow {
-  background-color: #f4c01e;
-}
-.text-primary-green {
-  color: #15803d;
-}
+
+/* ===================================================================
+   UTILITIES
+=================================================================== */
 .text-gray {
-  color: #4b5563;
+  color: $text-gray;
 }
-.bg-white-20 {
-  background-color: rgba(255, 255, 255, 0.2);
-}
-
-.btn-gradient {
-  background: $gradient-bg;
-  color: white;
-}
-
 .bg-gradient {
   background: $gradient-bg;
 }
-
 .hover-shadow:hover {
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
 }

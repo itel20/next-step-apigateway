@@ -13,8 +13,8 @@ import { FilterBoursePipe } from '../../pipes/filter-bourse.pipe';
   styleUrls: ['./bourses.component.scss'],
 })
 export default class BoursesComponent implements OnInit {
-  bourses: IBourseConcours[] = []; // 👈 IBourseConcours pour éviter mismatch
-  selectedBourse: IBourseConcours | null = null; // 👈 plus de BourseConcours ici
+  bourses: IBourseConcours[] = [];
+  selectedBourse: IBourseConcours | null = null;
 
   isFormVisible = false;
   showDetailsModal = false;
@@ -36,12 +36,12 @@ export default class BoursesComponent implements OnInit {
   }
 
   openCreate(): void {
-    this.selectedBourse = new BourseConcours(); // 👈 ça reste OK uniquement ici
+    this.selectedBourse = new BourseConcours();
     this.isFormVisible = true;
   }
 
   openEdit(b: IBourseConcours): void {
-    this.selectedBourse = { ...b, favoris: b.favoris ?? null }; // 👈 évite undefined
+    this.selectedBourse = { ...b };
     this.isFormVisible = true;
   }
 
@@ -49,13 +49,11 @@ export default class BoursesComponent implements OnInit {
     if (!this.selectedBourse) return;
 
     if (this.selectedBourse.id) {
-      // UPDATE
       this.bourseService.update(this.selectedBourse.id, this.selectedBourse).subscribe(() => {
         this.loadAll();
         this.isFormVisible = false;
       });
     } else {
-      // CREATE
       this.bourseService.create(this.selectedBourse).subscribe(() => {
         this.loadAll();
         this.isFormVisible = false;
@@ -65,16 +63,15 @@ export default class BoursesComponent implements OnInit {
 
   delete(id: number | null): void {
     if (!id) return;
-    if (confirm('Supprimer cette bourse ?')) {
-      this.bourses = this.bourses.filter(b => b.id !== id);
-      this.bourseService.delete(id).subscribe({
-        error: err => console.error('Erreur suppression:', err),
+    if (confirm('Supprimer ?')) {
+      this.bourseService.delete(id).subscribe(() => {
+        this.bourses = this.bourses.filter(b => b.id !== id);
       });
     }
   }
 
   viewDetails(b: IBourseConcours): void {
-    this.selectedBourse = { ...b, favoris: b.favoris ?? null };
+    this.selectedBourse = { ...b };
     this.showDetailsModal = true;
   }
 
@@ -86,13 +83,7 @@ export default class BoursesComponent implements OnInit {
 
   onCriteresChange(value: string): void {
     if (this.selectedBourse) {
-      this.selectedBourse.criteresEligibilite = value.split(',').map(s => s.trim());
-    }
-  }
-
-  onTagsChange(value: string): void {
-    if (this.selectedBourse) {
-      this.selectedBourse.tags = value.split(',').map(s => s.trim());
+      this.selectedBourse.criteres = value.split(',').map(s => s.trim());
     }
   }
 }

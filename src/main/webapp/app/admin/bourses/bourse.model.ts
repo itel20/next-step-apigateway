@@ -2,17 +2,11 @@ export interface IBourseConcours {
   id: number | null;
   titre: string;
   type: string;
-  description: string;
-  montant: number;
-  periodicite: string;
+  typeBourse: string | null;
   nombreBeneficiaires: number;
-  tauxAcceptation: number;
+  tauxAccepte: number | null;
   dateLimite: string;
-  criteresEligibilite: string[];
-  tags: string[];
-  conseilsPratiques: string;
-  favoris?: boolean | null; // optionnel = cohérent avec la classe
-  pays: string;
+  criteres: string[];
 }
 
 export class BourseConcours implements IBourseConcours {
@@ -20,16 +14,10 @@ export class BourseConcours implements IBourseConcours {
     public id: number | null = null,
     public titre = '',
     public type = '',
-    public description = '',
-    public montant = 0,
-    public periodicite = '',
+    public typeBourse: string | null = null,
     public nombreBeneficiaires = 0,
-    public tauxAcceptation = 0,
+    public tauxAccepte: number | null = null,
     public dateLimite: string = new Date().toISOString().split('T')[0],
-    public criteresEligibilite: string[] = [''],
-    public tags: string[] = [''],
-    public conseilsPratiques = '',
-    public favoris?: boolean | null, // ⬅ devient optionnel ici aussi
-    public pays = '',
+    public criteres: string[] = [],
   ) {}
 }

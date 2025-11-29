@@ -18,7 +18,7 @@
       <option value="Concours">Concours</option>
     </select>
   </div>
-  <button class="btn-add" (click)="openCreate()"><i class="bi bi-plus-lg"></i> Ajouter Bourses & Concours</button>
+  <button class="btn-add" (click)="openCreate()"><i class="bi bi-plus-lg"></i> Ajouter</button>
 </div>
 
 <!-- Table -->
@@ -28,12 +28,14 @@
       <tr>
         <th>Titre</th>
         <th>Type</th>
-        <th>Montant</th>
-        <th>Pays</th>
+        <th>Type bourse</th>
+        <th>Nb bénéficiaires</th>
+        <th>Taux accepté</th>
         <th>Date limite</th>
         <th class="actions-col">Actions</th>
       </tr>
     </thead>
+
     <tbody>
       <tr *ngFor="let b of bourses | filterBourse: searchTerm : filterType">
         <td>{{ b.titre }}</td>
@@ -42,9 +44,11 @@
             {{ b.type }}
           </span>
         </td>
-        <td>{{ b.montant }} CFA</td>
-        <td>{{ b.pays }}</td>
+        <td>{{ b.typeBourse || '-' }}</td>
+        <td>{{ b.nombreBeneficiaires }}</td>
+        <td>{{ b.tauxAccepte || '-' }}%</td>
         <td>{{ b.dateLimite }}</td>
+
         <td class="actions-col">
           <button class="icon-btn view" (click)="viewDetails(b)">
             <i class="bi bi-eye"></i>
@@ -57,118 +61,80 @@
           </button>
         </td>
       </tr>
+
       <tr *ngIf="bourses.length === 0">
-        <td colspan="6" class="text-center text-muted py-4">Aucune bourse trouvée.</td>
+        <td colspan="7" class="text-center text-muted py-4">Aucune bourse trouvée.</td>
       </tr>
     </tbody>
   </table>
 </div>
 
-<!-- Modal FORM Create / Edit -->
+<!-- Modal FORM Create/Edit -->
 <div class="modal" *ngIf="isFormVisible">
   <div class="modal-backdrop"></div>
   <div class="modal-dialog">
     <div class="modal-content">
       <button class="modal-close" (click)="cancel()">&times;</button>
+
       <div class="modal-header">
-        <h3>{{ selectedBourse?.id ? 'Modifier la bourse' : 'Créer une bourse' }}</h3>
+        <h3>{{ selectedBourse?.id ? 'Modifier' : 'Créer' }} une bourse / concours</h3>
       </div>
+
       <div class="modal-body">
-        <!-- Titre, Type, Montant -->
+        <!-- Titre + Type -->
         <div class="modal-row">
           <div class="modal-col">
-            <label>Titre <span class="text-danger">*</span></label>
+            <label>Titre *</label>
             <input type="text" class="form-control" [(ngModel)]="selectedBourse!.titre" />
           </div>
+
           <div class="modal-col">
-            <label>Type <span class="text-danger">*</span></label>
+            <label>Type *</label>
             <select class="form-control" [(ngModel)]="selectedBourse!.type">
               <option value="Bourse">Bourse</option>
               <option value="Concours">Concours</option>
             </select>
           </div>
-          <div class="modal-col">
-            <label>Montant (CFA) <span class="text-danger">*</span></label>
-            <input type="number" class="form-control" [(ngModel)]="selectedBourse!.montant" />
-          </div>
         </div>
 
-        <!-- Pays, Date limite, Périodicité -->
+        <!-- Type de bourse + date -->
         <div class="modal-row">
           <div class="modal-col">
-            <label>Pays <span class="text-danger">*</span></label>
-            <input type="text" class="form-control" [(ngModel)]="selectedBourse!.pays" />
+            <label>Type de bourse</label>
+            <input type="text" class="form-control" [(ngModel)]="selectedBourse!.typeBourse" />
           </div>
+
           <div class="modal-col">
-            <label>Date limite <span class="text-danger">*</span></label>
+            <label>Date limite *</label>
             <input type="date" class="form-control" [(ngModel)]="selectedBourse!.dateLimite" />
           </div>
-          <div class="modal-col">
-            <label>Périodicité <span class="text-danger">*</span></label>
-            <input type="text" class="form-control" [(ngModel)]="selectedBourse!.periodicite" />
-          </div>
         </div>
 
-        <!-- Nombre de bénéficiaires, Taux d'acceptation -->
+        <!-- Nombre bénéficiaires + taux -->
         <div class="modal-row">
           <div class="modal-col">
-            <label>Nombre de bénéficiaires <span class="text-danger">*</span></label>
+            <label>Nombre de bénéficiaires *</label>
             <input type="number" class="form-control" [(ngModel)]="selectedBourse!.nombreBeneficiaires" />
           </div>
+
           <div class="modal-col">
-            <label>Taux d'acceptation (%) <span class="text-danger">*</span></label>
-            <input type="number" class="form-control" [(ngModel)]="selectedBourse!.tauxAcceptation" />
+            <label>Taux accepté (%)</label>
+            <input type="number" class="form-control" [(ngModel)]="selectedBourse!.tauxAccepte" />
           </div>
         </div>
 
-        <!-- Critères d'éligibilité -->
+        <!-- Critères -->
         <div class="modal-row">
           <div class="modal-col-full">
-            <label>Critères d'éligibilité <span class="text-danger">*</span></label>
+            <label>Critères d'éligibilité</label>
+
             <input
               type="text"
               class="form-control"
-              [ngModel]="selectedBourse!.criteresEligibilite.join(', ')"
+              [ngModel]="selectedBourse!.criteres.join(', ')"
               (ngModelChange)="onCriteresChange($event)"
               [ngModelOptions]="{ standalone: true }"
             />
-          </div>
-        </div>
-
-        <!-- Tags -->
-        <div class="modal-row">
-          <div class="modal-col-full">
-            <label>Tags <span class="text-danger">*</span></label>
-            <input
-              type="text"
-              class="form-control"
-              [ngModel]="selectedBourse!.tags.join(', ')"
-              (ngModelChange)="onTagsChange($event)"
-              [ngModelOptions]="{ standalone: true }"
-            />
-          </div>
-        </div>
-
-        <!-- Conseils pratiques -->
-        <div class="modal-row">
-          <div class="modal-col-full">
-            <label>Conseils pratiques <span class="text-danger">*</span></label>
-            <textarea class="form-control" rows="3" [(ngModel)]="selectedBourse!.conseilsPratiques"></textarea>
-          </div>
-        </div>
-
-        <!-- Description -->
-        <div class="modal-row">
-          <div class="modal-col-full">
-            <label>Description <span class="text-danger">*</span></label>
-            <textarea class="form-control" rows="3" [(ngModel)]="selectedBourse!.description"></textarea>
-          </div>
-        </div>
-
-        <!-- Favoris (optionnel) -->
-        <div class="modal-row">
-          <div class="modal-col-full">
-            <label> <input type="checkbox" [(ngModel)]="selectedBourse!.favoris" /> Favoris </label>
           </div>
         </div>
       </div>
@@ -184,67 +150,54 @@
 <!-- Modal DETAILS -->
 <div class="modal" *ngIf="showDetailsModal">
   <div class="modal-backdrop"></div>
+
   <div class="modal-dialog details-dialog">
     <div class="modal-content details-content">
       <button class="modal-close" (click)="showDetailsModal = false">&times;</button>
+
       <div class="modal-header">
-        <h3>Détails de la Bourse / Concours</h3>
+        <h3>Détails — Bourse / Concours</h3>
       </div>
+
       <div class="modal-body">
         <div class="details-grid">
-          <!-- Tous les champs importants -->
           <div class="detail-item">
-            <label>Titre *</label>
+            <label>Titre</label>
             <p>{{ selectedBourse!.titre }}</p>
           </div>
+
           <div class="detail-item">
-            <label>Type *</label>
+            <label>Type</label>
             <p>{{ selectedBourse!.type }}</p>
           </div>
+
           <div class="detail-item">
-            <label>Montant *</label>
-            <p>{{ selectedBourse!.montant }} CFA</p>
+            <label>Type de bourse</label>
+            <p>{{ selectedBourse!.typeBourse || '-' }}</p>
           </div>
+
           <div class="detail-item">
-            <label>Pays *</label>
-            <p>{{ selectedBourse!.pays }}</p>
-          </div>
-          <div class="detail-item">
-            <label>Date limite *</label>
-            <p>{{ selectedBourse!.dateLimite }}</p>
-          </div>
-          <div class="detail-item">
-            <label>Périodicité *</label>
-            <p>{{ selectedBourse!.periodicite }}</p>
-          </div>
-          <div class="detail-item">
-            <label>Nombre de bénéficiaires *</label>
+            <label>Nb bénéficiaires</label>
             <p>{{ selectedBourse!.nombreBeneficiaires }}</p>
           </div>
+
           <div class="detail-item">
-            <label>Taux d'acceptation *</label>
-            <p>{{ selectedBourse!.tauxAcceptation }}%</p>
+            <label>Taux accepté</label>
+            <p>{{ selectedBourse!.tauxAccepte || '-' }}%</p>
           </div>
-          <div class="detail-item detail-full">
-            <label>Critères d'éligibilité *</label>
-            <p>{{ selectedBourse!.criteresEligibilite.join(', ') }}</p>
+
+          <div class="detail-item">
+            <label>Date limite</label>
+            <p>{{ selectedBourse!.dateLimite }}</p>
           </div>
+
           <div class="detail-item detail-full">
-            <label>Tags *</label>
-            <div class="tags">
-              <span class="tag" *ngFor="let t of selectedBourse!.tags">{{ t }}</span>
-            </div>
-          </div>
-          <div class="detail-item detail-full">
-            <label>Conseils pratiques *</label>
-            <p>{{ selectedBourse!.conseilsPratiques }}</p>
-          </div>
-          <div class="detail-item detail-full">
-            <label>Description *</label>
-            <p>{{ selectedBourse!.description }}</p>
+            <label>Critères</label>
+            <p>{{ selectedBourse!.criteres.join(', ') }}</p>
           </div>
         </div>
       </div>
+
       <div class="modal-footer">
         <button class="btn-add" (click)="showDetailsModal = false">Fermer</button>
       </div>

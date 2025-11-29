@@ -21,15 +21,11 @@ export interface BourseConcoursDTO {
   id?: number;
   titre: string;
   type: string;
-  montant?: number;
-  periodicite?: string;
+  typeBourse?: string | null;
   nombreBeneficiaires?: number;
-  tauxAcceptation?: number;
+  tauxAccepte?: number | null;
   dateLimite?: string; // ISO string
-  criteresEligibilite?: string[];
-  tags?: string[];
-  conseilsPratiques?: string;
-  favoris?: boolean;
+  criteres?: string[];
 }
 
 @Injectable({

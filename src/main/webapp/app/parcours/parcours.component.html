@@ -433,20 +433,23 @@
       </div>
     </div>
 
-    <!-- Bourses grid -->
     <main class="cards-grid bourses-grid">
       <article class="card-bourse" *ngFor="let b of boursesListFiltrees">
         <header class="bourse-header">
           <h3 class="bourse-title">{{ b.titre }}</h3>
           <div class="bourse-icons">
-            <span class="tag small" *ngFor="let t of b.tags">{{ t }}</span>
-            <button class="trophy" title="Favoris"><fa-icon [icon]="faTrophy"></fa-icon></button>
+            <!-- Utiliser typeBourse comme tag -->
+            <span class="tag small" *ngIf="b.typeBourse">{{ b.typeBourse }}</span>
+            <button class="trophy" title="Favoris">
+              <fa-icon [icon]="faTrophy"></fa-icon>
+            </button>
           </div>
         </header>
 
+        <!-- Montant et Périodicité : pas dispo -> placeholder -->
         <div class="bourse-amount">
-          <div class="amount">{{ b.montant ?? '—' }}</div>
-          <div class="period">{{ b.periodicite ?? '—' }}</div>
+          <div class="amount">Coût entièrement couvert</div>
+          <div class="period">Selon le programme</div>
         </div>
 
         <div class="bourse-stats">
@@ -455,7 +458,7 @@
             <div class="label">Bénéficiaires</div>
           </div>
           <div class="col">
-            <div class="big">{{ b.tauxAcceptation ?? '—' }}%</div>
+            <div class="big">{{ b.tauxAccepte ?? '—' }}%</div>
             <div class="label">Acceptation</div>
           </div>
         </div>
@@ -465,10 +468,10 @@
           <span>Date limite: {{ formatDateIso(b.dateLimite) }}</span>
         </div>
 
-        <div class="bourse-criteres" *ngIf="b.criteresEligibilite?.length">
+        <div class="bourse-criteres" *ngIf="b.criteres?.length">
           <strong>Critères:</strong>
           <ul>
-            <li *ngFor="let c of b.criteresEligibilite">{{ c }}</li>
+            <li *ngFor="let c of b.criteres">{{ c }}</li>
           </ul>
         </div>
 

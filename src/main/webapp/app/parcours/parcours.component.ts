@@ -392,25 +392,10 @@ export default class ParcoursComponent implements OnInit {
     this.boursesListFiltrees = this.boursesList.filter(
       b =>
         b.titre.toLowerCase().includes(q) ||
-        (b.tags ?? []).some(t => t.toLowerCase().includes(q)) ||
-        (b.type || '').toLowerCase().includes(q),
+        (b.typeBourse ?? '').toLowerCase().includes(q) ||
+        b.type.toLowerCase().includes(q) ||
+        (b.criteres ?? []).some(c => c.toLowerCase().includes(q)),
     );
-  }
-
-  // Filtre par type (Bourse / Concours)
-  filterBourses(): void {
-    this.boursesListFiltrees = this.boursesList.filter(b => !this.bourseSelectedType || b.type === this.bourseSelectedType);
-  }
-
-  // Affichage date format FR
-  formatDateIso(d?: string): string {
-    if (!d) return '';
-    return new Date(d).toLocaleDateString('fr-FR');
-  }
-
-  // Voir détails d'une bourse (placeholder)
-  voirDetailsBourse(b: BourseConcoursDTO): void {
-    // TODO: ouvrir modal ou naviguer vers le détail
   }
 
   onSearch(): void {
@@ -478,5 +463,16 @@ export default class ParcoursComponent implements OnInit {
 
   closeDetail(): void {
     this.selectedFiliere = null;
+  }
+  filterBourses(): void {
+    this.boursesListFiltrees = this.boursesList.filter(b => !this.bourseSelectedType || b.type === this.bourseSelectedType);
+  }
+
+  formatDateIso(d?: string): string {
+    return d ? new Date(d).toLocaleDateString('fr-FR') : '';
+  }
+
+  voirDetailsBourse(b: BourseConcoursDTO): void {
+    // console.log('Voir détails:', b); // remplacer par modal si besoin
   }
 }

@@ -6,44 +6,57 @@
   </div>
 
   <div class="row g-4">
-    <!-- Actualités -->
+    <!-- ===================== ACTUALITÉS ===================== -->
     <div class="col-lg-8">
       <div *ngFor="let actu of actusEvents" class="card mb-4 shadow-sm border-0">
-        <img [src]="actu.image" class="card-img-top rounded-top" [alt]="actu.title" />
+        <img [src]="actu.image" [alt]="actu.title" loading="lazy" class="card-img-top rounded-top" />
+
         <div class="card-body">
           <span
             class="badge mb-2"
-            [ngClass]="{ 'bg-success': actu.category === 'Événement', 'bg-warning': actu.category === 'Actualité' }"
-            >{{ actu.category }}</span
+            [ngClass]="{
+              'bg-success': actu.category === 'Événement',
+              'bg-warning': actu.category === 'Actualité',
+            }"
           >
+            {{ actu.category }}
+          </span>
+
           <h5 class="card-title">{{ actu.title }}</h5>
           <p class="card-text">{{ actu.description }}</p>
-          <p class="text-muted small"><i class="bi bi-calendar"></i> {{ actu.date }}</p>
-          <a href="#" class="btn btn-primary btn-sm">En savoir plus <i class="bi bi-arrow-right"></i></a>
+
+          <p class="text-muted small mb-3"><i class="bi bi-calendar"></i> {{ actu.date }}</p>
+
+          <button type="button" class="btn btn-primary btn-sm">En savoir plus <i class="bi bi-arrow-right"></i></button>
         </div>
       </div>
     </div>
 
-    <!-- Discussions & Témoignages -->
+    <!-- ===================== DISCUSSIONS & TÉMOIGNAGES ===================== -->
     <div class="col-lg-4">
-      <!-- Discussions -->
+      <!-- ===================== DISCUSSIONS ===================== -->
       <div class="card mb-4 shadow-sm border-0">
         <div class="card-header bg-primary text-white"><i class="bi bi-chat-dots"></i> Discussions</div>
+
         <div class="card-body p-2 custom-scrollbar">
           <div *ngFor="let topic of topics" class="border p-2 mb-3 rounded hover-highlight">
             <div class="d-flex align-items-center mb-1">
               <div class="rounded-circle avatar-initial me-2">
                 {{ getInitials(topic.user) }}
               </div>
+
               <div>
                 <div class="fw-bold">{{ topic.user }}</div>
                 <small class="text-muted">{{ topic.time }}</small>
               </div>
             </div>
+
             <p class="mb-1 text-primary fw-semibold"><i class="bi bi-trending-up"></i> {{ topic.subject }}</p>
-            <p class="fst-italic text-muted">"{{ topic.comment }}"</p>
+
+            <p class="fst-italic text-muted mb-2">"{{ topic.comment }}"</p>
+
             <div class="d-flex gap-2 align-items-center">
-              <button class="btn btn-sm" (click)="toggleLikeTopic(topic.id)">
+              <button type="button" class="btn btn-sm" (click)="toggleLikeTopic(topic.id)">
                 <i
                   class="bi"
                   [ngClass]="{
@@ -53,55 +66,70 @@
                 ></i>
                 {{ topic.likes + (likedTopics.has(topic.id) ? 1 : 0) }}
               </button>
-              <button class="btn btn-sm text-muted"><i class="bi bi-chat"></i> {{ topic.responses }}</button>
-              <span *ngIf="topic.certified" class="badge bg-success ms-auto">Certifié</span>
+
+              <button type="button" class="btn btn-sm text-muted"><i class="bi bi-chat"></i> {{ topic.responses }}</button>
+
+              <span *ngIf="topic.certified" class="badge bg-success ms-auto"> Certifié </span>
             </div>
           </div>
 
+          <!-- Input publication -->
           <div class="mt-3">
             <div class="input-group">
               <input
                 type="text"
+                class="form-control"
                 [(ngModel)]="newQuestion"
                 (keyup.enter)="sendQuestion()"
-                class="form-control"
                 placeholder="Posez votre question..."
               />
-              <button class="btn btn-primary" (click)="sendQuestion()"><i class="bi bi-send"></i></button>
+
+              <button type="button" class="btn btn-primary" (click)="sendQuestion()">
+                <i class="bi bi-send"></i>
+              </button>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Témoignages -->
+      <!-- ===================== TÉMOIGNAGES ===================== -->
       <div class="card shadow-sm border-0">
         <div class="card-header bg-warning text-dark"><i class="bi bi-quote"></i> Témoignages</div>
+
         <div class="card-body p-2 custom-scrollbar">
           <div *ngFor="let t of allTestimonials | slice: 0 : visibleTestimonials" class="border p-3 mb-3 rounded hover-highlight">
-            <p class="fst-italic">"{{ t.quote }}"</p>
-            <div class="d-flex align-items-center mt-2">
+            <p class="fst-italic mb-2">"{{ t.quote }}"</p>
+
+            <div class="d-flex align-items-center">
               <div class="rounded-circle avatar-initial me-2">
                 {{ getInitials(t.name) }}
               </div>
+
               <div>
                 <div class="fw-bold">{{ t.name }}</div>
-                <small class="text-muted">{{ t.age }} ans • {{ t.school }}</small>
+                <small class="text-muted"> {{ t.age }} ans • {{ t.school }} </small>
               </div>
             </div>
+
             <div class="d-flex gap-2 align-items-center mt-2">
-              <button class="btn btn-sm" (click)="toggleLikeTestimonial(t.id)">
+              <button type="button" class="btn btn-sm" (click)="toggleLikeTestimonial(t.id)">
                 <i
                   class="bi"
-                  [ngClass]="{ 'bi-heart-fill text-warning': likedTestimonials.has(t.id), 'bi-heart': !likedTestimonials.has(t.id) }"
+                  [ngClass]="{
+                    'bi-heart-fill text-warning': likedTestimonials.has(t.id),
+                    'bi-heart': !likedTestimonials.has(t.id),
+                  }"
                 ></i>
                 {{ t.likes + (likedTestimonials.has(t.id) ? 1 : 0) }}
               </button>
-              <button class="btn btn-sm text-muted"><i class="bi bi-chat"></i> {{ t.comments }}</button>
+
+              <button type="button" class="btn btn-sm text-muted"><i class="bi bi-chat"></i> {{ t.comments }}</button>
             </div>
           </div>
 
           <button
             *ngIf="visibleTestimonials < allTestimonials.length"
+            type="button"
             class="btn btn-outline-warning w-100 mt-2"
             (click)="loadMoreTestimonials()"
           >

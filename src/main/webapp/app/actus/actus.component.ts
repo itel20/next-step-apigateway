@@ -1,6 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+
+import { PublicationService } from './publication.service';
+import { Publication } from './publication.model';
+
+/* ===================== INTERFACES ===================== */
 
 interface Actu {
   id: number;
@@ -34,6 +39,8 @@ interface Testimonial {
   avatar: string;
 }
 
+/* ===================== COMPONENT ===================== */
+
 @Component({
   selector: 'jhi-actus',
   standalone: true,
@@ -41,12 +48,28 @@ interface Testimonial {
   templateUrl: './actus.component.html',
   styleUrls: ['./actus.component.scss'],
 })
-export class ActusComponent {
+export class ActusComponent implements OnInit {
+  /* ===================== ETAT ===================== */
+
   visibleTestimonials = 3;
   newQuestion = '';
 
   likedTopics = new Set<number>();
   likedTestimonials = new Set<number>();
+
+  topics: Topic[] = [];
+
+  /* ===================== CONSTRUCTOR ===================== */
+
+  constructor(private publicationService: PublicationService) {}
+
+  /* ===================== INIT ===================== */
+
+  ngOnInit(): void {
+    this.loadTopics();
+  }
+
+  /* ===================== ACTUS STATIQUES ===================== */
 
   actusEvents: Actu[] = [
     {
@@ -83,42 +106,7 @@ export class ActusComponent {
     },
   ];
 
-  topics: Topic[] = [
-    {
-      id: 1,
-      subject: 'Choix de filière après Bac S',
-      user: 'Aminata D.',
-      comment: 'Je souhaite comparer médecine et ingénierie pour mon avenir.',
-      likes: 24,
-      responses: 12,
-      certified: false,
-      // Remplacer par une vraie photo
-      avatar: 'https://randomuser.me/api/portraits/women/68.jpg',
-      time: 'Il y a 2h',
-    },
-    {
-      id: 2,
-      subject: 'Réorientation L2',
-      user: 'M. Diop',
-      comment: 'La réorientation est possible. Contactez le service pédagogique.',
-      likes: 45,
-      responses: 8,
-      certified: true,
-      avatar: 'https://randomuser.me/api/portraits/men/75.jpg',
-      time: 'Il y a 5h',
-    },
-    {
-      id: 3,
-      subject: "Études à l'étranger",
-      user: 'Ibrahima S.',
-      comment: 'Je souhaite étudier au Canada. Quelles démarches suivre ?',
-      likes: 67,
-      responses: 23,
-      certified: false,
-      avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
-      time: 'Il y a 1j',
-    },
-  ];
+  /* ===================== TESTIMONIALS ===================== */
 
   allTestimonials: Testimonial[] = [
     {
@@ -163,6 +151,52 @@ export class ActusComponent {
     },
   ];
 
+  /* ===================== API PUBLICATIONS ===================== */
+
+  loadTopics(): void {
+    this.publicationService.getAll().subscribe(publications => {
+      this.topics = publications.map(p => ({
+        id: p.id!,
+        subject: 'Discussion',
+        user: p.authorType,
+        comment: p.content,
+        likes: 0,
+        responses: 0,
+        certified: p.authorType === 'CONSEILLER',
+        avatar: '',
+        time: this.formatDate(p.createdAt),
+      }));
+    });
+  }
+
+  sendQuestion(): void {
+    if (!this.newQuestion.trim()) return;
+
+    const publication: Publication = {
+      content: this.newQuestion,
+      authorId: 1, // TODO: JWT
+      authorType: 'ETUDIANT',
+    };
+
+    this.publicationService.create(publication).subscribe(saved => {
+      this.topics.unshift({
+        id: saved.id!,
+        subject: 'Discussion',
+        user: saved.authorType,
+        comment: saved.content,
+        likes: 0,
+        responses: 0,
+        certified: saved.authorType === 'CONSEILLER',
+        avatar: '',
+        time: 'À l’instant',
+      });
+
+      this.newQuestion = '';
+    });
+  }
+
+  /* ===================== LIKES ===================== */
+
   toggleLikeTopic(id: number): void {
     if (this.likedTopics.has(id)) {
       this.likedTopics.delete(id);
@@ -179,16 +213,19 @@ export class ActusComponent {
     }
   }
 
+  /* ===================== UI HELPERS ===================== */
+
   loadMoreTestimonials(): void {
     this.visibleTestimonials = Math.min(this.visibleTestimonials + 3, this.allTestimonials.length);
   }
 
-  sendQuestion(): void {
-    if (this.newQuestion.trim()) this.newQuestion = '';
-  }
   getInitials(name: string): string {
     const parts = name.split(' ');
     if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
     return (parts[0].charAt(0) + parts[1].charAt(0)).toUpperCase();
+  }
+
+  formatDate(date?: string): string {
+    return date ? new Date(date).toLocaleString() : '';
   }
 }

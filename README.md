@@ -1,5 +1,63 @@
 # gatewayService
 
+# Next Step Senegal — API Gateway
+
+**Next Step** is a digital orientation platform designed to help Senegalese students explore their educational and career opportunities. The project began as a prototype developed during the **2024 IBM TechXchange Hackathon**, where our team achieved **3rd place** in Las Vegas.
+
+This repository contains the **API Gateway** of the Next Step application. It is part of a JHipster-generated microservices architecture, with an Angular frontend and a Spring Boot backend.
+
+## Project Overview
+
+Next Step aims to make educational guidance more accessible to students. The project is being revisited to improve its architecture, development workflow, and deployment practices.
+
+This repository is the entry point to the application's frontend and gateway services.
+
+## Architecture
+
+The application follows a microservices architecture generated with JHipster.
+
+**Main technologies**
+
+* **Angular** — frontend
+* **Java / Spring Boot** — backend
+* **JHipster 8.7.3** — application generation
+* **Docker / Docker Compose** — containerized development environment
+* **Keycloak** — authentication
+* **JHipster Registry / Eureka** — service discovery and configuration, where configured
+
+
+## Related Repositories
+
+| Repository                                                                           | Description                              |
+| ------------------------------------------------------------------------------------ | ---------------------------------------- |
+| [API Gateway](https://github.com/itel20/next-step-apigateway)                        | Angular frontend and gateway             |
+| [User Management Service](https://github.com/itel20/next-step-usermanagementservice) | Backend microservice for user management |
+
+## Development and Cloud-Native Journey
+
+This project is also a hands-on learning experience in cloud-native development.
+
+Current areas of work include:
+
+* Understanding and documenting the existing Docker Compose setup.
+* Improving the reproducibility of the development environment.
+* Implementing a CI/CD workflow to automate build and validation.
+* Exploring reliable ways to run and deploy the application.
+
+The project is being used as a practical case study for a proposed lightning talk at **KubeCon + CloudNativeCon Europe 2027**.
+
+## Project Status
+
+The application is an ongoing team project. Its architecture and development workflow are being reviewed and improved. Features and infrastructure components should be considered implemented only when they are available and tested in the repository.
+
+## Acknowledgements
+
+Next Step was developed as a team project. This repository is a public mirror intended to document the application and make its technical components accessible for review.
+
+For the original JHipster-generated development, build, and testing instructions, see the documentation below.
+
+---
+
 This application was generated using JHipster 8.7.3, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v8.7.3](https://www.jhipster.tech/documentation-archive/v8.7.3).
 
 This is a "gateway" application intended to be part of a microservice architecture, please refer to the [Doing microservices with JHipster][] page of the documentation for more information.

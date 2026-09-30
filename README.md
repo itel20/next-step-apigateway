@@ -31,7 +31,7 @@ The application follows a microservices architecture generated with JHipster.
 | Repository                                                                           | Description                              |
 | ------------------------------------------------------------------------------------ | ---------------------------------------- |
 | [API Gateway](https://github.com/itel20/next-step-apigateway)                        | Angular frontend and gateway             |
-| [User Management Service](https://github.com/itel20/next-step-usermanagementservice) | Backend microservice for user management |
+| [Core Backend Service](https://github.com/itel20/next-step-usermanagementservice) | Backend APIs - users, schools, fiels, of study, orientation logic|
 
 ## Development and Cloud-Native Journey
 

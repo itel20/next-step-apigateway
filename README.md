@@ -1,3 +1,4 @@
+![CI](https://github.com/itel20/next-step-apigateway/actions/workflows/ci.yml/badge.svg)
 # gatewayService
 
 # Next Step Senegal — API Gateway

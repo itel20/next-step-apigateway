@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { SplashScreenComponent } from './splash-screen.component';
 
 describe('SplashScreenComponent', () => {
@@ -9,6 +9,7 @@ describe('SplashScreenComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [SplashScreenComponent],
+      providers: [provideNoopAnimations(),
     }).compileComponents();
 
     fixture = TestBed.createComponent(SplashScreenComponent);

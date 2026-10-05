@@ -5,7 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({ providedIn: 'root' })
 export class AppPageTitleStrategy extends TitleStrategy {
-  private routerState: RouterStateSnapshot;
+  private routerState!: RouterStateSnapshot;
 
   constructor(
     private readonly title: Title,

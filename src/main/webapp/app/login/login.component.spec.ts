@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { provideHttpClient } from '@angular/common/http';
 import { LoginComponent } from './login.component';
 
 describe('SplashScreenComponent', () => {
@@ -8,6 +8,7 @@ describe('SplashScreenComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      providers: [provideHttpClient(), /* providers existants */],
       imports: [LoginComponent],
     }).compileComponents();
 

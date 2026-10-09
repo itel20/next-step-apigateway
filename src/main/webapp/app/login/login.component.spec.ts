@@ -8,7 +8,7 @@ describe('SplashScreenComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      providers: [provideHttpClient(), /* providers existants */],
+      providers: [provideHttpClient(), 
       imports: [LoginComponent],
     }).compileComponents();
 

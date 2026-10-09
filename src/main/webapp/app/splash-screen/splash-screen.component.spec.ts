@@ -9,7 +9,7 @@ describe('SplashScreenComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [SplashScreenComponent],
-      providers: [provideNoopAnimations(),
+      providers: [provideNoopAnimations()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SplashScreenComponent);
